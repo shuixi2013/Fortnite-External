@@ -178,7 +178,6 @@ void setupWindow()
 	//ImGuiStyle& s = ImGui::GetStyle();
 
 	//ImFont* font = io.Fonts->AddFontFromFileTTF("Roboto-Light.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
-	io.Fonts->AddFontFromMemoryCompressedTTF(Test_compressed_data, Test_compressed_size, 13.f);
 	io.IniFilename = NULL;
 
 	ImGuiStyle& s = ImGui::GetStyle();
