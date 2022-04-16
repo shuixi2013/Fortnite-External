@@ -3,6 +3,8 @@
 Gloomy.cc - 
 Fortnite External with some good features using OpenGL
 
+UC Post: https://www.unknowncheats.me/forum/fortnite/496284-leaking-external-source.html
+
 Copyright (c) 2022 Chase1803
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
