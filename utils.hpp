@@ -4,6 +4,13 @@
 #include <cstdint>
 #include <string>
 
+int g_width;
+int g_height;
+HWND fortnite_wnd;
+int g_pid;
+uint64_t g_base_address;
+uint64_t pattern_uworld;
+
 Sandy64 Drive;
 
 uintptr_t getBaseAddress(uintptr_t pid) {
@@ -1049,3 +1056,379 @@ double GetDistance(double x1, double y1, double z1, double x2, double y2) {
 	//return sqrtf(powf_((x2 - x1), 2) + powf_((y2 - y1), 2));
 	return sqrtf(powf((x2 - x1), 2) + powf_((y2 - y1), 2));
 }
+std::string string_To_UTF8(const std::string& str)
+{
+	int nwLen = ::MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
+
+	wchar_t* pwBuf = new wchar_t[nwLen + 1];
+	ZeroMemory(pwBuf, nwLen * 2 + 2);
+
+	::MultiByteToWideChar(CP_ACP, 0, str.c_str(), str.length(), pwBuf, nwLen);
+
+	int nLen = ::WideCharToMultiByte(CP_UTF8, 0, pwBuf, -1, NULL, NULL, NULL, NULL);
+
+	char* pBuf = new char[nLen + 1];
+	ZeroMemory(pBuf, nLen + 1);
+
+	::WideCharToMultiByte(CP_UTF8, 0, pwBuf, nwLen, pBuf, nLen, NULL, NULL);
+
+	std::string retStr(pBuf);
+
+	delete[]pwBuf;
+	delete[]pBuf;
+
+	pwBuf = NULL;
+	pBuf = NULL;
+
+	return retStr;
+}
+
+void DrawText1(int x, int y, const char* str, RGBA* color)
+{
+	ImFont a;
+	std::string utf_8_1 = std::string(str);
+	std::string utf_8_2 = string_To_UTF8(utf_8_1);
+	ImGui::GetOverlayDrawList()->AddText(ImVec2(x, y), ImGui::ColorConvertFloat4ToU32(ImVec4(color->R / 255.0, color->G / 255.0, color->B / 255.0, color->A / 255.0)), utf_8_2.c_str());
+}
+
+void DrawCorneredBox(int X, int Y, int W, int H, const ImU32& color, int thickness) {
+	float lineW = (W / 3);
+	float lineH = (H / 3);
+
+	//corners
+	ImGui::GetOverlayDrawList()->AddLine(ImVec2(X, Y), ImVec2(X, Y + lineH), ImGui::GetColorU32(color), thickness);
+	ImGui::GetOverlayDrawList()->AddLine(ImVec2(X, Y), ImVec2(X + lineW, Y), ImGui::GetColorU32(color), thickness);
+	ImGui::GetOverlayDrawList()->AddLine(ImVec2(X + W - lineW, Y), ImVec2(X + W, Y), ImGui::GetColorU32(color), thickness);
+	ImGui::GetOverlayDrawList()->AddLine(ImVec2(X + W, Y), ImVec2(X + W, Y + lineH), ImGui::GetColorU32(color), thickness);
+	ImGui::GetOverlayDrawList()->AddLine(ImVec2(X, Y + H - lineH), ImVec2(X, Y + H), ImGui::GetColorU32(color), thickness);
+	ImGui::GetOverlayDrawList()->AddLine(ImVec2(X, Y + H), ImVec2(X + lineW, Y + H), ImGui::GetColorU32(color), thickness);
+	ImGui::GetOverlayDrawList()->AddLine(ImVec2(X + W - lineW, Y + H), ImVec2(X + W, Y + H), ImGui::GetColorU32(color), thickness);
+	ImGui::GetOverlayDrawList()->AddLine(ImVec2(X + W, Y + H - lineH), ImVec2(X + W, Y + H), ImGui::GetColorU32(color), thickness);
+}
+
+static int Depth;
+
+static class CKey {
+private:
+	BYTE bPrevState[0x100];
+public:
+	CKey() {
+		memset(bPrevState, 0, sizeof(bPrevState));
+	}
+
+	BOOL IsKeyPushing(BYTE vKey) {
+		return GetAsyncKeyState(vKey) & 0x8000;
+	}
+
+	BOOL IsKeyPushed(BYTE vKey) {
+		BOOL bReturn = FALSE;
+
+		if (IsKeyPushing(vKey))
+			bPrevState[vKey] = TRUE;
+		else
+		{
+			if (bPrevState[vKey] == TRUE)
+				bReturn = TRUE;
+			bPrevState[vKey] = FALSE;
+		}
+
+		return bReturn;
+	}
+};
+
+static CKey Key;
+static bool isaimbotting;
+bool isVis;
+
+char* wchar_to_char(const wchar_t* pwchar)
+{
+	int currentCharIndex = 0;
+	char currentChar = pwchar[currentCharIndex];
+
+	while (currentChar != '\0')
+	{
+		currentCharIndex++;
+		currentChar = pwchar[currentCharIndex];
+	}
+
+	const int charCount = currentCharIndex + 1;
+
+	char* filePathC = (char*)malloc(sizeof(char) * charCount);
+
+	for (int i = 0; i < charCount; i++)
+	{
+		char character = pwchar[i];
+
+		*filePathC = character;
+
+		filePathC += sizeof(char);
+
+	}
+	filePathC += '\0';
+
+	filePathC -= (sizeof(char) * charCount);
+
+	return filePathC;
+}
+
+void DrawLString(float fontSize, int x, int y, ImU32 color, bool bCenter, bool stroke, const char* pText, ...)
+{
+	va_list va_alist;
+	char buf[1024] = { 0 };
+	va_start(va_alist, pText);
+	_vsnprintf_s(buf, sizeof(buf), pText, va_alist);
+	va_end(va_alist);
+	std::string text = WStringToUTF8(MBytesToWString(buf).c_str());
+	if (bCenter)
+	{
+		ImVec2 textSize = ImGui::CalcTextSize(text.c_str());
+		x = x - textSize.x / 2;
+		y = y - textSize.y;
+	}
+	if (stroke)
+	{
+		ImGui::GetOverlayDrawList()->AddText(ImGui::GetFont(), fontSize, ImVec2(x + 1, y + 1), ImGui::ColorConvertFloat4ToU32(ImVec4(0, 0, 0, 1)), text.c_str());
+		ImGui::GetOverlayDrawList()->AddText(ImGui::GetFont(), fontSize, ImVec2(x - 1, y - 1), ImGui::ColorConvertFloat4ToU32(ImVec4(0, 0, 0, 1)), text.c_str());
+		ImGui::GetOverlayDrawList()->AddText(ImGui::GetFont(), fontSize, ImVec2(x + 1, y - 1), ImGui::ColorConvertFloat4ToU32(ImVec4(0, 0, 0, 1)), text.c_str());
+		ImGui::GetOverlayDrawList()->AddText(ImGui::GetFont(), fontSize, ImVec2(x - 1, y + 1), ImGui::ColorConvertFloat4ToU32(ImVec4(0, 0, 0, 1)), text.c_str());
+	}
+	ImGui::GetOverlayDrawList()->AddText(ImGui::GetFont(), fontSize, ImVec2(x, y), color, text.c_str());
+}
+
+Vector3 calc_angle(Vector3& zaz, Vector3& daz) {
+	Vector3 dalte = zaz - daz;
+	Vector3 ongle;
+	double hpm = sqrt(dalte.x * dalte.x + dalte.y * dalte.y);
+	ongle.y = atan(dalte.y / dalte.x) * 57.295779513082;
+	ongle.x = (atan(dalte.z / hpm) * 57.295779513082) * -1;
+	if (dalte.x >= 0.f) ongle.y += 180;
+	return ongle;
+}
+
+
+#include <array>
+
+std::uintptr_t find_signature(const char* sig, const char* mask)
+{
+	auto buffer = std::make_unique<std::array<std::uint8_t, 0x100000>>();
+	auto data = buffer.get()->data();
+
+	for (std::uintptr_t i = 0u; i < (2u << 25u); ++i)
+	{
+		Drive.ReadPtr(g_pid, g_base_address + i * 0x100000, data, 0x100000);
+
+		if (!data)
+			return 0;
+
+		for (std::uintptr_t j = 0; j < 0x100000u; ++j)
+		{
+			if ([](std::uint8_t const* data, std::uint8_t const* sig, char const* mask)
+				{
+					for (; *mask; ++mask, ++data, ++sig)
+					{
+						if (*mask == 'x' && *data != *sig) return false;
+					}
+					return (*mask) == 0;
+				}(data + j, (std::uint8_t*)sig, mask))
+			{
+				std::uintptr_t result = g_base_address + i * 0x100000 + j;
+				std::uint32_t rel = 0;
+
+				Drive.ReadPtr(g_pid, result + 3, &rel, sizeof(std::uint32_t));
+
+				if (!rel)
+					return 0;
+
+				return result + rel + 7;
+			}
+		}
+	}
+
+	return 0;
+}
+
+
+typedef struct Playertest
+{
+	float ItemDist;
+	uint64_t Acotr;
+	uint64_t Acotrmesh;
+	DWORD_PTR rootcomp;
+	bool isbot;
+	bool storebot;
+	std::string name;
+	wchar_t* LootNames;
+	Vector3 ItemPosition;
+}Playertest;
+std::vector<Playertest> PLIST;
+
+typedef struct _LootEntity {
+	ImDrawList* Renderer;
+	std::string name;
+	uintptr_t CurrentActor;
+	Vector3 LocalRelativeLocation;
+}LootEntity;
+static std::vector<LootEntity> LootentityList;
+
+
+float closestDistance = FLT_MAX;
+DWORD_PTR closestPawn = NULL;
+int LocalTeam;
+static bool targetlocked = false;
+
+uintptr_t GWorld;
+uintptr_t LocalPlayerController;
+uint64_t PlayerCameraManager;
+bool InLobby = false;
+
+void menucolors()
+{
+
+	ImGuiStyle& s = ImGui::GetStyle();
+
+	ImGui::StyleColorsDark();
+
+	const ImColor bgSecondary = ImColor(15, 15, 15, 255);
+	s.Colors[ImGuiCol_WindowBg] = ImColor(32, 32, 32, 255);
+	s.Colors[ImGuiCol_ChildBg] = bgSecondary;
+	s.Colors[ImGuiCol_FrameBg] = ImColor(65, 64, 64, 255);
+	s.Colors[ImGuiCol_FrameBgActive] = ImColor(35, 37, 39, 255);
+	s.Colors[ImGuiCol_Border] = ImColor(0, 0, 0, 255);
+	s.Colors[ImGuiCol_CheckMark] = ImColor(255, 0, 0, 255);
+	s.Colors[ImGuiCol_SliderGrab] = ImColor(255, 255, 255, 150);
+	s.Colors[ImGuiCol_SliderGrabActive] = ImColor(255, 255, 255, 255);
+	s.Colors[ImGuiCol_ResizeGrip] = ImColor(24, 24, 24, 255);
+	s.Colors[ImGuiCol_Header] = ImColor(0, 0, 0, 255);
+	s.Colors[ImGuiCol_HeaderHovered] = ImColor(0, 0, 0, 255);
+	s.Colors[ImGuiCol_HeaderActive] = ImColor(0, 0, 0, 255);
+	s.Colors[ImGuiCol_TitleBg] = ImColor(247, 255, 25, 255);
+	s.Colors[ImGuiCol_TitleBgCollapsed] = ImColor(247, 255, 25, 255);
+	s.Colors[ImGuiCol_TitleBgActive] = ImColor(247, 255, 25, 255);
+	s.Colors[ImGuiCol_FrameBgHovered] = ImColor(65, 64, 64, 255);
+	s.Colors[ImGuiCol_ScrollbarBg] = ImColor(0, 0, 0, 255);
+	s.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(128, 128, 128, 255);
+	s.Colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(255, 255, 255, 255);
+	s.Colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(255, 255, 255, 255);
+	s.Colors[ImGuiCol_Header] = ImColor(42, 42, 42, 255);
+	s.Colors[ImGuiCol_HeaderHovered] = ImColor(50, 50, 50, 255);
+	s.Colors[ImGuiCol_HeaderActive] = ImColor(50, 50, 50, 255);
+	s.Colors[ImGuiCol_PopupBg] = ImColor(15, 15, 15, 255);
+	s.Colors[ImGuiCol_Button] = ImColor(30, 30, 30, 255);//
+	s.Colors[ImGuiCol_ButtonHovered] = ImColor(128, 128, 128, 150);
+	s.Colors[ImGuiCol_ButtonActive] = ImColor(128, 128, 128, 255);
+}
+
+std::wstring s2ws(const std::string& str) {
+	int size_needed = MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), NULL, 0);
+	std::wstring wstrTo(size_needed, 0);
+	MultiByteToWideChar(CP_UTF8, 0, &str[0], (int)str.size(), &wstrTo[0], size_needed);
+	return wstrTo;
+}
+
+int get_fn_processid() {
+	BYTE target_name[] = { 'F','o','r','t','n','i','t','e','C','l','i','e','n','t','-','W','i','n','6','4','-','S','h','i','p','p','i','n','g','.','e','x','e', 0 };
+	std::wstring process_name = s2ws(std::string((char*)target_name));
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	PROCESSENTRY32W entry;
+	entry.dwSize = sizeof(entry);
+
+	if (!Process32First(snapshot, &entry)) {
+		return 0;
+	}
+
+	while (Process32Next(snapshot, &entry)) {
+		if (std::wstring(entry.szExeFile) == process_name) {
+			return entry.th32ProcessID;
+		}
+	}
+
+	return 0;
+}
+
+void background()
+{
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Once);
+	ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize, ImGuiCond_Once);
+
+	ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.09f, 0.09f, 0.09f, 0.20f / 1.f * 2.f));
+	static const auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove;
+	ImGui::Begin(XorStr("##background").c_str(), nullptr, flags);
+	ImGui::End();
+	ImGui::PopStyleColor();
+}
+
+void cursor()
+{
+	ImGui::SetNextWindowPos(ImGui::GetIO().MousePos);
+	ImGui::SetNextWindowSize(ImVec2(0, 0), ImGuiCond_Once);
+
+
+	//ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.09f, 0.09f, 0.09f, 0.20f / 1.f * 2.f));
+	static const auto flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoMove;
+	ImGui::Begin(XorStr("##cursor").c_str(), nullptr, flags);
+	ImGui::End();
+	//ImGui::PopStyleColor();
+}
+
+ImColor cRainbow = ImGui::ColorConvertFloat4ToU32(ImVec4(255.0, 0.0, 0.0, 255.0));
+
+
+void decoration()
+{
+	auto pos = ImGui::GetWindowPos();
+	auto size = ImGui::GetWindowSize();
+	ImGui::GetWindowDrawList()->AddRect(ImVec2(pos.x + 5, pos.y + 1), ImVec2(pos.x + size.x - 5, pos.y + size.y - 1), ImColor(1, 1, 1, 255));
+	ImGui::GetWindowDrawList()->AddRect(ImVec2(pos.x + 6, pos.y + 2), ImVec2(pos.x + size.x - 6, pos.y + size.y - 2), ImColor(40, 40, 40, 255));
+	ImGui::GetWindowDrawList()->AddRect(ImVec2(pos.x + 7, pos.y + 3), ImVec2(pos.x + size.x - 7, pos.y + size.y - 3), ImColor(1, 1, 1, 255));
+	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(pos.x + 8, pos.y + 4), ImVec2(pos.x + size.x - 8, pos.y + 6), cRainbow);
+	ImGui::GetWindowDrawList()->AddRect(ImVec2(pos.x + 7, pos.y + 5), ImVec2(pos.x + size.x - 7, pos.y + size.y - 3), ImColor(1, 1, 1, 255));
+	ImGui::GetWindowDrawList()->AddRect(ImVec2(pos.x + 7, pos.y + 6), ImVec2(pos.x + size.x - 7, pos.y + size.y - 3), ImColor(40, 40, 40, 255));
+	ImGui::GetWindowDrawList()->AddRect(ImVec2(pos.x + 7, pos.y + 7), ImVec2(pos.x + size.x - 7, pos.y + size.y - 3), ImColor(1, 1, 1, 255));
+	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(pos.x + 8, pos.y + 8), ImVec2(pos.x + size.x - 8, pos.y + size.y - 4), ImColor(30, 30, 30, 255));
+
+	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(pos.x + 12, pos.y + 23), ImVec2(pos.x + size.x - 12, pos.y + size.y - 8), ImColor(1, 1, 1, 255));
+	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(pos.x + 13, pos.y + 24), ImVec2(pos.x + size.x - 13, pos.y + size.y - 9), ImColor(40, 40, 40, 255));
+	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(pos.x + 17, pos.y + 28), ImVec2(pos.x + size.x - 17, pos.y + size.y - 13), ImColor(1, 1, 1, 255));
+	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(pos.x + 18, pos.y + 29), ImVec2(pos.x + size.x - 18, pos.y + size.y - 14), ImColor(34, 34, 34, 255));
+	ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(pos.x + 18, pos.y + 29), ImVec2(pos.x + 133, pos.y + size.y - 14), ImColor(31, 31, 31, 255));
+
+
+	ImGui::GetWindowDrawList()->AddText(ImVec2(pos.x + 14, pos.y + 8), ImColor(255, 255, 255, 255), "Gloomy");
+	ImGui::GetWindowDrawList()->AddText(ImVec2(pos.x + 50, pos.y + 8), ImColor(255, 0, 0, 255), ".cc");
+	ImGui::GetWindowDrawList()->AddRect(ImVec2(pos.x + 17, pos.y + 28), ImVec2(pos.x + 133, pos.y + size.y - 13), ImColor(1, 1, 1, 255));
+}
+
+bool g_overlay_visible{ false };
+bool g_fovchanger{ false };
+bool g_esp_enabled{ true };
+bool g_esp_distance{ true };
+bool g_esp_skeleton{ false };
+bool g_3d_box{ false };
+bool g_aimbot{ true };
+bool g_skipknocked{ true };
+bool g_trigger{ false };
+bool g_lineesp{ false };
+bool g_boxesp{ false };
+bool g_fov{ false };
+bool g_circlefov{ true };
+bool g_crossh{ true };
+bool g_cornerboxesp{ false };
+bool g_chests{ false };
+bool g_vehicles{ false };
+bool g_ammo{ false };
+bool g_ammos{ false };
+bool g_loot{ false };
+bool g_curweaponesp{ true };
+bool g_consumables{ false };
+bool g_spoofesp{ false };
+bool g_mouse_aim{ true };
+bool g_mem_aim{ false };
+bool g_utils{ false };
+bool controller = false;
+bool g_exploits_backtrack{ false };
+bool g_gun_tracers{ false };
+bool g_disable_gunshots{ false };
+bool g_playerfly{ false };
+bool g_chams{ false };
+bool g_platform_esp{ false };
+bool g_name_esp{ false };

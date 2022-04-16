@@ -1,5 +1,3 @@
-// File: 'C:\Users\SpicyMayo\Desktop\New folder (11)\wtdf.otf' (111692 bytes)
-// Exported using binary_to_compressed_c.cpp
 static const unsigned int Test_compressed_size = 65176;
 static const unsigned int Test_compressed_data[65176 / 4] =
 {
