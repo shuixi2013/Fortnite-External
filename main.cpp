@@ -14,22 +14,15 @@
 #include "driverloader/singed.hpp"
 #include"signed.h"
 #include "Controller.h"
-
 #include <d3d9.h>
 #include "d3dx9.h"
 #include <thread>
+#include <string>
+#include <stdio.h>
+#include <fstream>
 
 #pragma comment(lib, "d3d9.lib")
 #pragma comment(lib, "d3dx9.lib")
-
-#include <string>
-std::string tm_to_readable_time(tm ctx);
-static std::time_t string_to_timet(std::string timestamp);
-static std::tm timet_to_tm(time_t timestamp);
-
-
-#include <stdio.h>
-#include <fstream>
 
 int g_width;
 int g_height;
@@ -40,7 +33,6 @@ extern void aimbot(float x, float y);
 
 int g_pid;
 uint64_t g_base_address;
-
 uint64_t pattern_uworld;
 
 #include "font.h"
@@ -60,13 +52,6 @@ bool g_fov{ false };
 bool g_circlefov{ true };
 bool g_crossh{ true };
 bool g_cornerboxesp{ false };
-bool NoPullout = false;;
-bool adsinair = false;;
-bool InstantRevive = false;
-bool BackTrack = false;
-bool RapidFire = false;
-bool RailGun = false;
-bool AirStuck = false;
 bool g_chests{ false };
 bool g_vehicles{ false };
 bool g_ammo{ false };
@@ -78,22 +63,15 @@ bool g_spoofesp{ false };
 bool g_mouse_aim{ true };
 bool g_mem_aim{ false };
 bool g_utils{ false };
-bool g_humanize{ false };
-bool g_item_uncommon{ false };
-bool g_item_mythic{ false };
-bool g_item_gold{ false };
-bool g_item_nonrare{ false };
 bool controller = false;
 bool g_exploits_backtrack{ false };
-bool g_disable_transition{ false };
-bool g_noslideslowdown{ false };
 bool g_gun_tracers{ false };
 bool g_disable_gunshots{ false };
 bool g_playerfly{ false };
 bool g_chams{ false };
 bool g_platform_esp{ false };
 bool g_name_esp{ false };
-//g_chams
+
 #define maxPlayerCount 40
 #include "utils.hpp"
 
@@ -175,9 +153,7 @@ void setupWindow()
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	//ImGuiStyle& s = ImGui::GetStyle();
 
-	//ImFont* font = io.Fonts->AddFontFromFileTTF("Roboto-Light.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
 	io.IniFilename = NULL;
 
 	ImGuiStyle& s = ImGui::GetStyle();
@@ -215,9 +191,6 @@ void setupWindow()
 	s.Colors[ImGuiCol_ButtonHovered] = ImColor(128, 128, 128, 150);
 	s.Colors[ImGuiCol_ButtonActive] = ImColor(128, 128, 128, 255);
 
-
-	
-
 	ImGui_ImplGlfw_InitForOpenGL(g_window, true);
 	ImGui_ImplOpenGL3_Init(XorStr("#version 130").c_str());
 }
@@ -231,7 +204,7 @@ void cleanupWindow() {
 	glfwTerminate();
 }
 
-BOOL CALLBACK retreiveValorantWindow(HWND hwnd, LPARAM lparam) {
+BOOL CALLBACK retreiveFortniteWindow(HWND hwnd, LPARAM lparam) {
 	DWORD process_id;
 	GetWindowThreadProcessId(hwnd, &process_id);
 	if (process_id == g_pid) {
@@ -242,15 +215,12 @@ BOOL CALLBACK retreiveValorantWindow(HWND hwnd, LPARAM lparam) {
 
 bool isFortniteFocused = false;
 
-void activateValorantWindow() {
+void activateFortniteWindow() {
 	SetForegroundWindow(fortnite_wnd);
 }
-;
 
-
-void handleKeyPresses() {
-
-
+void handleKeyPresses() 
+{
 	if (GetAsyncKeyState(VK_F1) & 1) {
 		g_overlay_visible = !g_overlay_visible;
 		glfwSetWindowAttrib(g_window, GLFW_MOUSE_PASSTHROUGH, !g_overlay_visible);
@@ -259,7 +229,7 @@ void handleKeyPresses() {
 			SetForegroundWindow(overlay_window);
 		}
 		else {
-			activateValorantWindow();
+			activateFortniteWindow();
 		}
 	}
 }
@@ -354,16 +324,12 @@ void drawlootloop()
 		std::vector<LootEntity> tmpList;
 		uintptr_t ItemLevels = read<uintptr_t>(g_pid, GWorld + 0x148);
 
-		int foundPlayerCount = 0;
-
 		for (int i = 0; i < read<DWORD>(g_pid, GWorld + (0x148 + sizeof(PVOID))); ++i) {
 
 			uintptr_t ItemLevel = read<uintptr_t>(g_pid, ItemLevels + (i * sizeof(uintptr_t)));
 
 			for (int i = 0; i < read<DWORD>(g_pid, ItemLevel + (0x98 + sizeof(PVOID))); ++i) {
 
-				if (foundPlayerCount >= maxPlayerCount)
-					break;
 
 				uintptr_t ItemsPawns = read<uintptr_t>(g_pid, ItemLevel + 0x98);
 				uintptr_t CurrentItemPawn = read<uintptr_t>(g_pid, ItemsPawns + (i * sizeof(uintptr_t)));
@@ -378,17 +344,16 @@ void drawlootloop()
 					int currentitemid = read<int>(g_pid, CurrentItemPawn + 0x18);
 					auto CurrentItemPawnName = GetNameFromFName(currentitemid);
 
-					if (strstr(CurrentItemPawnName.c_str(), (XorStr("WestSausage")).c_str()) || (g_loot && strstr(CurrentItemPawnName.c_str(), (XorStr("FortPickupAthena")).c_str())) || strstr(CurrentItemPawnName.c_str(), (XorStr("Tiered_Chest").c_str())) || strstr(CurrentItemPawnName.c_str(), (XorStr("Assualt").c_str()))
-						|| strstr(CurrentItemPawnName.c_str(), (XorStr("Athena_Shields").c_str())) || strstr(CurrentItemPawnName.c_str(), (XorStr("Tiered_Ammo").c_str())) ||
-						(g_vehicles && strstr(CurrentItemPawnName.c_str(), XorStr("Vehicl").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_Taxi").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BigRig").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicTr").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_SportsC").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicC").c_str()))
-						)
+					if ((g_loot && strstr(CurrentItemPawnName.c_str(), (XorStr("FortPickupAthena")).c_str())) || strstr(CurrentItemPawnName.c_str(), (XorStr("Tiered_Chest").c_str())) || 
+						(g_vehicles && strstr(CurrentItemPawnName.c_str(), XorStr("Vehicl").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_Taxi").c_str()) || 
+						strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BigRig").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicTr").c_str()) || 
+						strstr(CurrentItemPawnName.c_str(), XorStr("Valet_SportsC").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicC").c_str()))) 
 					{
 						LootEntity fnlEntity{ };
 						fnlEntity.CurrentActor = CurrentItemPawn;
 						fnlEntity.name = CurrentItemPawnName;
 						tmpList.push_back(fnlEntity);
 
-						foundPlayerCount++;
 					}
 				}
 
@@ -435,12 +400,9 @@ void CacheNew()
 
 		auto AActors2 = read<uintptr_t>(g_pid, PersistentLevel + 0x98);
 
-		int foundPlayerCount = 0;
 
 		for (int i = 0; i < ActorCount; ++i) {
 
-			if (foundPlayerCount >= maxPlayerCount)
-				break;
 
 			uintptr_t CurrentItemPawn = read<uintptr_t>(g_pid, AActors2 + (i * sizeof(uintptr_t)));
 
@@ -457,8 +419,6 @@ void CacheNew()
 				Actor.name = CurrentItemPawnName;
 				Actor.rootcomp = Globals::LocalPawnRootComponent;
 
-				foundPlayerCount++;
-
 				tmpList.push_back(Actor);
 			}
 		}
@@ -466,21 +426,16 @@ void CacheNew()
 		drawlootloop();
 		PLIST.clear();
 		PLIST = tmpList;
-	//	std::this_thread::sleep_for(std::chrono::milliseconds(1));
-
+		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 	}
-
-
 }
 
 bool isVisible(DWORD_PTR mesh)
 {
 	if (!mesh)
 		return false;
-	float fLastSubmitTime = read<float>(g_pid, mesh + 0x330);//Last_Submit_Time
-	float fLastRenderTimeOnScreen = read<float>(g_pid, mesh + 0x334);//Last_Render_Time
-	//if (!fLastRenderTimeOnScreen)
-	//	fLastRenderTimeOnScreen = read<float>(g_pid, mesh + 0x344);
+	float fLastSubmitTime = read<float>(g_pid, mesh + 0x330);
+	float fLastRenderTimeOnScreen = read<float>(g_pid, mesh + 0x334);
 
 	const float fVisionTick = 0.06f;
 	bool bVisible = fLastRenderTimeOnScreen + fVisionTick >= fLastSubmitTime;
@@ -582,20 +537,7 @@ void DrawLString(float fontSize, int x, int y, ImU32 color, bool bCenter, bool s
 	ImGui::GetOverlayDrawList()->AddText(ImGui::GetFont(), fontSize, ImVec2(x, y), color, text.c_str());
 }
 
-__forceinline Vector3 calc_angle(Vector3& Src, Vector3& Dst)
-{
-#define M_RADPIE	57.295779513082f
-	Vector3 Delta = Src - Dst;
-	Vector3 AimAngles;
-	float Hyp = sqrt(powf(Delta.x, 2.f) + powf(Delta.y, 2.f));
-	AimAngles.y = atanf(Delta.y / Delta.x) * M_RADPIE;
-	AimAngles.x = (atanf(Delta.z / Hyp) * M_RADPIE) * -1.f;
-	if (Delta.x >= 0.f) AimAngles.y += 180.f;
-	AimAngles.z = 0.f;
-	return AimAngles;
-}
-
-Vector3 galgan(Vector3& zaz, Vector3& daz) {
+Vector3 calc_angle(Vector3& zaz, Vector3& daz) {
 	Vector3 dalte = zaz - daz;
 	Vector3 ongle;
 	double hpm = sqrt(dalte.x * dalte.x + dalte.y * dalte.y);
@@ -604,6 +546,7 @@ Vector3 galgan(Vector3& zaz, Vector3& daz) {
 	if (dalte.x >= 0.f) ongle.y += 180;
 	return ongle;
 }
+
 void WriteAngles(Vector3 Location)
 {
 	auto camloc = read<Vector3>(g_pid, Globals::LocalPawnRootComponent + 0x128);
@@ -613,7 +556,7 @@ void WriteAngles(Vector3 Location)
 	static auto Ydefaultxmin = read<float>(g_pid, PlayerCameraManager + 0x318c);
 	static auto Ydefaultxmax = read<float>(g_pid, PlayerCameraManager + 0x3190);
 
-	Vector3 angles = galgan(camloc, Location);
+	Vector3 angles = calc_angle(camloc, Location);
 
 	write<float>(g_pid, PlayerCameraManager + 0x3184, angles.x + 1.f);
 	write<float>(g_pid, PlayerCameraManager + 0x3188, angles.x + 1.f);
@@ -625,23 +568,6 @@ void WriteAngles(Vector3 Location)
 	write<float>(g_pid, PlayerCameraManager + 0x318c, Ydefaultxmin);
 	write<float>(g_pid, PlayerCameraManager + 0x3190, Ydefaultxmax);
 }
-
-enum class EFortItemTier : uint8_t
-{
-	No_Tier = 0,
-	I = 1,
-	II = 2,
-	III = 3,
-	IV = 4,
-	V = 5,
-	VI = 6,
-	VII = 7,
-	VIII = 8,
-	IX = 9,
-	X = 10,
-	NumItemTierValues = 11,
-	EFortItemTier_MAX = 12
-};
 
 bool actorLoop() 
 {
@@ -766,7 +692,7 @@ bool actorLoop()
 			g_functions::ConvertWorld2Screen(identify);
 
 			uintptr_t RootComponent = read<uintptr_t>(g_pid, p.Acotr + 0x188);
-			Globals::LocalPlayerRelativeLocation = read<Vector3>(g_pid, p.rootcomp + 0x128); //0x11C
+			Globals::LocalPlayerRelativeLocation = read<Vector3>(g_pid, p.rootcomp + 0x128);
 
 			if (Globals::LocalPawn)
 			{
@@ -785,8 +711,7 @@ bool actorLoop()
 
 					camera::m_CameraRotation.x = degreees;
 
-
-					// set fov angle
+					//set fov angle
 					if (g_fovchanger)
 					{
 						FOVAngle = FOVChangerValue;
@@ -797,14 +722,13 @@ bool actorLoop()
 					}
 
 				};
-				SetupCameraRotationAndFov(Globals::LocalPlayer, Globals::LocalPawnRootComponent, camera::m_CameraRotation, camera::m_FovAngle); //RootComp
+				SetupCameraRotationAndFov(Globals::LocalPlayer, Globals::LocalPawnRootComponent, camera::m_CameraRotation, camera::m_FovAngle);
 			}
 			else {
 				// PlayerCameraManager -> LastFrameCameraCachePrivate -> POV -> Rotation && FOV
 				camera::m_CameraRotation = read<Vector3>(g_pid, PlayerCameraManager + 0x28E0 + 0x10 + 0x18);
-
-				//  PlayerCameraManager.LastFrameCameraCachePrivate      ->   0x28E0
 				camera::m_CameraRotation.z = 0;
+
 				if (g_fovchanger)
 				{
 					camera::m_FovAngle = FOVChangerValue;
@@ -828,14 +752,13 @@ bool actorLoop()
 			SetupCameraLocation(Globals::LocalPlayer, camera::m_CameraLocation);
 
 
-			uint64_t playerstate = read<uint64_t>(g_pid, p.Acotr + 0x2A0); //0x2B8
+			uint64_t playerstate = read<uint64_t>(g_pid, p.Acotr + 0x2A0); 
 
 			int TeamIndex = read<int>(g_pid, playerstate + 0x1020);
 
 			if (g_fovchanger)
 			{
-				auto fov = PlayerCameraManager + 0x298; //0x2A4 
-				write(g_pid, fov, FOVChangerValue);
+				auto fov = PlayerCameraManager + 0x298;write(g_pid, fov, FOVChangerValue);
 			}
 
 			Vector3 vHeadBone = g_functions::f_getbonewithIndex(p.Acotrmesh, 98);
@@ -866,36 +789,35 @@ bool actorLoop()
 
 			if (g_playerfly)
 			{
-				write<float>(g_pid, Globals::LocalPawn + 0x1ce4, 10.f);//0x1ce0
-				//write<bool>(g_pid, Globals::LocalPawn + 0x1c00 + 0x18, false);
+				write<float>(g_pid, Globals::LocalPawn + 0x1ce4, 10.f);
 				write<bool>(g_pid, Globals::LocalPawn + 0x1c00 + 0x18, true);
 			}
 
 			if (g_gun_tracers)
 			{
 				auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x7b0);
-				write<bool>(g_pid, CurrentWeapon + 0xaf0, false); //LastFireTime Offset
-				write<bool>(g_pid, CurrentWeapon + 0xaf1, false); //LastFireTime Offset
-				write<bool>(g_pid, CurrentWeapon + 0xb00, false); //LastFireTime Offset
-				write<bool>(g_pid, CurrentWeapon + 0xb02, false); //LastFireTime Offset
+				write<bool>(g_pid, CurrentWeapon + 0xaf0, false);
+				write<bool>(g_pid, CurrentWeapon + 0xaf1, false);
+				write<bool>(g_pid, CurrentWeapon + 0xb00, false);
+				write<bool>(g_pid, CurrentWeapon + 0xb02, false);
 			}
 
 			if (g_disable_gunshots)
 			{
 				auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x7b0);
-				write<bool>(g_pid, CurrentWeapon + 0x5a1, true); //LastFireTime Offset
-				write<float>(g_pid, CurrentWeapon + 0xb04, 0.003); //LastFireTime Offset
-				write<float>(g_pid, CurrentWeapon + 0x410, false); //LastFireTime Offset
-				write<float>(g_pid, CurrentWeapon + 0x630, true); //LastFireTime Offset
-				write<bool>(g_pid, CurrentWeapon + 0xa90, false); //LastFireTime Offset
-				write<bool>(g_pid, CurrentWeapon + 0xa91, false); //LastFireTime Offset
+				write<bool>(g_pid, CurrentWeapon + 0x5a1, true);
+				write<float>(g_pid, CurrentWeapon + 0xb04, 0.003);
+				write<float>(g_pid, CurrentWeapon + 0x410, false);
+				write<float>(g_pid, CurrentWeapon + 0x630, true);
+				write<bool>(g_pid, CurrentWeapon + 0xa90, false);
+				write<bool>(g_pid, CurrentWeapon + 0xa91, false);
 			}
 
 			if (g_name_esp)
 			{
 				//APlayerState	PlayerNamePrivate	0x370	FString
 				uint64_t APlayerState = read<uint64_t>(g_pid, Globals::LocalPawn + 0x0);
-				auto nameptr = read<uintptr_t>(g_pid, enemyplayerstate + 0x370);
+				auto nameptr = read<uintptr_t>(g_pid, APlayerState + 0x370);
 
 				uint64_t StringData = read<uint64_t>(g_pid, nameptr); //FString -> Data (0x0)
 				uint32_t StringLength = read<uint32_t>(g_pid, nameptr + 0x8); //FString -> Count (0x8)
@@ -911,7 +833,7 @@ bool actorLoop()
 			{
 				//AFortPlayerState	Platform	0x420	FString
 				uint64_t AFortPlayerState = read<uint64_t>(g_pid, Globals::LocalPawn + 0x0);
-				auto nameptr = read<uintptr_t>(g_pid, enemyplayerstate + 0x420);
+				auto nameptr = read<uintptr_t>(g_pid, AFortPlayerState + 0x420);
 
 				uint64_t StringData = read<uint64_t>(g_pid, nameptr); //FString -> Data (0x0)
 				uint32_t StringLength = read<uint32_t>(g_pid, nameptr + 0x8); //FString -> Count (0x8)
@@ -992,10 +914,9 @@ bool actorLoop()
 
 				if (ItemDist < bLootRendering) {
 
-					auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x7A0);//
-					auto ItemData = read<DWORD_PTR>(g_pid, CurrentWeapon + 0x3E8);//
+					auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x7A0);//AFortPawn	CurrentWeapon	0x7b0	AFortWeapon*
+					auto ItemData = read<DWORD_PTR>(g_pid, CurrentWeapon + 0x3E8);
 
-				//	auto definition = read<uint64_t>(g_pid, entity.CurrentActor + 0x308 + 0x18);
 					BYTE tier;
 					tier = read<BYTE>(g_pid, ItemData + 0x74);
 					ImColor Color;
@@ -1024,7 +945,7 @@ bool actorLoop()
 						Color = IM_COL32(255, 255, 255, 255); // p
 					}
 
-					auto AmmoCount = read<int>(g_pid, CurrentWeapon + 0xB24);
+					auto AmmoCount = read<int>(g_pid, CurrentWeapon + 0xB24);//AFortWeapon	AmmoCount	0xb3c	int32_t
 
 
 					auto bIsReloadingWeapon = read<bool>(g_pid, CurrentWeapon + 0x321);
@@ -1034,9 +955,6 @@ bool actorLoop()
 					wchar_t* WeaponName = new wchar_t[uint64_t(WeaponLength) + 1];
 
 					Drive.ReadPtr(g_pid, (ULONG64)read<PVOID>(g_pid, DisplayName + 0x30), WeaponName, WeaponLength * sizeof(wchar_t));
-
-					//AFortWeapon	AmmoCount	0xb3c	int32_t
-					//AFortPawn	CurrentWeapon	0x7b0	AFortWeapon*
 
 					std::string Text = wchar_to_char(WeaponName);
 
@@ -1171,12 +1089,8 @@ bool actorLoop()
 						{
 							ESPSkeleton = { 255, 255, 255, 255 };
 						}
-						//vHeadBoneOut
-					//	DrawLine(vneck.x, vneck.y, vleftChest.x, vleftChest.y, &ESPSkeleton, 0.5f);
+
 						DrawLine(vleftChest.x, vleftChest.y, vrightChest.x, vrightChest.y, &ESPSkeleton, 0.5f);
-
-
-
 						DrawLine(vleftChest.x, vleftChest.y, vleftShoulder.x, vleftShoulder.y, &ESPSkeleton, 0.5f);
 						DrawLine(vrightChest.x, vrightChest.y, vrightShoulder.x, vrightShoulder.y, &ESPSkeleton, 0.5f);
 						DrawLine(vleftShoulder.x, vleftShoulder.y, vleftElbow.x, vleftElbow.y, &ESPSkeleton, 0.5f);
@@ -1321,18 +1235,13 @@ bool actorLoop()
 							}
 							else if (g_mem_aim)
 							{
-								//FVector
 								Vector3 HeadPosition = g_functions::f_getbonewithIndex(AimbotMesh, 78);
-
-								//float ScreenLocationX = Head.x - Globals::ScreenCenterX, ScreenLocationY = Head.y - Globals::ScreenCenterY;
-								//ClosestActorMouseAimbotPosition = Vector3(HeadPosition.x, HeadPosition.y, 0);
 
 								if (!IsVec3Valid(HeadPosition))
 									return false;
-							//	WriteAngle(ClosestActorMouseAimbotPosition);
 
 								WriteAngles(HeadPosition);
-
+										
 							}
 
 							if (g_exploits_backtrack)
@@ -1542,9 +1451,6 @@ void runRenderTick() {
 	sprintf_s(dist, "FPS %.f\n", ImGui::GetIO().Framerate);
 	ImGui::GetOverlayDrawList()->AddText(ImVec2(15, 40), ImColor(cRainbow), dist);
 
-
-	//std::thread(color).detach();
-
 	if (g_overlay_visible)
 	{
 		cursor();
@@ -1577,12 +1483,9 @@ void runRenderTick() {
 
 			decoration();
 
-			//ImGui::SetWindowPos(ImVec2(0.0f, 0.0f));
-			//ImGui::SetWindowSize(ImVec2(800.0f, 450.0f));
 
 			static int Menu_Tab = 0; 1; 2; 3; 4;
 
-			//ImGui::Text("Fortnite External");
 			ImGui::SetCursorPos({ 17,29 });
 			if (ImGui::Button("Aimbot "))
 			{
@@ -1769,7 +1672,7 @@ void runRenderTick() {
 			{
 				ImGui::Spacing();
 				ImGui::SetCursorPos(ImVec2(140, 35));
-				ImGui::Checkbox(XorStr("Freeze Players").c_str(), &g_exploits_backtrack);
+				ImGui::Checkbox(XorStr("Backtrack").c_str(), &g_exploits_backtrack);
 				ImGui::SetCursorPos(ImVec2(140, 55));
 				ImGui::Checkbox(XorStr("Gun Tracers").c_str(), &g_gun_tracers);
 				ImGui::SetCursorPos(ImVec2(140, 75));
@@ -1869,98 +1772,6 @@ typedef bool (WINAPI* InjectMouseInput_t)(InjectedInputMouseInfo* inputs, int co
 HMODULE user32;
 InjectMouseInput_t InjectMouseInput;
 
-#include "Normal.h"
-#include "BezierCurve.h"
-#define __Mouse_H__
-#include <random>
-
-//Random Number Generator
-int Random(int lowerBound, int upperBound) {
-	std::random_device rd;
-	std::uniform_int_distribution<int> distribution(lowerBound, upperBound);
-	std::mt19937 engine(rd()); // Mersenne twister MT19937
-	int value = distribution(engine);
-	return value;
-}
-
-Normal targetDistribution;
-Normal midpointDistribution;
-
-//Standard mouse move function via SendInput
-void MouseMoveInternal(float x, float y) {
-	double fScreenWidth = ::GetSystemMetrics(SM_CXSCREEN);
-	double fScreenHeight = ::GetSystemMetrics(SM_CYSCREEN);
-	double fx = x * (65535.0f / fScreenWidth);
-	double fy = y * (65535.0f / fScreenHeight);
-
-	InjectedInputMouseInfo info = { 0 };
-	info.DeltaX = fx;
-	info.DeltaY = fy;
-	InjectMouseInput(&info, 1);
-}
-
-void MoveMouse(int x, int y) {
-	//Accuracy to desired pixel
-	int Acc = 3;
-
-	int targetX = x + (int)(Acc * targetDistribution.NextGaussian());
-	int targetY = y + (int)(Acc * targetDistribution.NextGaussian());
-
-	//Declare the original pointer position
-	POINT p;
-	GetCursorPos(&p);
-	int originalX = (int)p.x;
-	int originalY = (int)p.y;
-
-	//Find a mid point between original and target position
-	int midPointX = (x - targetX) / 2;
-	int midPointY = (y - targetY) / 2;
-
-	//Points normal to the straight line between start and end point
-	int factor = 6;
-	int bezierMidPointX = (int)((midPointX / factor) * (midpointDistribution.NextGaussian()));
-	int bezierMidPointY = (int)((midPointY / factor) * (midpointDistribution.NextGaussian()));
-
-	BezierCurve bc;
-	double input[] = { originalX, originalY, bezierMidPointX, bezierMidPointY, targetX, targetY };
-
-	//Change numberOfPoints for more or less control points
-	const int numberOfPoints = 500;
-
-	//Don't change numberOfDataPoints
-	const int numberOfDataPoints = numberOfPoints * 2;
-	double output[numberOfDataPoints];
-
-	//control points are couplets of two so / 2
-	bc.Bezier2D(input, numberOfDataPoints / 2, output);
-
-	/*for (int i = 0; i < 1000; i++){
-
-		std::cout << output[i] << std::endl;
-
-	}*/
-
-	//std::vector<POINT> points;
-	POINT A;
-
-	for (int count = 1; count != numberOfDataPoints - 1; count += 2)
-	{
-		A.x = (int)output[count + 1];
-		A.y = (int)output[count];
-
-		//points.push_back(A);
-
-		MouseMoveInternal((float)A.x, (float)A.y);
-
-		////Testing - sleep for a vaule between 0-20
-		Sleep(Random(0, 20));
-		////
-
-	}
-
-	//return points;
-}
-
 int main() {
 
 	user32 = LoadLibraryA("user32.dll");
@@ -2002,7 +1813,7 @@ int main() {
 
 	Drive.Init();
 
-	EnumWindows(retreiveValorantWindow, NULL);
+	EnumWindows(retreiveFortniteWindow, NULL);
 	if (!fortnite_wnd) {
 		std::cout << XorStr("Could not find Fortnite.\n");
 		system(XorStr("pause").c_str());
@@ -2057,8 +1868,6 @@ int main() {
 #include <thread>
 #include <Windows.h>
 
-
-
 void aimbot(float x, float y)
 {
 	float ScreenCenterX = (Globals::Width / 2);
@@ -2101,18 +1910,10 @@ void aimbot(float x, float y)
 		}
 	}
 
-	if (g_humanize)
-	{
-		MoveMouse(TargetX, TargetY);
-	}
-	else
-	{
-		InjectedInputMouseInfo info = { 0 };
-		info.DeltaX = TargetX;
-		info.DeltaY = TargetY;
-		InjectMouseInput(&info, 1);
-	}
-
+	InjectedInputMouseInfo info = { 0 };
+	info.DeltaX = TargetX;
+	info.DeltaY = TargetY;
+	InjectMouseInput(&info, 1);
 
 	return;
 }
