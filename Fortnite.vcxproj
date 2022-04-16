@@ -147,8 +147,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\dxSDK\Include;$(ProjectDir)include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -161,7 +161,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BezierCurve.cpp" />
     <ClCompile Include="driverloader\file_utils.cpp" />
     <ClCompile Include="driverloader\singed.cpp" />
     <ClCompile Include="driverloader\service_utils.cpp" />
@@ -172,22 +171,16 @@
     <ClCompile Include="include\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="include\imgui\imgui_tables.cpp" />
     <ClCompile Include="include\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Normal.cpp" />
-    <ClCompile Include="RunMouse.cpp" />
     <ClCompile Include="signed.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BezierCurve.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="driverloader\file_utils.hpp" />
     <ClInclude Include="driverloader\singed.hpp" />
     <ClInclude Include="driverloader\raw_driver.hpp" />
     <ClInclude Include="driverloader\service_utils.hpp" />
     <ClInclude Include="font.h" />
-    <ClInclude Include="MouseModule.h" />
-    <ClInclude Include="Normal.h" />
-    <ClInclude Include="RunMouse.h" />
     <ClInclude Include="string.hpp" />
     <ClInclude Include="signed.h" />
     <ClInclude Include="utils.hpp" />

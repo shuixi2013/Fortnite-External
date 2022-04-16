@@ -35,15 +35,6 @@
     <ClCompile Include="driverloader\service_utils.cpp">
       <Filter>Driver\Loader</Filter>
     </ClCompile>
-    <ClCompile Include="BezierCurve.cpp">
-      <Filter>HumanAim</Filter>
-    </ClCompile>
-    <ClCompile Include="Normal.cpp">
-      <Filter>HumanAim</Filter>
-    </ClCompile>
-    <ClCompile Include="RunMouse.cpp">
-      <Filter>HumanAim</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils.hpp" />
@@ -65,16 +56,6 @@
     </ClInclude>
     <ClInclude Include="font.h" />
     <ClInclude Include="Controller.h" />
-    <ClInclude Include="BezierCurve.h">
-      <Filter>HumanAim</Filter>
-    </ClInclude>
-    <ClInclude Include="Normal.h">
-      <Filter>HumanAim</Filter>
-    </ClInclude>
-    <ClInclude Include="RunMouse.h">
-      <Filter>HumanAim</Filter>
-    </ClInclude>
-    <ClInclude Include="MouseModule.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Imgui">
@@ -85,9 +66,6 @@
     </Filter>
     <Filter Include="Driver\Loader">
       <UniqueIdentifier>{83b1fab2-b644-4a84-974c-23b1893d6d93}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="HumanAim">
-      <UniqueIdentifier>{b549a5dd-293a-4bd5-8b5b-3df01e829935}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

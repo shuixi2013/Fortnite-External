@@ -6,8 +6,6 @@
 
 Sandy64 Drive;
 
-
-
 uintptr_t getBaseAddress(uintptr_t pid) {
 	return Drive.GetModuleBase(pid, XorStr("FortniteClient-Win64-Shipping.exe").c_str());
 }
