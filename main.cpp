@@ -894,7 +894,7 @@ bool actorLoop()
 			if (g_name_esp)
 			{
 				//APlayerState	PlayerNamePrivate	0x370	FString
-				uint64_t enemyplayerstate = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2A0);
+				uint64_t APlayerState = read<uint64_t>(g_pid, Globals::LocalPawn + 0x0);
 				auto nameptr = read<uintptr_t>(g_pid, enemyplayerstate + 0x370);
 
 				uint64_t StringData = read<uint64_t>(g_pid, nameptr); //FString -> Data (0x0)
@@ -910,7 +910,7 @@ bool actorLoop()
 			if (g_platform_esp && CheckInScreen(p.Acotr, Globals::Width, Globals::Height))
 			{
 				//AFortPlayerState	Platform	0x420	FString
-				uint64_t enemyplayerstate = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2A0);
+				uint64_t AFortPlayerState = read<uint64_t>(g_pid, Globals::LocalPawn + 0x0);
 				auto nameptr = read<uintptr_t>(g_pid, enemyplayerstate + 0x420);
 
 				uint64_t StringData = read<uint64_t>(g_pid, nameptr); //FString -> Data (0x0)
