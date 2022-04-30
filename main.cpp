@@ -1,4 +1,7 @@
 /*
+	*Gloomy.cc
+ 	*https://github.com/Chase1803
+	
 	Copyright (c) 2022 Chase1803
 	Permission is hereby granted, free of charge, to any person
 	obtaining a copy of this software and associated documentation
@@ -18,12 +21,6 @@
 	WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 	OTHER DEALINGS IN THE SOFTWARE.
- */
-
- /*
-  * Gloomy.cc
-
-  * https://github.com/Chase1803
  */
 
 #include <iostream>
@@ -227,7 +224,7 @@ void CacheNew()
 
 		Globals::LocalPawn = read<uintptr_t>(g_pid, LocalPlayerController + 0x310);
 
-		Globals::LocalPawnRootComponent = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x188);//0x190
+		Globals::LocalPawnRootComponent = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x188);
 
 		uint64_t localplayerstate = read<uint64_t>(g_pid, Globals::LocalPawn + 0x290);
 
@@ -291,24 +288,7 @@ bool IsVec3Valid(Vector3 vec3)
 
 void WriteAngles(Vector3 Location)
 {
-	auto camloc = read<Vector3>(g_pid, Globals::LocalPawnRootComponent + 0x128);
-
-	static auto Pdefaultxmin = read<float>(g_pid, PlayerCameraManager + 0x3184);
-	static auto Pdefaultxmax = read<float>(g_pid, PlayerCameraManager + 0x3188);
-	static auto Ydefaultxmin = read<float>(g_pid, PlayerCameraManager + 0x318c);
-	static auto Ydefaultxmax = read<float>(g_pid, PlayerCameraManager + 0x3190);
-
-	Vector3 angles = calc_angle(camloc, Location);
-
-	write<float>(g_pid, PlayerCameraManager + 0x3184, angles.x + 1.f);
-	write<float>(g_pid, PlayerCameraManager + 0x3188, angles.x + 1.f);
-	write<float>(g_pid, PlayerCameraManager + 0x318c, angles.y - 2.f);
-	write<float>(g_pid, PlayerCameraManager + 0x3190, angles.y - 2.f);
-	Sleep(5);
-	write<float>(g_pid, PlayerCameraManager + 0x3184, Pdefaultxmin);
-	write<float>(g_pid, PlayerCameraManager + 0x3188, Pdefaultxmax);
-	write<float>(g_pid, PlayerCameraManager + 0x318c, Ydefaultxmin);
-	write<float>(g_pid, PlayerCameraManager + 0x3190, Ydefaultxmax);
+	//Depreciated
 }
 
 bool actorLoop() 
@@ -373,12 +353,11 @@ bool actorLoop()
 
 				else if (g_loot && strstr(entity.name.c_str(), ("FortPickupAthena")) && CheckInScreen(entity.CurrentActor, Globals::Width, Globals::Height))
 				{
-					BYTE tier;
 					if (ItemDist < bLootRendering) {
 
 						auto definition = read<uint64_t>(g_pid, entity.CurrentActor + 0x308 + 0x18);
 
-						tier = read<BYTE>(g_pid, definition + 0x74);
+						BYTE tier = read<BYTE>(g_pid, definition + 0x74);
 
 						RGBA Color;
 						RGBA RGBAColor;
@@ -388,8 +367,8 @@ bool actorLoop()
 
 						if (g_loot)
 						{
-							auto DisplayName = read<uint64_t>(g_pid, definition + 0x90); // DisplayName (FText)
-							auto WeaponLength = read<uint32_t>(g_pid, DisplayName + 0x38); // FText -> Length
+							auto DisplayName = read<uint64_t>(g_pid, definition + 0x90);
+							auto WeaponLength = read<uint32_t>(g_pid, DisplayName + 0x38);
 							wchar_t* WeaponName = new wchar_t[uint64_t(WeaponLength) + 1];
 
 							Drive.ReadPtr(g_pid, (ULONG64)read<PVOID>(g_pid, DisplayName + 0x30), WeaponName, WeaponLength * sizeof(wchar_t));
@@ -531,33 +510,33 @@ bool actorLoop()
 
 			if (g_playerfly)
 			{
-				write<float>(g_pid, Globals::LocalPawn + 0x1ce4, 10.f);
-				write<bool>(g_pid, Globals::LocalPawn + 0x1c00 + 0x18, true);
+				//write<float>(g_pid, Globals::LocalPawn + 0x1ce4, 10.f);
+				//write<bool>(g_pid, Globals::LocalPawn + 0x1c00 + 0x18, true);
 			}
 
 			if (g_gun_tracers)
 			{
-				auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x7b0);
-				write<bool>(g_pid, CurrentWeapon + 0xaf0, false);
-				write<bool>(g_pid, CurrentWeapon + 0xaf1, false);
-				write<bool>(g_pid, CurrentWeapon + 0xb00, false);
-				write<bool>(g_pid, CurrentWeapon + 0xb02, false);
+				//auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x7b0);
+				//write<bool>(g_pid, CurrentWeapon + 0xaf0, false);
+				//write<bool>(g_pid, CurrentWeapon + 0xaf1, false);
+				//write<bool>(g_pid, CurrentWeapon + 0xb00, false);
+				//write<bool>(g_pid, CurrentWeapon + 0xb02, false);
 			}
 
 			if (g_disable_gunshots)
 			{
-				auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x7b0);
-				write<bool>(g_pid, CurrentWeapon + 0x5a1, true);
-				write<float>(g_pid, CurrentWeapon + 0xb04, 0.003);
-				write<float>(g_pid, CurrentWeapon + 0x410, false);
-				write<float>(g_pid, CurrentWeapon + 0x630, true);
-				write<bool>(g_pid, CurrentWeapon + 0xa90, false);
-				write<bool>(g_pid, CurrentWeapon + 0xa91, false);
+				//auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x7b0);
+				//write<bool>(g_pid, CurrentWeapon + 0x5a1, true);
+				//write<float>(g_pid, CurrentWeapon + 0xb04, 0.003);
+				//write<float>(g_pid, CurrentWeapon + 0x410, false);
+				//write<float>(g_pid, CurrentWeapon + 0x630, true);
+				//write<bool>(g_pid, CurrentWeapon + 0xa90, false);
+				//write<bool>(g_pid, CurrentWeapon + 0xa91, false);
 			}
 
 			if (g_name_esp)
 			{
-				uint64_t APlayerState = read<uint64_t>(g_pid, Globals::LocalPawn + 0x0);//APlayerState	PlayerNamePrivate	0x370	FString
+				uint64_t APlayerState = read<uint64_t>(g_pid, 0x0);//APlayerState	PlayerNamePrivate	0x370	FString
 				auto nameptr = read<uintptr_t>(g_pid, APlayerState + 0x370);
 
 				uint64_t StringData = read<uint64_t>(g_pid, nameptr); //FString -> Data (0x0)
@@ -572,7 +551,7 @@ bool actorLoop()
 
 			if (g_platform_esp && CheckInScreen(p.Acotr, Globals::Width, Globals::Height))
 			{
-				uint64_t AFortPlayerState = read<uint64_t>(g_pid, Globals::LocalPawn + 0x0);//AFortPlayerState	Platform	0x420	FString
+				uint64_t AFortPlayerState = read<uint64_t>(g_pid, 0x0);//AFortPlayerState	Platform	0x420	FString
 				auto nameptr = read<uintptr_t>(g_pid, AFortPlayerState + 0x420);
 
 				uint64_t StringData = read<uint64_t>(g_pid, nameptr); //FString -> Data (0x0)
@@ -654,7 +633,7 @@ bool actorLoop()
 
 				if (ItemDist < bLootRendering) {
 
-					auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x790);//AFortPawn	CurrentWeapon	0x7b0	AFortWeapon*
+					auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x790);
 					auto ItemData = read<DWORD_PTR>(g_pid, CurrentWeapon + 0x3d8);
 
 					BYTE tier;
@@ -670,34 +649,30 @@ bool actorLoop()
 					}
 					else if ((tier == 4))
 					{
-						Color = IM_COL32(128, 0, 128, 255); // p
+						Color = IM_COL32(128, 0, 128, 255);
 					}
 					else if ((tier == 5))
 					{
-						Color = IM_COL32(255, 255, 0, 255); // p
+						Color = IM_COL32(255, 255, 0, 255);
 					}
 					else if ((tier == 6))
 					{
-						Color = IM_COL32(255, 255, 0, 255); // p
+						Color = IM_COL32(255, 255, 0, 255);
 					}
 					else if ((tier == 0) || (tier == 1))
 					{
-						Color = IM_COL32(255, 255, 255, 255); // p
+						Color = IM_COL32(255, 255, 255, 255);
 					}
 
-					auto AmmoCount = read<int>(g_pid, CurrentWeapon + 0xb14);//AFortWeapon	AmmoCount	0xb3c	int32_t
-
-
+					auto AmmoCount = read<int>(g_pid, CurrentWeapon + 0xb14);
 					auto bIsReloadingWeapon = read<bool>(g_pid, CurrentWeapon + 0x311);
 
-					auto DisplayName = read<uint64_t>(g_pid, ItemData + 0x90); // DisplayName (FText)
-					auto WeaponLength = read<uint32_t>(g_pid, DisplayName + 0x38); // FText -> Length
+					auto DisplayName = read<uint64_t>(g_pid, ItemData + 0x90);
+					auto WeaponLength = read<uint32_t>(g_pid, DisplayName + 0x38);
 					wchar_t* WeaponName = new wchar_t[uint64_t(WeaponLength) + 1];
 
 					Drive.ReadPtr(g_pid, (ULONG64)read<PVOID>(g_pid, DisplayName + 0x30), WeaponName, WeaponLength * sizeof(wchar_t));
-
 					std::string Text = wchar_to_char(WeaponName);
-
 
 					if (strstr(p.name.c_str(), "PlayerPawn_Athena_C"))
 					{
@@ -730,7 +705,6 @@ bool actorLoop()
 						{
 							ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x - 30, vpelvis.y), Color, Text.c_str());
 						}
-
 				}
 			}
 			int Teamcheck;
@@ -743,9 +717,6 @@ bool actorLoop()
 			{
 				Teamcheck = TeamIndex != LocalTeam; 
 			}
-
-
-			//auto isDying = (read<char>(g_pid, p.Acotr + 0x6a0) >> 2) & 1;
 
 			if (Teamcheck || InLobby) {
 
@@ -922,8 +893,6 @@ bool actorLoop()
 
 				auto isDBNO = (read<char>(g_pid, p.Acotr + 0x6f2) >> 4) & 1;
 
-
-
 				if (dist < bA1mb0tF0VV4lue && dist < closestDistance && TeamIndex != LocalTeam && !InLobby && CheckInScreen(p.Acotr, Globals::Width, Globals::Height))
 				{
 					if (g_skipknocked)
@@ -986,18 +955,13 @@ bool actorLoop()
 
 							if (g_exploits_backtrack)
 							{
-								if (GetAsyncKeyState(VK_LBUTTON)) {
-
-									float ItemDist = Globals::LocalPlayerRelativeLocation.Distance(Head) / 100.f;
-
-									auto fov = sqrtf(powf(Head.x, 4.0f) + powf(Head.y, 4.0f));
-									int setting = 2;
-
-									write<float>(g_pid, closestPawn + 0x64, 0.001f); // time dilation 0x98
+								if (GetAsyncKeyState(VK_LBUTTON)) 
+								{
+									//write<float>(g_pid, closestPawn + 0x64, 0.001f); // time dilation 0x98
 								}
 								else
 								{
-									write<float>(g_pid, closestPawn + 0x64, 1); // time dilation 0x98
+									//write<float>(g_pid, closestPawn + 0x64, 1); // time dilation 0x98
 								}
 							}
 						}
@@ -1302,24 +1266,24 @@ void runRenderTick() {
 			}
 			else if (Menu_Tab == 4) // Exploits Tab
 			{
-				ImGui::Spacing();
-				ImGui::SetCursorPos(ImVec2(140, 35));
-				ImGui::Checkbox(XorStr("Backtrack").c_str(), &g_exploits_backtrack);
-				ImGui::SetCursorPos(ImVec2(140, 55));
-				ImGui::Checkbox(XorStr("Gun Tracers").c_str(), &g_gun_tracers);
-				ImGui::SetCursorPos(ImVec2(140, 75));
-				ImGui::Checkbox(XorStr("Disable Gunshots").c_str(), &g_disable_gunshots);
-				ImGui::SetCursorPos(ImVec2(140, 95));
-				ImGui::Checkbox(XorStr("[TEST] Player Fly").c_str(), &g_playerfly);
+				//ImGui::Spacing();
+				//ImGui::SetCursorPos(ImVec2(140, 35));
+				//ImGui::Checkbox(XorStr("Backtrack").c_str(), &g_exploits_backtrack);
+				//ImGui::SetCursorPos(ImVec2(140, 55));
+				//ImGui::Checkbox(XorStr("Gun Tracers").c_str(), &g_gun_tracers);
+				//ImGui::SetCursorPos(ImVec2(140, 75));
+				//ImGui::Checkbox(XorStr("Disable Gunshots").c_str(), &g_disable_gunshots);
+				//ImGui::SetCursorPos(ImVec2(140, 95));
+				//ImGui::Checkbox(XorStr("[TEST] Player Fly").c_str(), &g_playerfly);
 
 				ImGui::PushItemWidth(180.f);
-				ImGui::SetCursorPos(ImVec2(140, 115));
+				ImGui::SetCursorPos(ImVec2(140, 35));
 				ImGui::Checkbox("Fov Changer", &g_fovchanger);
 				if (g_fovchanger)
 				{
-					ImGui::SetCursorPos(ImVec2(140, 135));
+					ImGui::SetCursorPos(ImVec2(140, 55));
 					ImGui::Text("FOV CHANGER");
-					ImGui::SetCursorPos(ImVec2(140, 150));
+					ImGui::SetCursorPos(ImVec2(140, 75));
 					ImGui::SliderFloat(("                 "), &FOVChangerValue, 90.0f, 170.0f, ("%.2f"));
 				}
 			}
@@ -1366,25 +1330,6 @@ void no_exec(std::string command)
 	GetExitCodeProcess(ShExecInfo.hProcess, &rv);
 	CloseHandle(ShExecInfo.hProcess);
 }
-
-enum InjectedInputMouseOptions
-{
-	Absolute = 32768,
-	HWheel = 4096,
-	LeftDown = 2,
-	LeftUp = 4,
-	MiddleDown = 32,
-	MiddleUp = 64,
-	Move = 1,
-	MoveNoCoalesce = 8192,
-	None = 0,
-	RightDown = 8,
-	RightUp = 16,
-	VirtualDesk = 16384,
-	Wheel = 2048,
-	XDown = 128,
-	XUp = 256
-};
 
 typedef struct _InjectedInputMouseInfo
 {
