@@ -5,14 +5,7 @@ HANDLE hDrive;
 
 BOOL Sandy64::Init()
 {
-
-	//Pid = d;
-
 	hDrive = ::CreateFileA(XorStr("\\\\.\\Sandy64").c_str(), GENERIC_ALL, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_HIDDEN, NULL);
-	//
-	//hDrive = ::CreateFileA(XorStr("\\\\.\\Sandy64").c_str(), GENERIC_READ | GENERIC_WRITE, NULL, NULL, OPEN_EXISTING, NULL, NULL);
-	//hDrive = CreateFileW(L"\\\\.\\Sandy64", GENERIC_READ | GENERIC_WRITE, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-	//::CloseHandle(hDrive);
 	return hDrive != 0;
 }
 ULONG64 Sandy64::GetModuleBase(ULONG ProcessPid, LPCSTR ModuleName)
