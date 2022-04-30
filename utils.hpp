@@ -534,30 +534,6 @@ namespace g_functions
 
 }
 
-
-bool CheckInScreen(uintptr_t CurrentActor, int Width, int Height) {
-	//Vector3 Pos;
-	//functions::get_bone(CurrentActor, 66, &Pos);
-	//Pos = g_functions::ConvertWorld2Screen(Pos);
-
-	Vector3 Posx = g_functions::f_getbonewithIndex(CurrentActor, 66);
-	Vector3 vPos = g_functions::ConvertWorld2Screen(Posx);
-
-	return true;
-	/*
-	if (CurrentActor)
-	{
-		if (((vPos.x <= 0 or vPos.x > Width) and (vPos.y <= 0 or vPos.y > Height)) or ((vPos.x <= 0 or vPos.x > Width) or (vPos.y <= 0 or vPos.y > Height))) {
-			return false;
-		}
-		else {
-			return true;
-		}
-
-	}*/
-}
-
-
 class Color
 {
 public:
