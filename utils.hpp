@@ -1,4 +1,7 @@
 /*
+	*Gloomy.cc
+ 	*https://github.com/Chase1803
+	
 	Copyright (c) 2022 Chase1803
 	Permission is hereby granted, free of charge, to any person
 	obtaining a copy of this software and associated documentation
@@ -18,12 +21,6 @@
 	WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 	OTHER DEALINGS IN THE SOFTWARE.
- */
-
- /*
-  * Gloomy.cc
-  * Made by Chase
-  * https://github.com/Chase1803
  */
 
 #pragma once
