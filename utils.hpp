@@ -513,7 +513,7 @@ static std::string ReadGetNameFromFName(int key) {
 	uint32_t ChunkOffset = (uint32_t)((int)(key) >> 16);
 	uint16_t NameOffset = (uint16_t)key;
  
-	uint64_t NamePoolChunk = reas<uint64_t>(g_pid, g_base_address + 0xC563880 + (8 * ChunkOffset) + 16) + (unsigned int)(4 * NameOffset); //((ChunkOffset + 2) * 8) ERROR_NAME_SIZE_EXCEEDED
+	uint64_t NamePoolChunk = read<uint64_t>(g_pid, g_base_address + 0xC563880 + (8 * ChunkOffset) + 16) + (unsigned int)(4 * NameOffset); //((ChunkOffset + 2) * 8) ERROR_NAME_SIZE_EXCEEDED
 	uint16_t nameEntry = read<uint16_t>(g_pid, NamePoolChunk);
  
 	int nameLength = nameEntry >> 6;
