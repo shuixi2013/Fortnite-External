@@ -166,15 +166,11 @@ void drawlootloop()
 			uintptr_t ItemLevel = read<uintptr_t>(g_pid, ItemLevels + (i * sizeof(uintptr_t)));
 
 			for (int i = 0; i < read<DWORD>(g_pid, ItemLevel + (0x98 + sizeof(PVOID))); ++i) {
-
-
 				uintptr_t ItemsPawns = read<uintptr_t>(g_pid, ItemLevel + 0x98);
 				uintptr_t CurrentItemPawn = read<uintptr_t>(g_pid, ItemsPawns + (i * sizeof(uintptr_t)));
-
 				uintptr_t ItemRootComponent = read<uintptr_t>(g_pid, CurrentItemPawn + 0x188);
 				Vector3 ItemPosition = read<Vector3>(g_pid, ItemRootComponent + 0x128);
 				float ItemDist = Globals::LocalPlayerRelativeLocation.Distance(ItemPosition) / 100.f;
-
 
 				if (ItemDist < bLootRendering) {
 
@@ -209,42 +205,28 @@ void CacheNew()
 		std::vector<Playertest> tmpList;
 
 		GWorld = read<uintptr_t>(g_pid, pattern_uworld);
-
 		uintptr_t PersistentLevel = read<uintptr_t>(g_pid, GWorld + 0x30);
-
 		uintptr_t GameInstance = read<uintptr_t>(g_pid, GWorld + 0x190);
-
 		uintptr_t LocalPlayers = read<uintptr_t>(g_pid, GameInstance + 0x38);
-
 		Globals::LocalPlayer = read<uintptr_t>(g_pid, LocalPlayers);
-
+		
 		LocalPlayerController = read<uintptr_t>(g_pid, Globals::LocalPlayer + 0x30);
-
 		PlayerCameraManager = read<uint64_t>(g_pid, LocalPlayerController + 0x328);
-
 		Globals::LocalPawn = read<uintptr_t>(g_pid, LocalPlayerController + 0x310);
-
 		Globals::LocalPawnRootComponent = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x188);
-
 		uint64_t localplayerstate = read<uint64_t>(g_pid, Globals::LocalPawn + 0x290);
-
 		LocalTeam = read<int>(g_pid, localplayerstate + 0x1010);
 
 		InLobby = false;
 		if (!Globals::LocalPawn) InLobby = true;
 
 		auto ActorCount = read<DWORD>(g_pid, PersistentLevel + 0xA0);
-
 		auto AActors2 = read<uintptr_t>(g_pid, PersistentLevel + 0x98);
-
-
+		
 		for (int i = 0; i < ActorCount; ++i) {
-
-
 			uintptr_t CurrentItemPawn = read<uintptr_t>(g_pid, AActors2 + (i * sizeof(uintptr_t)));
-
+			
 			int CurrentItemId = read<int>(g_pid, CurrentItemPawn + 0x18);
-
 			auto CurrentItemPawnName = GetNameFromFName(CurrentItemId);
 
 			if (strstr(CurrentItemPawnName.c_str(), "PlayerPawn_Athena_C") || strstr(CurrentItemPawnName.c_str(), "PlayerPawn"))
@@ -506,32 +488,6 @@ bool actorLoop()
 			}
 
 			distance = Globals::LocalPlayerRelativeLocation.Distance(RelativeInternalLocation) / 100.f;
-
-			if (g_playerfly)
-			{
-				//write<float>(g_pid, Globals::LocalPawn + 0x1ce4, 10.f);
-				//write<bool>(g_pid, Globals::LocalPawn + 0x1c00 + 0x18, true);
-			}
-
-			if (g_gun_tracers)
-			{
-				//auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x7b0);
-				//write<bool>(g_pid, CurrentWeapon + 0xaf0, false);
-				//write<bool>(g_pid, CurrentWeapon + 0xaf1, false);
-				//write<bool>(g_pid, CurrentWeapon + 0xb00, false);
-				//write<bool>(g_pid, CurrentWeapon + 0xb02, false);
-			}
-
-			if (g_disable_gunshots)
-			{
-				//auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x7b0);
-				//write<bool>(g_pid, CurrentWeapon + 0x5a1, true);
-				//write<float>(g_pid, CurrentWeapon + 0xb04, 0.003);
-				//write<float>(g_pid, CurrentWeapon + 0x410, false);
-				//write<float>(g_pid, CurrentWeapon + 0x630, true);
-				//write<bool>(g_pid, CurrentWeapon + 0xa90, false);
-				//write<bool>(g_pid, CurrentWeapon + 0xa91, false);
-			}
 
 			if (g_name_esp)
 			{
