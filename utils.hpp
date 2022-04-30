@@ -509,14 +509,13 @@ __int64 __fastcall sub_7FF6119D0ED0(unsigned __int16 *a1, _WORD *a2)
 }
 */
 
-static std::string RealGetNameFromFName(int key)
-{
+static std::string ReadGetNameFromFName(int key) {
 	uint32_t ChunkOffset = (uint32_t)((int)(key) >> 16);
 	uint16_t NameOffset = (uint16_t)key;
-
-	uint64_t NamePoolChunk = read<uint64_t>(g_pid, g_base_address + 0xC42D200 + (8 * ChunkOffset) + 16) + (unsigned int)(4 * NameOffset); //((ChunkOffset + 2) * 8) ERROR_NAME_SIZE_EXCEEDED
+ 
+	uint64_t NamePoolChunk = reas<uint64_t>(g_pid, g_base_address + 0xC563880 + (8 * ChunkOffset) + 16) + (unsigned int)(4 * NameOffset); //((ChunkOffset + 2) * 8) ERROR_NAME_SIZE_EXCEEDED
 	uint16_t nameEntry = read<uint16_t>(g_pid, NamePoolChunk);
-
+ 
 	int nameLength = nameEntry >> 6;
 	char buff[1024];
 	if ((uint32_t)nameLength)
@@ -530,21 +529,21 @@ static std::string RealGetNameFromFName(int key)
 		unsigned int v5; // eax
 		__int64 result; // rax
 		int v7; // ecx
-		unsigned int v8; // kr00_4
+		char v8; // kr00_4
 		__int64 v9; // ecx
-
+ 
 		v5 = 0;
-		result = 28i64;
+		result = 30i64;
 		if (v4)
 		{
 			do
 			{
+				v7 = v5 | result;
 				++v2;
-				v7 = v5++ | 0xB000;
-				v8 = v7 + result;
-				BYTE(v7) = v8 ^ ~*(BYTE*)(v2 - 1);
-				result = v8 >> 2;
-				*(BYTE*)(v2 - 1) = v7;
+				++v5;
+				v8 = ~(BYTE)v7;
+				result = (unsigned int)(2 * v7);
+				*(v2 - 1) ^= v8;
 			} while (v5 < v4);
 		}
 		buff[nameLength] = '\0';
@@ -555,21 +554,21 @@ static std::string RealGetNameFromFName(int key)
 		return "";
 	}
 }
-
+ 
 static std::string GetNameFromFName(int key)
 {
 	uint32_t ChunkOffset = (uint32_t)((int)(key) >> 16);
 	uint16_t NameOffset = (uint16_t)key;
-
-	uint64_t NamePoolChunk = read<uint64_t>(g_pid, g_base_address + 0xC42D200 + (8 * ChunkOffset) + 16) + (unsigned int)(4 * NameOffset); //((ChunkOffset + 2) * 8) ERROR_NAME_SIZE_EXCEEDED
+ 
+	uint64_t NamePoolChunk = read<uint64_t>(g_pid, g_base_address + 0xC563880 + (8 * ChunkOffset) + 16) + (unsigned int)(4 * NameOffset); //((ChunkOffset + 2) * 8) ERROR_NAME_SIZE_EXCEEDED
 	if (read<uint16_t>(g_pid, NamePoolChunk) < 64)
 	{
 		auto a1 = read<DWORD>(g_pid, NamePoolChunk + 4);
-		return RealGetNameFromFName(a1);
+		return ReadGetNameFromFName(a1);
 	}
 	else
 	{
-		return RealGetNameFromFName(key);
+		return ReadGetNameFromFName(key);
 	}
 }
 
