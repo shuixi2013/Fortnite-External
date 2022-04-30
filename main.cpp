@@ -500,7 +500,7 @@ bool actorLoop()
 
 			if (g_fovchanger)
 			{
-				auto fov = PlayerCameraManager + 0x288;write(g_pid, fov, FOVChangerValue);
+				write(g_pid, PlayerCameraManager + 0x288, FOVChangerValue);
 			}
 
 			Vector3 vHeadBone = g_functions::f_getbonewithIndex(p.Acotrmesh, 98);
