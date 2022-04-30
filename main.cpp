@@ -312,7 +312,7 @@ bool actorLoop()
 				auto IsSearched = read<BYTE>(g_pid, (uintptr_t)entity.CurrentActor + 0xf51);
 				if (IsSearched >> 7 & 1) continue;
 
-				if (strstr(entity.name.c_str(), ("Tiered_Chest")) && g_chests && CheckInScreen(entity.CurrentActor, Globals::Width, Globals::Height))
+				if (strstr(entity.name.c_str(), ("Tiered_Chest")) && g_chests)
 				{
 					if (ItemDist < bLootRendering) {
 						Vector3 ChestPosition;
@@ -323,13 +323,13 @@ bool actorLoop()
 				}
 				else if ((g_vehicles && (strstr(entity.name.c_str(), XorStr("Vehicl").c_str()) || strstr(entity.name.c_str(), XorStr("Valet_Taxi").c_str()) || strstr(entity.name.c_str(), XorStr("Valet_BigRig").c_str()) || strstr(entity.name.c_str(), XorStr("Valet_BasicTr").c_str()) || strstr(entity.name.c_str(), XorStr("Valet_SportsC").c_str()) || strstr(entity.name.c_str(), XorStr("Valet_BasicC").c_str()))))
 				{
-					if (ItemDist < bLootRendering && CheckInScreen(entity.CurrentActor, Globals::Width, Globals::Height)) {
+					if (ItemDist < bLootRendering) {
 						Vector3 VehiclePosition = g_functions::ConvertWorld2Screen(ItemPosition);
 						std::string Text = null + ("Vehicle [") + std::to_string((int)ItemDist) + ("m]");
 						DrawString(14, VehiclePosition.x, VehiclePosition.y, &Col.red, true, true, Text.c_str());
 					}
 				}
-				else if (strstr(entity.name.c_str(), ("AthenaSupplyDrop_C")) && g_loot && CheckInScreen(entity.CurrentActor, Globals::Width, Globals::Height))
+				else if (strstr(entity.name.c_str(), ("AthenaSupplyDrop_C")) && g_loot)
 				{
 					if (ItemDist < bLootRendering) {
 						Vector3 ChestPosition;
@@ -340,7 +340,7 @@ bool actorLoop()
 
 					}
 				}
-				else if (strstr(entity.name.c_str(), ("Tiered_Ammo")) && g_ammo && CheckInScreen(entity.CurrentActor, Globals::Width, Globals::Height))
+				else if (strstr(entity.name.c_str(), ("Tiered_Ammo")) && g_ammo)
 				{
 					if (ItemDist < bLootRendering) {
 						Vector3 ChestPosition;
@@ -351,7 +351,7 @@ bool actorLoop()
 					}
 				}
 
-				else if (g_loot && strstr(entity.name.c_str(), ("FortPickupAthena")) && CheckInScreen(entity.CurrentActor, Globals::Width, Globals::Height))
+				else if (g_loot && strstr(entity.name.c_str(), ("FortPickupAthena")))
 				{
 					if (ItemDist < bLootRendering) {
 
@@ -456,7 +456,7 @@ bool actorLoop()
 				}
 				else
 				{
-					camera::m_FovAngle = read<float>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x30); //0x2180
+					camera::m_FovAngle = read<float>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x30);
 				}
 			}
 
@@ -539,8 +539,8 @@ bool actorLoop()
 				uint64_t APlayerState = read<uint64_t>(g_pid, 0x0);//APlayerState	PlayerNamePrivate	0x370	FString
 				auto nameptr = read<uintptr_t>(g_pid, APlayerState + 0x370);
 
-				uint64_t StringData = read<uint64_t>(g_pid, nameptr); //FString -> Data (0x0)
-				uint32_t StringLength = read<uint32_t>(g_pid, nameptr + 0x8); //FString -> Count (0x8)
+				uint64_t StringData = read<uint64_t>(g_pid, nameptr);
+				uint32_t StringLength = read<uint32_t>(g_pid, nameptr + 0x8);
 				wchar_t* OutString = new wchar_t[StringLength + 1];
 				Drive.ReadPtr(g_pid, StringData, OutString, StringLength * sizeof(wchar_t));
 
@@ -549,20 +549,17 @@ bool actorLoop()
 				DrawString(13, vHeadBoneOut.x, vHeadBoneOut.y - 50, &Col.white, true, true, Text.c_str());
 			}
 
-			if (g_platform_esp && CheckInScreen(p.Acotr, Globals::Width, Globals::Height))
+			if (g_platform_esp)
 			{
 				uint64_t AFortPlayerState = read<uint64_t>(g_pid, 0x0);//AFortPlayerState	Platform	0x420	FString
 				auto nameptr = read<uintptr_t>(g_pid, AFortPlayerState + 0x420);
 
-				uint64_t StringData = read<uint64_t>(g_pid, nameptr); //FString -> Data (0x0)
-				uint32_t StringLength = read<uint32_t>(g_pid, nameptr + 0x8); //FString -> Count (0x8)
+				uint64_t StringData = read<uint64_t>(g_pid, nameptr);
+				uint32_t StringLength = read<uint32_t>(g_pid, nameptr + 0x8);
 				wchar_t* OutString = new wchar_t[StringLength + 1];
 				Drive.ReadPtr(g_pid, StringData, OutString, StringLength * sizeof(wchar_t));
-
-
+				
 				std::string Text = wchar_to_char(OutString);
-
-				//std::cout << namehaha << "\n";
 				
 				if (strstr(Text.c_str(), ("WIN")))
 				{
@@ -625,7 +622,7 @@ bool actorLoop()
 			Skellll = { 255, 255, 255, 255 };
 			DrawLine(vneck2.x, vneck2.y, vpelvis.x, vpelvis.y, &Skellll, 0.5f);
 
-			if (g_curweaponesp && CheckInScreen(p.Acotr, Globals::Width, Globals::Height))
+			if (g_curweaponesp)
 			{
 				uintptr_t ItemRootComponent = read<uintptr_t>(g_pid, p.Acotr + 0x188);
 				Vector3 ItemPosition = read<Vector3>(g_pid, ItemRootComponent + 0x128);
@@ -722,7 +719,7 @@ bool actorLoop()
 
 				isVis = isVisible(p.Acotrmesh);
 				if (distance <= bE5pD1st4nce || InLobby) {
-					if (g_boxesp && CheckInScreen(p.Acotr, Globals::Width, Globals::Height))
+					if (g_boxesp)
 					{
 						if (isVis)
 						{
@@ -733,7 +730,7 @@ bool actorLoop()
 							DrawNormalBox(vRootBoneOut.x - (BoxWidth / 2), vHeadBoneOut.y, BoxWidth, BoxHeight, 1.0f, &ESPColor, &ESPColor);
 						}
 					}
-					else if (g_cornerboxesp && CheckInScreen(p.Acotr, Globals::Width, Globals::Height))
+					else if (g_cornerboxesp)
 					{
 						if (isVis)
 						{
@@ -744,7 +741,7 @@ bool actorLoop()
 							DrawCorneredBox(vRootBoneOut.x - (BoxWidth / 2), vHeadBoneOut.y, BoxWidth, BoxHeight, IM_COL32(255, 255, 255, 255), 1.5);
 						}
 					}
-					if (g_esp_distance && CheckInScreen(p.Acotr, Globals::Width, Globals::Height)) {
+					if (g_esp_distance) {
 
 						char dist[64];
 						sprintf_s(dist, "%.fM", distance);
@@ -752,7 +749,7 @@ bool actorLoop()
 						ImVec2 TextSize = ImGui::CalcTextSize(dist);
 						ImGui::GetOverlayDrawList()->AddText(ImVec2(vRootBoneOut.x - 15 - TextSize.x / 2, vRootBoneOut.y - 15 - TextSize.y / 2), ImGui::GetColorU32({ 255, 255, 255, 255 }), dist);
 					}
-					if (g_esp_skeleton && CheckInScreen(p.Acotr, Globals::Width, Globals::Height)) {
+					if (g_esp_skeleton) {
 
 						Vector3 neck2 = g_functions::f_getbonewithIndex(p.Acotrmesh, 98);
 						Vector3 vneck2 = g_functions::ConvertWorld2Screen(neck2);
@@ -817,7 +814,7 @@ bool actorLoop()
 						DrawLine(vrightKnee.x, vrightKnee.y, vrightAnkle.x, vrightAnkle.y, &ESPSkeleton, 0.5f);
 					}
 
-					if (g_3d_box && CheckInScreen(p.Acotr, Globals::Width, Globals::Height))
+					if (g_3d_box)
 					{
 
 						if (vHeadBoneOut.x != 0 || vHeadBoneOut.y != 0 || vHeadBoneOut.z != 0)
@@ -861,7 +858,7 @@ bool actorLoop()
 						}
 					}
 
-					if (g_lineesp && CheckInScreen(p.Acotr, Globals::Width, Globals::Height))
+					if (g_lineesp)
 					{
 
 						ImU32 LineColor;
@@ -893,7 +890,7 @@ bool actorLoop()
 
 				auto isDBNO = (read<char>(g_pid, p.Acotr + 0x6f2) >> 4) & 1;
 
-				if (dist < bA1mb0tF0VV4lue && dist < closestDistance && TeamIndex != LocalTeam && !InLobby && CheckInScreen(p.Acotr, Globals::Width, Globals::Height))
+				if (dist < bA1mb0tF0VV4lue && dist < closestDistance && TeamIndex != LocalTeam && !InLobby)
 				{
 					if (g_skipknocked)
 					{
@@ -918,10 +915,6 @@ bool actorLoop()
 			{
 				if (g_aimbot)
 				{
-					targetlocked = true;
-
-					RGBA ESPTargetLine = { 255, 0, 0, 255 };
-
 					uint64_t AimbotMesh = read<uint64_t>(g_pid, closestPawn + 0x2F0);
 					if (!AimbotMesh)
 						return false;
@@ -942,6 +935,7 @@ bool actorLoop()
 							{
 								aimbot(Head.x, Head.y);
 							}
+							/*
 							else if (g_mem_aim)
 							{
 								Vector3 HeadPosition = g_functions::f_getbonewithIndex(AimbotMesh, 78);
@@ -949,7 +943,7 @@ bool actorLoop()
 								if (!IsVec3Valid(HeadPosition))
 									return false;
 
-								WriteAngles(HeadPosition);
+								//WriteAngles(HeadPosition);
 
 							}
 
@@ -963,7 +957,7 @@ bool actorLoop()
 								{
 									//write<float>(g_pid, closestPawn + 0x64, 1); // time dilation 0x98
 								}
-							}
+							}*/
 						}
 
 					}
@@ -971,9 +965,6 @@ bool actorLoop()
 			}
 			else
 			{
-				isaimbotting = false;
-				targetlocked = false;
-
 				closestDistance = FLT_MAX;
 				closestPawn = NULL;
 			}
