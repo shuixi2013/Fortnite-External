@@ -1,5 +1,5 @@
 # Fortnite-Selfleak
 
 Gloomy.cc - 
-Fortnite External with some good features using OpenGL
+Fortnite External Cheat with some good features using OpenGL
 
