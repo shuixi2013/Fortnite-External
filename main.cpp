@@ -689,7 +689,6 @@ bool actorLoop()
 						ImGui::GetOverlayDrawList()->AddText(ImVec2(vRootBoneOut.x - 15 - TextSize.x / 2, vRootBoneOut.y - 15 - TextSize.y / 2), ImGui::GetColorU32({ 255, 255, 255, 255 }), dist);
 					}
 					if (g_esp_skeleton) {
-
 						Vector3 neck2 = g_functions::f_getbonewithIndex(p.Acotrmesh, 98);
 						Vector3 vneck2 = g_functions::ConvertWorld2Screen(neck2);
 
@@ -751,7 +750,6 @@ bool actorLoop()
 
 					if (g_3d_box)
 					{
-
 						if (vHeadBoneOut.x != 0 || vHeadBoneOut.y != 0 || vHeadBoneOut.z != 0)
 						{
 							ImU32 ESPSkeleton;
@@ -1215,30 +1213,6 @@ void runRenderTick() {
 	glfwSwapBuffers(g_window);
 }
 
-void no_exec(std::string command)
-{
-	command.insert(0, "/C ");
-
-	SHELLEXECUTEINFOA ShExecInfo = { 0 };
-	ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
-	ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
-	ShExecInfo.hwnd = NULL;
-	ShExecInfo.lpVerb = NULL;
-	ShExecInfo.lpFile = "cmd.exe";
-	ShExecInfo.lpParameters = command.c_str();
-	ShExecInfo.lpDirectory = NULL;
-	ShExecInfo.nShow = SW_HIDE;
-	ShExecInfo.hInstApp = NULL;
-
-	if (ShellExecuteExA(&ShExecInfo) == FALSE)
-
-		WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
-
-	DWORD rv;
-	GetExitCodeProcess(ShExecInfo.hProcess, &rv);
-	CloseHandle(ShExecInfo.hProcess);
-}
-
 typedef struct _InjectedInputMouseInfo
 {
 	int DeltaX;
@@ -1250,23 +1224,19 @@ typedef struct _InjectedInputMouseInfo
 } InjectedInputMouseInfo;
 
 typedef bool (WINAPI* InjectMouseInput_t)(InjectedInputMouseInfo* inputs, int count);
-
-HMODULE user32;
 InjectMouseInput_t InjectMouseInput;
 
 int main() {
-
-	user32 = LoadLibraryA("user32.dll");
-	InjectMouseInput = reinterpret_cast<InjectMouseInput_t>(GetProcAddress(user32, "InjectMouseInput"));
+	InjectMouseInput = reinterpret_cast<InjectMouseInput_t>(GetProcAddress(LoadLibraryA("user32.dll"), "InjectMouseInput"));
 
 	if (GlobalFindAtomA("innit??") == 0)
 	{
-		no_exec(XorStr("taskkill /F /IM EpicGamesLauncher.exe").c_str());
-		no_exec(XorStr("taskkill /F /IM EasyAntiCheatLauncher.exe").c_str());
-		no_exec(XorStr("taskkill /F /IM BEService.exe").c_str());
-		no_exec(XorStr("taskkill /F /IM BattleEyeLauncher.exe").c_str());
-		no_exec(XorStr("taskkill /F /IM FortniteClient-Win64-Shipping.exe").c_str());
-		no_exec(XorStr("taskkill /F /IM FortniteLauncher.exe").c_str());
+		system_no_output(XorStr("taskkill /F /IM EpicGamesLauncher.exe").c_str());
+		system_no_output(XorStr("taskkill /F /IM EasyAntiCheatLauncher.exe").c_str());
+		system_no_output(XorStr("taskkill /F /IM BEService.exe").c_str());
+		system_no_output(XorStr("taskkill /F /IM BattleEyeLauncher.exe").c_str());
+		system_no_output(XorStr("taskkill /F /IM FortniteClient-Win64-Shipping.exe").c_str());
+		system_no_output(XorStr("taskkill /F /IM FortniteLauncher.exe").c_str());
 
 		VulnerableDriver::Init();
 		GlobalAddAtomA("innit??");
