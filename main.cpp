@@ -225,13 +225,13 @@ void CacheNew()
 
 		PlayerCameraManager = read<uint64_t>(g_pid, LocalPlayerController + 0x328);
 
-		Globals::LocalPawn = read<uintptr_t>(g_pid, LocalPlayerController + 0x320);
+		Globals::LocalPawn = read<uintptr_t>(g_pid, LocalPlayerController + 0x310);
 
 		Globals::LocalPawnRootComponent = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x188);//0x190
 
-		uint64_t localplayerstate = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2A0);
+		uint64_t localplayerstate = read<uint64_t>(g_pid, Globals::LocalPawn + 0x290);
 
-		LocalTeam = read<int>(g_pid, localplayerstate + 0x1020);
+		LocalTeam = read<int>(g_pid, localplayerstate + 0x1010);
 
 		InLobby = false;
 		if (!Globals::LocalPawn) InLobby = true;
@@ -255,7 +255,7 @@ void CacheNew()
 				Playertest Actor{ };
 
 				Actor.Acotr = CurrentItemPawn;
-				Actor.Acotrmesh = read<uint64_t>(g_pid, CurrentItemPawn + 0x300);
+				Actor.Acotrmesh = read<uint64_t>(g_pid, CurrentItemPawn + 0x2F0);
 				Actor.name = CurrentItemPawnName;
 				Actor.rootcomp = Globals::LocalPawnRootComponent;
 
@@ -275,7 +275,7 @@ bool isVisible(DWORD_PTR mesh)
 	if (!mesh)
 		return false;
 	float fLastSubmitTime = read<float>(g_pid, mesh + 0x330);
-	float fLastRenderTimeOnScreen = read<float>(g_pid, mesh + 0x334);
+	float fLastRenderTimeOnScreen = read<float>(g_pid, mesh + 0x338);
 
 	const float fVisionTick = 0.06f;
 	bool bVisible = fLastRenderTimeOnScreen + fVisionTick >= fLastSubmitTime;
@@ -494,13 +494,13 @@ bool actorLoop()
 			SetupCameraLocation(Globals::LocalPlayer, camera::m_CameraLocation);
 
 
-			uint64_t playerstate = read<uint64_t>(g_pid, p.Acotr + 0x2A0); 
+			uint64_t playerstate = read<uint64_t>(g_pid, p.Acotr + 0x290); 
 
-			int TeamIndex = read<int>(g_pid, playerstate + 0x1020);
+			int TeamIndex = read<int>(g_pid, playerstate + 0x1010);
 
 			if (g_fovchanger)
 			{
-				auto fov = PlayerCameraManager + 0x298;write(g_pid, fov, FOVChangerValue);
+				auto fov = PlayerCameraManager + 0x288;write(g_pid, fov, FOVChangerValue);
 			}
 
 			Vector3 vHeadBone = g_functions::f_getbonewithIndex(p.Acotrmesh, 98);
@@ -654,8 +654,8 @@ bool actorLoop()
 
 				if (ItemDist < bLootRendering) {
 
-					auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x7A0);//AFortPawn	CurrentWeapon	0x7b0	AFortWeapon*
-					auto ItemData = read<DWORD_PTR>(g_pid, CurrentWeapon + 0x3E8);
+					auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x790);//AFortPawn	CurrentWeapon	0x7b0	AFortWeapon*
+					auto ItemData = read<DWORD_PTR>(g_pid, CurrentWeapon + 0x3d8);
 
 					BYTE tier;
 					tier = read<BYTE>(g_pid, ItemData + 0x74);
@@ -685,10 +685,10 @@ bool actorLoop()
 						Color = IM_COL32(255, 255, 255, 255); // p
 					}
 
-					auto AmmoCount = read<int>(g_pid, CurrentWeapon + 0xB24);//AFortWeapon	AmmoCount	0xb3c	int32_t
+					auto AmmoCount = read<int>(g_pid, CurrentWeapon + 0xb14);//AFortWeapon	AmmoCount	0xb3c	int32_t
 
 
-					auto bIsReloadingWeapon = read<bool>(g_pid, CurrentWeapon + 0x321);
+					auto bIsReloadingWeapon = read<bool>(g_pid, CurrentWeapon + 0x311);
 
 					auto DisplayName = read<uint64_t>(g_pid, ItemData + 0x90); // DisplayName (FText)
 					auto WeaponLength = read<uint32_t>(g_pid, DisplayName + 0x38); // FText -> Length
@@ -920,7 +920,7 @@ bool actorLoop()
 
 				auto dist = sqrtf(dx * dx + dy * dy + dz * dz) / 100.0f;
 
-				auto isDBNO = (read<char>(g_pid, p.Acotr + 0x702) >> 4) & 1;
+				auto isDBNO = (read<char>(g_pid, p.Acotr + 0x6f2) >> 4) & 1;
 
 
 
@@ -953,7 +953,7 @@ bool actorLoop()
 
 					RGBA ESPTargetLine = { 255, 0, 0, 255 };
 
-					uint64_t AimbotMesh = read<uint64_t>(g_pid, closestPawn + 0x300);
+					uint64_t AimbotMesh = read<uint64_t>(g_pid, closestPawn + 0x2F0);
 					if (!AimbotMesh)
 						return false;
 
