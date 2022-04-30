@@ -535,7 +535,7 @@ bool actorLoop()
 
 			if (g_name_esp)
 			{
-				uint64_t APlayerState = read<uint64_t>(g_pid, 0x0);//APlayerState	PlayerNamePrivate	0x370	FString
+				uint64_t APlayerState = read<uint64_t>(g_pid, 0x0);//APlayerState->PlayerNamePrivate*FString
 				auto nameptr = read<uintptr_t>(g_pid, APlayerState + 0x370);
 
 				uint64_t StringData = read<uint64_t>(g_pid, nameptr);
@@ -550,7 +550,7 @@ bool actorLoop()
 
 			if (g_platform_esp)
 			{
-				uint64_t AFortPlayerState = read<uint64_t>(g_pid, 0x0);//AFortPlayerState	Platform	0x420	FString
+				uint64_t AFortPlayerState = read<uint64_t>(g_pid, 0x0);//AFortPlayerState->Platform*FString
 				auto nameptr = read<uintptr_t>(g_pid, AFortPlayerState + 0x420);
 
 				uint64_t StringData = read<uint64_t>(g_pid, nameptr);
