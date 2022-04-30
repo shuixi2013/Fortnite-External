@@ -472,7 +472,6 @@ bool actorLoop()
 			};
 			SetupCameraLocation(Globals::LocalPlayer, camera::m_CameraLocation);
 
-
 			uint64_t playerstate = read<uint64_t>(g_pid, p.Acotr + 0x290); 
 
 			int TeamIndex = read<int>(g_pid, playerstate + 0x1010);
@@ -695,57 +694,41 @@ bool actorLoop()
 						}
 
 						if (bIsReloadingWeapon)
-						{
 							ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x - 30, vpelvis.y), IM_COL32(255, 255, 255, 255), "Reloading");
-						}
 						else
-						{
 							ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x - 30, vpelvis.y), Color, Text.c_str());
-						}
 				}
 			}
+			
 			int Teamcheck;
-
+			
 			if (g_chams)
-			{
 				Teamcheck = TeamIndex = LocalTeam;
-			}
 			else
-			{
 				Teamcheck = TeamIndex != LocalTeam; 
-			}
 
 			if (Teamcheck || InLobby) {
-
 				isVis = isVisible(p.Acotrmesh);
-				if (distance <= bE5pD1st4nce || InLobby) {
+				if (distance <= bE5pD1st4nce || InLobby) 
+				{
 					if (g_boxesp)
 					{
 						if (isVis)
-						{
 							DrawNormalBox(vRootBoneOut.x - (BoxWidth / 2), vHeadBoneOut.y, BoxWidth, BoxHeight, 1.0f, &ESPColor2, &ESPColor2);
-						}
 						else
-						{
 							DrawNormalBox(vRootBoneOut.x - (BoxWidth / 2), vHeadBoneOut.y, BoxWidth, BoxHeight, 1.0f, &ESPColor, &ESPColor);
-						}
 					}
 					else if (g_cornerboxesp)
 					{
 						if (isVis)
-						{
 							DrawCorneredBox(vRootBoneOut.x - (BoxWidth / 2), vHeadBoneOut.y, BoxWidth, BoxHeight, IM_COL32(255, 215, 0, 255), 1.5);
-						}
 						else
-						{
 							DrawCorneredBox(vRootBoneOut.x - (BoxWidth / 2), vHeadBoneOut.y, BoxWidth, BoxHeight, IM_COL32(255, 255, 255, 255), 1.5);
-						}
 					}
 					if (g_esp_distance) {
 
 						char dist[64];
 						sprintf_s(dist, "%.fM", distance);
-
 						ImVec2 TextSize = ImGui::CalcTextSize(dist);
 						ImGui::GetOverlayDrawList()->AddText(ImVec2(vRootBoneOut.x - 15 - TextSize.x / 2, vRootBoneOut.y - 15 - TextSize.y / 2), ImGui::GetColorU32({ 255, 255, 255, 255 }), dist);
 					}
@@ -790,13 +773,9 @@ bool actorLoop()
 						RGBA ESPSkeleton;
 
 						if (isVis)
-						{
 							ESPSkeleton = { 255, 215, 0, 255 };
-						}
 						else
-						{
 							ESPSkeleton = { 255, 255, 255, 255 };
-						}
 
 						DrawLine(vleftChest.x, vleftChest.y, vrightChest.x, vrightChest.y, &ESPSkeleton, 0.5f);
 						DrawLine(vleftChest.x, vleftChest.y, vleftShoulder.x, vleftShoulder.y, &ESPSkeleton, 0.5f);
@@ -819,18 +798,12 @@ bool actorLoop()
 
 						if (vHeadBoneOut.x != 0 || vHeadBoneOut.y != 0 || vHeadBoneOut.z != 0)
 						{
-
 							ImU32 ESPSkeleton;
-
 							if (isVis)
-							{
 								ESPSkeleton = ImGui::GetColorU32({ 255, 215, 0, 255 });
-							}
 							else
-							{
 								ESPSkeleton = ImGui::GetColorU32({ 255, 255, 255, 255 });
-							}
-
+							
 							Vector3 bottom1 = g_functions::ConvertWorld2Screen(Vector3(vRootBone.x + 40, vRootBone.y - 40, vRootBone.z));
 							Vector3 bottom2 = g_functions::ConvertWorld2Screen(Vector3(vRootBone.x - 40, vRootBone.y - 40, vRootBone.z));
 							Vector3 bottom3 = g_functions::ConvertWorld2Screen(Vector3(vRootBone.x - 40, vRootBone.y + 40, vRootBone.z));
@@ -860,17 +833,11 @@ bool actorLoop()
 
 					if (g_lineesp)
 					{
-
 						ImU32 LineColor;
-
 						if (isVis)
-						{
 							LineColor = ImGui::ColorConvertFloat4ToU32(ImVec4(ESPColor2.R / 128.0, ESPColor2.G / 224.0, ESPColor2.B / 0.0, ESPColor2.A / 255.0));
-						}
 						else
-						{
 							LineColor = ImGui::ColorConvertFloat4ToU32(ImVec4(ESPColor.R / 128.0, ESPColor.G / 224.0, ESPColor.B / 0.0, ESPColor.A / 255.0));
-						}
 
 						ImGui::GetOverlayDrawList()->AddLine(
 							ImVec2(Globals::ScreenCenterX, Globals::Height),
@@ -884,8 +851,6 @@ bool actorLoop()
 
 				auto dx = w2shead.x - (Globals::Width / 2);
 				auto dy = w2shead.y - (Globals::Height / 2);
-			
-
 				auto dist = sqrtf(dx * dx + dy * dy) / 100.0f;
 
 				auto isDBNO = (read<char>(g_pid, p.Acotr + 0x6f2) >> 4) & 1;
@@ -1091,25 +1056,21 @@ void runRenderTick() {
 			if (ImGui::Button("Visuals")) {
 				Menu_Tab = 1;
 			}
-			//ImGui::SameLine();
 			ImGui::SetCursorPos({ 17,69 });
 			if (ImGui::Button("Misc   "))
 			{
 				Menu_Tab = 2;
 			}
-			//ImGui::SameLine();
 			ImGui::SetCursorPos({ 17,89 });
 			if (ImGui::Button("World  "))
 			{
 				Menu_Tab = 3;
 			}
-			//ImGui::SameLine();
 			ImGui::SetCursorPos({ 17,109 });
 			if (ImGui::Button("Exploit"))
 			{
 				Menu_Tab = 4;
 			}
-
 			ImGui::SetCursorPos(ImVec2(240, 10));
 
 			if (Menu_Tab == 0) // Aimbot Tab
