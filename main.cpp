@@ -22,7 +22,7 @@
 
  /*
   * Gloomy.cc
-  * Made by Chase
+
   * https://github.com/Chase1803
  */
 
@@ -916,9 +916,9 @@ bool actorLoop()
 
 				auto dx = w2shead.x - (Globals::Width / 2);
 				auto dy = w2shead.y - (Globals::Height / 2);
-				auto dz = w2shead.z - (Depth / 2);
+			
 
-				auto dist = sqrtf(dx * dx + dy * dy + dz * dz) / 100.0f;
+				auto dist = sqrtf(dx * dx + dy * dy) / 100.0f;
 
 				auto isDBNO = (read<char>(g_pid, p.Acotr + 0x6f2) >> 4) & 1;
 
