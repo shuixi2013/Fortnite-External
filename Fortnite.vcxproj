@@ -172,7 +172,7 @@
     <ClCompile Include="include\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="include\imgui\imgui_tables.cpp" />
     <ClCompile Include="include\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="signed.cpp" />
+    <ClCompile Include="driver.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -183,7 +183,7 @@
     <ClInclude Include="driverloader\service_utils.hpp" />
     <ClInclude Include="font.h" />
     <ClInclude Include="string.hpp" />
-    <ClInclude Include="signed.h" />
+    <ClInclude Include="driver.h" />
     <ClInclude Include="utils.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
