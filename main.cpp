@@ -337,15 +337,11 @@ bool actorLoop()
 				{
 					if (ItemDist < bLootRendering) {
 
-						auto definition = read<uint64_t>(g_pid, entity.CurrentActor + 0x308 + 0x18);
-
+						auto definition = read<uint64_t>(g_pid, entity.CurrentActor + 0x2f8 + 0x18);
 						BYTE tier = read<BYTE>(g_pid, definition + 0x74);
 
-						RGBA Color;
-						RGBA RGBAColor;
-
-						Vector3 ChestPosition;
-						ChestPosition = g_functions::ConvertWorld2Screen(ItemPosition);
+						RGBA Color, RGBAColor;
+						Vector3 ChestPosition = g_functions::ConvertWorld2Screen(ItemPosition);
 
 						if (g_loot)
 						{
@@ -587,9 +583,8 @@ bool actorLoop()
 
 					auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x790);
 					auto ItemData = read<DWORD_PTR>(g_pid, CurrentWeapon + 0x3d8);
+					BYTE tier = read<BYTE>(g_pid, ItemData + 0x74);
 
-					BYTE tier;
-					tier = read<BYTE>(g_pid, ItemData + 0x74);
 					ImColor Color;
 					if (tier == 2)
 					{
@@ -639,15 +634,15 @@ bool actorLoop()
 						ImGui::GetOverlayDrawList()->AddText(ImVec2(vHeadBoneOut.x - 30 - TextSize.x / 2, vHeadBoneOut.y - 15 - TextSize.y / 2), ImGui::GetColorU32({ 255, 255, 255, 255 }), Bot.c_str());
 					}
 
-						if (AmmoCount)
+				        if (AmmoCount)
+					{
+						char buffer[128];
+						sprintf_s(buffer, "Ammo: %i", AmmoCount);
+						if (buffer != "?") 
 						{
-							char buffer[128];
-							sprintf_s(buffer, "Ammo: %i", AmmoCount);
-							if (buffer != "?") 
-							{
-								ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x, vpelvis.y + 15), IM_COL32(255, 255, 255, 255), buffer);
-							}
+						        ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x, vpelvis.y + 15), IM_COL32(255, 255, 255, 255), buffer);
 						}
+					 }
 
 						if (bIsReloadingWeapon)
 							ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x - 30, vpelvis.y), IM_COL32(255, 255, 255, 255), "Reloading");
@@ -968,7 +963,7 @@ void runRenderTick() {
 
 	if (g_overlay_visible)
 	{
-		cursor();
+		//cursor();
 		background();
 
 	}
