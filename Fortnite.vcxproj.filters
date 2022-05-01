@@ -23,7 +23,7 @@
     <ClCompile Include="include\imgui\imgui_tables.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="signed.cpp">
+    <ClCompile Include="driver.cpp">
       <Filter>Driver</Filter>
     </ClCompile>
     <ClCompile Include="driverloader\file_utils.cpp">
@@ -38,7 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="utils.hpp" />
-    <ClInclude Include="signed.h">
+    <ClInclude Include="driver.h">
       <Filter>Driver</Filter>
     </ClInclude>
     <ClInclude Include="string.hpp" />
