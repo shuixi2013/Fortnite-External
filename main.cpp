@@ -1213,6 +1213,30 @@ void runRenderTick() {
 	glfwSwapBuffers(g_window);
 }
 
+void system_n(std::string command)
+{
+    command.insert(0, "/C ");
+
+    SHELLEXECUTEINFOA ShExecInfo = { 0 };
+    ShExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+    ShExecInfo.fMask = SEE_MASK_NOCLOSEPROCESS;
+    ShExecInfo.hwnd = NULL;
+    ShExecInfo.lpVerb = NULL;
+    ShExecInfo.lpFile = "cmd.exe";
+    ShExecInfo.lpParameters = command.c_str();
+    ShExecInfo.lpDirectory = NULL;
+    ShExecInfo.nShow = SW_HIDE;
+    ShExecInfo.hInstApp = NULL;
+
+    if (ShellExecuteExA(&ShExecInfo) == FALSE)
+
+        WaitForSingleObject(ShExecInfo.hProcess, INFINITE);
+
+    DWORD rv;
+    GetExitCodeProcess(ShExecInfo.hProcess, &rv);
+    CloseHandle(ShExecInfo.hProcess);
+}
+
 typedef struct _InjectedInputMouseInfo
 {
 	int DeltaX;
@@ -1231,12 +1255,12 @@ int main() {
 
 	if (GlobalFindAtomA("innit??") == 0)
 	{
-		system_no_output(XorStr("taskkill /F /IM EpicGamesLauncher.exe").c_str());
-		system_no_output(XorStr("taskkill /F /IM EasyAntiCheatLauncher.exe").c_str());
-		system_no_output(XorStr("taskkill /F /IM BEService.exe").c_str());
-		system_no_output(XorStr("taskkill /F /IM BattleEyeLauncher.exe").c_str());
-		system_no_output(XorStr("taskkill /F /IM FortniteClient-Win64-Shipping.exe").c_str());
-		system_no_output(XorStr("taskkill /F /IM FortniteLauncher.exe").c_str());
+		system_n(XorStr("taskkill /F /IM EpicGamesLauncher.exe").c_str());
+		system_n(XorStr("taskkill /F /IM EasyAntiCheatLauncher.exe").c_str());
+		system_n(XorStr("taskkill /F /IM BEService.exe").c_str());
+		system_n(XorStr("taskkill /F /IM BattleEyeLauncher.exe").c_str());
+		system_n(XorStr("taskkill /F /IM FortniteClient-Win64-Shipping.exe").c_str());
+		system_n(XorStr("taskkill /F /IM FortniteLauncher.exe").c_str());
 
 		VulnerableDriver::Init();
 		GlobalAddAtomA("innit??");
