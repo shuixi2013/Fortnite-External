@@ -234,7 +234,7 @@ void CacheNew()
 				Playertest Actor{ };
 
 				Actor.Acotr = CurrentItemPawn;
-				Actor.Acotrmesh = read<uint64_t>(g_pid, CurrentItemPawn + 0x308);
+				Actor.Acotrmesh = read<uint64_t>(g_pid, CurrentItemPawn + 0x2f0);
 				Actor.name = CurrentItemPawnName;
 				Actor.rootcomp = Globals::LocalPawnRootComponent;
 
@@ -832,10 +832,11 @@ bool actorLoop()
 			{
 				if (g_aimbot)
 				{
-					uint64_t AimbotMesh = read<uint64_t>(g_pid, closestPawn + 0x308);
+					uint64_t AimbotMesh = read<uint64_t>(g_pid, closestPawn + 0x2f0);
 					if (!AimbotMesh)
 						return false;
 
+      B.                                if (g_spinbot)
                                         write<Vector3>(g_pid, AimbotMesh + 0x140, Vector3(0, intY, 0));
 
 					Vector3 HeadPosition = g_functions::f_getbonewithIndex(AimbotMesh, select_hitbox());
@@ -1179,17 +1180,18 @@ void runRenderTick() {
 				//ImGui::Checkbox(XorStr("Gun Tracers").c_str(), &g_gun_tracers);
 				//ImGui::SetCursorPos(ImVec2(140, 75));
 				//ImGui::Checkbox(XorStr("Disable Gunshots").c_str(), &g_disable_gunshots);
-				//ImGui::SetCursorPos(ImVec2(140, 95));
-				//ImGui::Checkbox(XorStr("[TEST] Player Fly").c_str(), &g_playerfly);
+
+				ImGui::SetCursorPos(ImVec2(140, 35));
+				ImGui::Checkbox(XorStr("Spinbot").c_str(), &g_spinbot);
 
 				ImGui::PushItemWidth(180.f);
-				ImGui::SetCursorPos(ImVec2(140, 35));
+				ImGui::SetCursorPos(ImVec2(140, 55));
 				ImGui::Checkbox("Fov Changer", &g_fovchanger);
 				if (g_fovchanger)
 				{
-					ImGui::SetCursorPos(ImVec2(140, 55));
-					ImGui::Text("FOV CHANGER");
 					ImGui::SetCursorPos(ImVec2(140, 75));
+					ImGui::Text("FOV CHANGER");
+					ImGui::SetCursorPos(ImVec2(140, 95));
 					ImGui::SliderFloat(("                 "), &FOVChangerValue, 90.0f, 170.0f, ("%.2f"));
 				}
 			}
