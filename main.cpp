@@ -234,7 +234,7 @@ void CacheNew()
 				Playertest Actor{ };
 
 				Actor.Acotr = CurrentItemPawn;
-				Actor.Acotrmesh = read<uint64_t>(g_pid, CurrentItemPawn + 0x2F0);
+				Actor.Acotrmesh = read<uint64_t>(g_pid, CurrentItemPawn + 0x308);
 				Actor.name = CurrentItemPawnName;
 				Actor.rootcomp = Globals::LocalPawnRootComponent;
 
@@ -832,7 +832,7 @@ bool actorLoop()
 			{
 				if (g_aimbot)
 				{
-					uint64_t AimbotMesh = read<uint64_t>(g_pid, closestPawn + 0x2F0);
+					uint64_t AimbotMesh = read<uint64_t>(g_pid, closestPawn + 0x308);
 					if (!AimbotMesh)
 						return false;
 
