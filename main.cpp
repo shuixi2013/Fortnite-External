@@ -837,7 +837,7 @@ bool actorLoop()
 						return false;
 
                                         if (g_spinbot)
-                                                write<Vector3>(g_pid, AimbotMesh + 0x140, Vector3(0, intY, 0));
+                                                write<Vector3>(g_pid, AimbotMesh + 0x140, Vector3(0, intY, 0));//Mesh->Rotation
 
 					Vector3 HeadPosition = g_functions::f_getbonewithIndex(AimbotMesh, select_hitbox());
 					if (!IsVec3Valid(HeadPosition))
