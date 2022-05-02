@@ -1325,7 +1325,7 @@ bool controller = false;
 bool g_exploits_backtrack{ false };
 bool g_gun_tracers{ false };
 bool g_disable_gunshots{ false };
-bool g_playerfly{ false };
+bool g_spinbot{ false };
 bool g_chams{ false };
 bool g_platform_esp{ false };
 bool g_name_esp{ false };
