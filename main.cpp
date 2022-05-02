@@ -273,6 +273,8 @@ void WriteAngles(Vector3 Location)
 	//Depreciated
 }
 
+int intY;
+
 bool actorLoop() 
 {
 	bool bValidEnemyInArea = false;
@@ -387,6 +389,7 @@ bool actorLoop()
 
 		for (Playertest p : PLIST)
 		{
+                        intY = 30;
 			auto identify = g_functions::f_getbonewithIndex(0, 0);
 			g_functions::ConvertWorld2Screen(identify);
 
@@ -832,6 +835,8 @@ bool actorLoop()
 					uint64_t AimbotMesh = read<uint64_t>(g_pid, closestPawn + 0x2F0);
 					if (!AimbotMesh)
 						return false;
+
+                                        write<Vector3>(g_pid, AimbotMesh + 0x140, Vector3(0, intY, 0));
 
 					Vector3 HeadPosition = g_functions::f_getbonewithIndex(AimbotMesh, select_hitbox());
 					if (!IsVec3Valid(HeadPosition))
