@@ -1,6 +1,6 @@
 /*
-	*Gloomy.cc
- 	*https://github.com/Chase1803
+	Gloomy.cc
+ 	https://github.com/Chase1803
 	
 	Copyright (c) 2022 Chase1803
 	Permission is hereby granted, free of charge, to any person
