@@ -1187,7 +1187,7 @@ void runRenderTick() {
 				//ImGui::Checkbox(XorStr("Disable Gunshots").c_str(), &g_disable_gunshots);
 
 				ImGui::SetCursorPos(ImVec2(140, 35));
-				ImGui::Checkbox(XorStr("No Spread").c_str(), &g_gun_tracers);
+				ImGui::Checkbox(XorStr("No Bloom").c_str(), &g_gun_tracers);
 
                                 ImGui::SetCursorPos(ImVec2(140, 55));
 				ImGui::Checkbox(XorStr("Spinbot").c_str(), &g_spinbot);
