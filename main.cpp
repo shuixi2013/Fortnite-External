@@ -273,7 +273,7 @@ void WriteAngles(Vector3 Location)
 	//Depreciated
 }
 
-int intY;
+int intY = 0;
 
 bool actorLoop() 
 {
@@ -389,7 +389,7 @@ bool actorLoop()
 
 		for (Playertest p : PLIST)
 		{
-                        intY = 30;
+                        intY = 0;
 			auto identify = g_functions::f_getbonewithIndex(0, 0);
 			g_functions::ConvertWorld2Screen(identify);
 
@@ -839,7 +839,10 @@ bool actorLoop()
                                         auto CurrentWeapon = read<uintptr_t>(g_pid, closestPawn + 0x790);
 				
                                         if (g_spinbot)
+                                        {
                                                 write<Vector3>(g_pid, AimbotMesh + 0x140, Vector3(0, intY, 0));//Mesh->Rotation
+                                                intY + 20;
+                                        }
 
 					Vector3 HeadPosition = g_functions::f_getbonewithIndex(AimbotMesh, select_hitbox());
 					if (!IsVec3Valid(HeadPosition))
