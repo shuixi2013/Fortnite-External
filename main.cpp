@@ -614,7 +614,7 @@ bool actorLoop()
 						Color = IM_COL32(255, 255, 255, 255);
 					}
 
-					auto AmmoCount = read<int>(g_pid, CurrentWeapon + 0xb14);
+					auto AmmoCount = read<int>(g_pid, CurrentWeapon + 0xb24);
 					auto bIsReloadingWeapon = read<bool>(g_pid, CurrentWeapon + 0x311);
 
 					auto DisplayName = read<uint64_t>(g_pid, ItemData + 0x90);
