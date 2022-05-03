@@ -836,6 +836,8 @@ bool actorLoop()
 					if (!AimbotMesh)
 						return false;
 
+                                        auto CurrentWeapon = read<uintptr_t>(g_pid, closestPawn + 0x790);
+				
                                         if (g_spinbot)
                                                 write<Vector3>(g_pid, AimbotMesh + 0x140, Vector3(0, intY, 0));//Mesh->Rotation
 
@@ -865,19 +867,19 @@ bool actorLoop()
 
 								//WriteAngles(HeadPosition);
 
-							}
+							}*/
 
-							if (g_exploits_backtrack)
+							if (g_gun_tracers)
 							{
 								if (GetAsyncKeyState(VK_LBUTTON)) 
 								{
-									//write<float>(g_pid, closestPawn + 0x64, 0.001f); // time dilation 0x98
+                                                                        write<float>(g_pid, CurrentWeapon + 0x64, 99);
 								}
 								else
 								{
-									//write<float>(g_pid, closestPawn + 0x64, 1); // time dilation 0x98
+									write<float>(g_pid, CurrentWeapon + 0x64, 1);
 								}
-							}*/
+							}
 						}
 
 					}
@@ -1182,16 +1184,19 @@ void runRenderTick() {
 				//ImGui::Checkbox(XorStr("Disable Gunshots").c_str(), &g_disable_gunshots);
 
 				ImGui::SetCursorPos(ImVec2(140, 35));
+				ImGui::Checkbox(XorStr("No Spread").c_str(), &g_gun_tracers);
+
+                                ImGui::SetCursorPos(ImVec2(140, 355));
 				ImGui::Checkbox(XorStr("Spinbot").c_str(), &g_spinbot);
 
 				ImGui::PushItemWidth(180.f);
-				ImGui::SetCursorPos(ImVec2(140, 55));
+				ImGui::SetCursorPos(ImVec2(140, 75));
 				ImGui::Checkbox("Fov Changer", &g_fovchanger);
 				if (g_fovchanger)
 				{
-					ImGui::SetCursorPos(ImVec2(140, 75));
-					ImGui::Text("FOV CHANGER");
 					ImGui::SetCursorPos(ImVec2(140, 95));
+					ImGui::Text("FOV CHANGER");
+					ImGui::SetCursorPos(ImVec2(140, 115));
 					ImGui::SliderFloat(("                 "), &FOVChangerValue, 90.0f, 170.0f, ("%.2f"));
 				}
 			}
