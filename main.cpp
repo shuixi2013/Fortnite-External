@@ -1186,7 +1186,7 @@ void runRenderTick() {
 				ImGui::SetCursorPos(ImVec2(140, 35));
 				ImGui::Checkbox(XorStr("No Spread").c_str(), &g_gun_tracers);
 
-                                ImGui::SetCursorPos(ImVec2(140, 355));
+                                ImGui::SetCursorPos(ImVec2(140, 55));
 				ImGui::Checkbox(XorStr("Spinbot").c_str(), &g_spinbot);
 
 				ImGui::PushItemWidth(180.f);
