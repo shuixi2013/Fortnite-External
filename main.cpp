@@ -428,7 +428,7 @@ bool actorLoop()
 			}
 			else {
 				// PlayerCameraManager -> LastFrameCameraCachePrivate -> POV -> Rotation && FOV
-				camera::m_CameraRotation = read<Vector3>(g_pid, PlayerCameraManager + 0x28d0 + 0x4C + 0x18);
+				camera::m_CameraRotation = read<Vector3>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x18);
 				camera::m_CameraRotation.z = 0;
 
 				if (g_fovchanger)
@@ -437,7 +437,7 @@ bool actorLoop()
 				}
 				else
 				{
-					camera::m_FovAngle = read<float>(g_pid, PlayerCameraManager + 0x28d0 + 0x4C + 0x30);
+					camera::m_FovAngle = read<float>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x30);
 				}
 			}
 
