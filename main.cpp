@@ -293,7 +293,7 @@ bool actorLoop()
 				float ItemDist = Globals::LocalPlayerRelativeLocation.Distance(ItemPosition) / 100.f;
 				std::string null = ("");
 
-				auto IsSearched = read<BYTE>(g_pid, (uintptr_t)entity.CurrentActor + 0xf51);
+				auto IsSearched = read<BYTE>(g_pid, (uintptr_t)entity.CurrentActor + 0xf41);
 				if (IsSearched >> 7 & 1) continue;
 
 				if (strstr(entity.name.c_str(), ("Tiered_Chest")) && g_chests)
