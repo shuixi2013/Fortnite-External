@@ -840,7 +840,8 @@ bool actorLoop()
 				
                                         if (g_spinbot)
                                         {
-                                                write<Vector3>(g_pid, AimbotMesh + 0x140, Vector3(0, intY, 0));//Mesh->Rotation
+                                                uintptr_t hmm = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x2f0);
+                                                write<Vector3>(g_pid, hmm + 0x140, Vector3(0, intY, 0));//Mesh->Rotation
                                                 intY + 20;
                                         }
 
