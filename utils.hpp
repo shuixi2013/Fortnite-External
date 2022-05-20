@@ -1174,7 +1174,7 @@ int LocalTeam;
 static bool targetlocked = false;
 
 uintptr_t GWorld;
-uintptr_t LocalPlayerController;
+uintptr_t LocalPlayerController, MyHUD;
 uint64_t PlayerCameraManager;
 bool InLobby = false;
 
