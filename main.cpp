@@ -218,7 +218,6 @@ void CacheNew()
 		std::vector<Playertest> tmpList;
 
 		GWorld = read<uintptr_t>(g_pid, pattern_uworld);
-		uintptr_t PersistentLevel = read<uintptr_t>(g_pid, GWorld + 0x30);
 		uintptr_t GameInstance = read<uintptr_t>(g_pid, GWorld + 0x1A8);
 		uintptr_t LocalPlayers = read<uintptr_t>(g_pid, GameInstance + 0x38);
 		//Globals::LocalPlayer = read<uintptr_t>(g_pid, LocalPlayers);
@@ -234,11 +233,12 @@ void CacheNew()
 		InLobby = false;
 		if (!Globals::LocalPawn) InLobby = true;
 
-		auto ActorCount = read<DWORD>(g_pid, PersistentLevel + 0xA0);
-		auto AActors2 = read<uintptr_t>(g_pid, PersistentLevel + 0x98);
+                uintptr_t PersistentLevel = read<uintptr_t>(g_pid, GWorld + 0x30);
+		auto ActorCluster = read<uintptr_t>(g_pid, PersistentLevel + 0xd8);
+		auto ActorsArray = read<uintptr_t>(g_pid, ActorCluster + 0x28);
 		
-		for (int i = 0; i < ActorCount; ++i) {
-			uintptr_t CurrentItemPawn = read<uintptr_t>(g_pid, AActors2 + (i * sizeof(uintptr_t)));
+		for (int i = 0; i < ActorCluster; ++i) {
+			uintptr_t CurrentItemPawn = read<uintptr_t>(g_pid, ActorCluster + (i * sizeof(uintptr_t)));
 			
 			int CurrentItemId = read<int>(g_pid, CurrentItemPawn + 0x18);
 			auto CurrentItemPawnName = GetNameFromFName(CurrentItemId);
