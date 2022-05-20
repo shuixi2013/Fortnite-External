@@ -54,6 +54,19 @@
 extern void aimbot(float x, float y);
 GLFWwindow* g_window;
 
+struct FMinimalViewInfo
+{
+	Vector3 Location;
+	Vector3 Rotation;
+	float FOV;
+};
+
+struct FCameraCacheEntry
+{
+	float Timestamp;
+	FMinimalViewInfo POV;
+};
+
 static void glfwErrorCallback(int error, const char* description)
 {
 	fprintf(stderr, XorStr("OverEW: %d: %s\n").c_str(), error, description);
@@ -428,7 +441,9 @@ bool actorLoop()
 			}
 			else {
 				// PlayerCameraManager -> LastFrameCameraCachePrivate -> POV -> Rotation && FOV
-				camera::m_CameraRotation = read<Vector3>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x18);
+                                auto CameraCacheEntry = read<FCameraCacheEntry>(g_pid, PlayerCameraManager + 0x28d0);
+				//camera::m_CameraRotation = read<Vector3>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x18);
+                                camera::m_CameraRotation = CameraCacheEntry.POV.Rotation;
 				camera::m_CameraRotation.z = 0;
 
 				if (g_fovchanger)
@@ -437,7 +452,8 @@ bool actorLoop()
 				}
 				else
 				{
-					camera::m_FovAngle = read<float>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x30);
+					//camera::m_FovAngle = read<float>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x30);
+                                        camera::m_FovAngle = CameraCacheEntry.POV.FOV;
 				}
 			}
 
