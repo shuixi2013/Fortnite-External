@@ -235,10 +235,10 @@ void CacheNew()
 
                 uintptr_t PersistentLevel = read<uintptr_t>(g_pid, GWorld + 0x30);
 		auto ActorCluster = read<uintptr_t>(g_pid, PersistentLevel + 0xd8);
-		auto ActorsArray = read<uintptr_t>(g_pid, ActorCluster + 0x28);
+		auto Actors = read<uintptr_t>(g_pid, ActorCluster + 0x28);
 		
-		for (int i = 0; i < ActorsArray; ++i) {
-			uintptr_t CurrentItemPawn = read<uintptr_t>(g_pid, ActorsArray + (i * sizeof(uintptr_t)));
+		for (int i = 0; i < ActorCluster; ++i) {
+			uintptr_t CurrentItemPawn = read<uintptr_t>(g_pid, Actors + (i * sizeof(uintptr_t)));
 			
 			int CurrentItemId = read<int>(g_pid, CurrentItemPawn + 0x18);
 			auto CurrentItemPawnName = GetNameFromFName(CurrentItemId);
