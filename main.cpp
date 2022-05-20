@@ -855,8 +855,8 @@ bool actorLoop()
 				
                                         if (g_spinbot)
                                         {
-                                                uintptr_t hmm = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x2f0);
-                                                write<Vector3>(g_pid, hmm + 0x140, Vector3(0, intY, 0));//Mesh->Rotation
+                                                uintptr_t hmm = read<uintptr_t>(g_pid, closestPawn + 0x188);
+                                                write<Vector3>(g_pid, hmm + 0x140, Vector3(0, intY, 0));//Comp->Rotation
                                                 intY + 20;
                                         }
 
