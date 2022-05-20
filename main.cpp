@@ -422,8 +422,6 @@ bool actorLoop()
 					double degreees = tester * (180.0 / M_PI);
 
 					camera::m_CameraRotation.y = read<double>(g_pid, RootComponent + 0x148);
-
-
 					camera::m_CameraRotation.x = degreees;
 
 					//set fov angle
@@ -444,7 +442,9 @@ bool actorLoop()
 
 				// CameraManager->0x28d0->0x10->0x18
                                 camera::m_CameraRotation = CameraCacheEntry.POV.Rotation;
-				camera::m_CameraRotation.z = 0;
+				//camera::m_CameraRotation.z = 0;
+                       
+                                camera::m::CameraLocation = CameraCacheEntry.POV.Location;
 
 				if (g_fovchanger)
 				{
