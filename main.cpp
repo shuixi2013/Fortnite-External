@@ -427,7 +427,7 @@ bool actorLoop()
 			else {
                 
                                 camera::m_CameraRotation = read<Vector3>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x18);
-				camera::m_CameraRotation = 0;
+				camera::m_CameraRotation.x = 0;
                        
 				if (g_fovchanger)
 				{
