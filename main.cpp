@@ -234,10 +234,10 @@ void CacheNew()
 		if (!Globals::LocalPawn) InLobby = true;
 
                 uintptr_t PersistentLevel = read<uintptr_t>(g_pid, GWorld + 0x30);
-		auto ActorCluster = read<uintptr_t>(g_pid, PersistentLevel + 0xd8);
-		auto Actors = read<uintptr_t>(g_pid, ActorCluster + 0x28);
+		auto ActorArray = read<uintptr_t>(g_pid, PersistentLevel + 0xa0);
+		auto Actors = read<uintptr_t>(g_pid, PersistentLevel + 0x98);
 		
-		for (int i = 0; i < ActorCluster; ++i) {
+		for (int i = 0; i < ActorArray; ++i) {
 			uintptr_t CurrentItemPawn = read<uintptr_t>(g_pid, Actors + (i * sizeof(uintptr_t)));
 			
 			int CurrentItemId = read<int>(g_pid, CurrentItemPawn + 0x18);
