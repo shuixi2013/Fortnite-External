@@ -673,10 +673,11 @@ bool actorLoop()
 
                         if (g_spinbot)
                             {
-                                 if (Globals::LocalPawn) continue;
+                                 if (Globals::LocalPawn) {
                                      uintptr_t Component = read<uintptr_t>(g_pid, p.Acotr + 0x188);
                                      write<Vector3>(g_pid, Component + 0x140, Vector3(0, intY, 0));//Comp->Rotation
                                      intY + 20;
+                                 }
                              }
 
 			if (Teamcheck || InLobby) {
