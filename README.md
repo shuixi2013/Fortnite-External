@@ -2,7 +2,9 @@
 # Gloomy.cc
 
 Gloomy.cc -  
-External Fortnite Project written mostly in C++ along with external libraries.
+External Fortnite Cheat written mostly in C++.
+
+Status: Updated
 
 Last Update: 20/05/22 - Updated offsets and fnamepool to latest patch.
 
