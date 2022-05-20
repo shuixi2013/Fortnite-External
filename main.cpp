@@ -54,6 +54,13 @@
 extern void aimbot(float x, float y);
 GLFWwindow* g_window;
 
+struct FMinimalViewInfo
+ {
+ 	Vector3 Location;
+ 	Vector3 Rotation;
+ 	float FOV;
+ };
+
 static void glfwErrorCallback(int error, const char* description)
 {
 	fprintf(stderr, XorStr("OverEW: %d: %s\n").c_str(), error, description);
@@ -426,17 +433,22 @@ bool actorLoop()
 			}
 			else {
                 
-                                camera::m_CameraRotation = read<Vector3>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x18);
-				camera::m_CameraRotation.z = 0;
+                                auto CameraCache = read<FMinimalViewInfo>(g_pid, PlayerCameraManager + 0x28d0 + 0x10);
+                
+                                camera::m_CameraRotation = CameraCache.Rotation;
+                                camera::m_CameraLocation = CameraCache.Location;
                        
-				if (g_fovchanger)
-				{
-					camera::m_FovAngle = FOVChangerValue;
-				}
-				else
-				{
-                                        camera::m_FovAngle = read<float>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x30);
-				}
+                         
+                                if (g_fovchanger)
+                                {
+                                        camera::m_FovAngle = FOVChangerValue;
+                                }
+                                else
+                                {
+                                        camera::m_FovAngle = CameraCache.FOV;
+                                }
+
+                                
 			}
 
 			// get camera location
@@ -1221,14 +1233,37 @@ void runRenderTick() {
 	glfwSwapBuffers(g_window);
 }
 
-typedef struct _InjectedInputMouseInfo
-{
-	int DeltaX;
-	int DeltaY;
-	unsigned int MouseData;
-} InjectedInputMouseInfo;
+enum InjectedInputMouseOptions
+ {
+     Absolute = 32768,
+     HWheel = 4096,
+     LeftDown = 2,
+     LeftUp = 4,
+     MiddleDown = 32,
+     MiddleUp = 64,
+     Move = 1,
+     MoveNoCoalesce = 8192,
+     None = 0,
+     RightDown = 8,
+     RightUp = 16,
+     VirtualDesk = 16384,
+     Wheel = 2048,
+     XDown = 128,
+     XUp = 256
+ };
 
-typedef bool (WINAPI* InjectMouseInput_t)(InjectedInputMouseInfo* inputs, int count);
+ typedef struct _InjectedInputMouseInfo
+ {
+ 	int DeltaX;
+ 	int DeltaY;
+ 	unsigned int MouseData;
+ 	InjectedInputMouseOptions MouseOptions;
+ 	unsigned int TimeOffsetInMilliseconds;
+ 	void* ExtraInfo;
+ } InjectedInputMouseInfo;
+
+ typedef bool (WINAPI* InjectMouseInput_t)(InjectedInputMouseInfo* inputs, int count);
+
 InjectMouseInput_t InjectMouseInput;
 
 int main() {
