@@ -671,14 +671,7 @@ bool actorLoop()
 			else
 				Teamcheck = TeamIndex != LocalTeam; 
 
-                        if (g_spinbot)
-                            {
-                                 if (Globals::LocalPawn) {
-                                     uintptr_t Component = read<uintptr_t>(g_pid, p.Acotr + 0x188);
-                                     write<Vector3>(g_pid, Component + 0x140, Vector3(0, intY, 0));//Comp->Rotation
-                                     intY + 20;
-                                 }
-                             }
+                    
 
 			if (Teamcheck || InLobby) {
 				isVis = isVisible(p.Acotrmesh);
@@ -826,6 +819,14 @@ bool actorLoop()
                                 auto dist = sqrtf(dx * dx + dy * dy);
 				auto isDBNO = (read<char>(g_pid, p.Acotr + 0x6f2) >> 4) & 1;
 
+                                 if (g_spinbot)
+                                    {
+                                      if (TeamIndex = LocalTeam && GetAsyncKeyState(VK_RBUTTON)) {
+                                            uintptr_t Component = read<uintptr_t>(g_pid, p.Acotr + 0x188);
+                                            write<Vector3>(g_pid, Component + 0x140, Vector3(0, intY, 0));//Comp->Rotation
+                                            intY + 20;
+                                        }
+                                    }
 				if (dist < bA1mb0tF0VV4lue && dist < closestDistance && TeamIndex != LocalTeam && !InLobby)
 				{
 					if (g_skipknocked)
