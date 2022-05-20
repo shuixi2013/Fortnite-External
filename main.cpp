@@ -440,9 +440,9 @@ bool actorLoop()
 				SetupCameraRotationAndFov(Globals::LocalPlayer, Globals::LocalPawnRootComponent, camera::m_CameraRotation, camera::m_FovAngle);
 			}
 			else {
-				// PlayerCameraManager -> LastFrameCameraCachePrivate -> POV -> Rotation && FOV
                                 auto CameraCacheEntry = read<FCameraCacheEntry>(g_pid, PlayerCameraManager + 0x28d0);
-				//camera::m_CameraRotation = read<Vector3>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x18);
+
+				// CameraManager->0x28d0->0x10->0x18
                                 camera::m_CameraRotation = CameraCacheEntry.POV.Rotation;
 				camera::m_CameraRotation.z = 0;
 
@@ -452,7 +452,7 @@ bool actorLoop()
 				}
 				else
 				{
-					//camera::m_FovAngle = read<float>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x30);
+					// CameraManager->0x28d0->0x10->0x30
                                         camera::m_FovAngle = CameraCacheEntry.POV.FOV;
 				}
 			}
