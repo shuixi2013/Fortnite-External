@@ -221,9 +221,10 @@ void CacheNew()
 		uintptr_t PersistentLevel = read<uintptr_t>(g_pid, GWorld + 0x30);
 		uintptr_t GameInstance = read<uintptr_t>(g_pid, GWorld + 0x1A8);
 		uintptr_t LocalPlayers = read<uintptr_t>(g_pid, GameInstance + 0x38);
-		Globals::LocalPlayer = read<uintptr_t>(g_pid, LocalPlayers);
+		//Globals::LocalPlayer = read<uintptr_t>(g_pid, LocalPlayers);
 		
-		LocalPlayerController = read<uintptr_t>(g_pid, Globals::LocalPlayer + 0x30);
+		LocalPlayerController = read<uintptr_t>(g_pid, LocalPlayers + 0xb8);
+                MyHUD = read<uintptr_t>(g_pid, LocalPlayerController + 0x320);
 		PlayerCameraManager = read<uint64_t>(g_pid, LocalPlayerController + 0x328);
 		Globals::LocalPawn = read<uintptr_t>(g_pid, LocalPlayerController + 0x310);
 		Globals::LocalPawnRootComponent = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x188);
