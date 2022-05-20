@@ -219,7 +219,7 @@ void CacheNew()
 
 		GWorld = read<uintptr_t>(g_pid, pattern_uworld);
 		uintptr_t GameInstance = read<uintptr_t>(g_pid, GWorld + 0x1A8);
-		uintptr_t LocalPlayers = read<uintptr_t>(g_pid, GameInstance + 
+		uintptr_t LocalPlayers = read<uintptr_t>(g_pid, GameInstance + 0x38);
 		LocalPlayerController = read<uintptr_t>(g_pid, LocalPlayers + 0xb8);
                 MyHUD = read<uintptr_t>(g_pid, LocalPlayerController + 0x320);
 		PlayerCameraManager = read<uint64_t>(g_pid, LocalPlayerController + 0x328);
@@ -443,7 +443,7 @@ bool actorLoop()
                                 camera::m_CameraRotation = CameraCacheEntry.POV.Rotation;
 				//camera::m_CameraRotation.z = 0;
                        
-                                camera::m::CameraLocation = CameraCacheEntry.POV.Location;
+                                camera::m_CameraLocation = CameraCacheEntry.POV.Location;
 
 				if (g_fovchanger)
 				{
