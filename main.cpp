@@ -226,7 +226,7 @@ void CacheNew()
 		Globals::LocalPawn = read<uintptr_t>(g_pid, LocalPlayerController + 0x310);
 		Globals::LocalPawnRootComponent = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x188);
 		uint64_t LocalPlayerState = read<uint64_t>(g_pid, Globals::LocalPawn + 0x290);
-		LocalTeam = read<int>(g_pid, localplayerstate + 0x1010);
+		LocalTeam = read<int>(g_pid, LocalPlayerState + 0x1010);
 
 		InLobby = false;
 		if (!Globals::LocalPawn) InLobby = true;
