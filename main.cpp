@@ -1299,8 +1299,8 @@ int main() {
 	if (!pattern_uworld)
 		pattern_uworld = find_signature(XorStr("\x48\x89\x05\x00\x00\x00\x00\x48\x8B\x4B\x78").c_str(), XorStr("xxx????xxxx").c_str());
 
-        if (!pattern_gnames)
-		pattern_gnames = find_signature(XorStr("\x48\x83\xEC\x28\x80\x3D\x9D\x12\x82\x0B\x00\x74\x0C\x48\x8D\x05\x98").c_str(), XorStr("xxxxxxxxxx?xxxxxx").c_str());
+        //if (!pattern_gnames)
+	//	pattern_gnames = find_signature(XorStr("\x48\x83\xEC\x28\x80\x3D\x9D\x12\x82\x0B\x00\x74\x0C\x48\x8D\x05\x98").c_str(), XorStr("xxxxxxxxxx?xxxxxx").c_str());
 
 	if (!g_base_address) {
 		std::cout << XorStr("Could not get base address.\n").c_str();
