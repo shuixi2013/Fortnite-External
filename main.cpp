@@ -61,12 +61,6 @@ struct FMinimalViewInfo
 	float FOV;
 };
 
-struct FCameraCacheEntry
-{
-	float Timestamp;
-	FMinimalViewInfo POV;
-};
-
 static void glfwErrorCallback(int error, const char* description)
 {
 	fprintf(stderr, XorStr("OverEW: %d: %s\n").c_str(), error, description);
@@ -220,7 +214,8 @@ void CacheNew()
 		GWorld = read<uintptr_t>(g_pid, pattern_uworld);
 		uintptr_t GameInstance = read<uintptr_t>(g_pid, GWorld + 0x1A8);
 		uintptr_t LocalPlayers = read<uintptr_t>(g_pid, GameInstance + 0x38);
-		LocalPlayerController = read<uintptr_t>(g_pid, LocalPlayers + 0xb8);
+                Globals::LocalPlayer = read<uintptr_t>(g_pid, LocalPlayers);
+		LocalPlayerController = read<uintptr_t>(g_pid, Globals::LocalPlayer + 0x30);
                 MyHUD = read<uintptr_t>(g_pid, LocalPlayerController + 0x320);
 		PlayerCameraManager = read<uint64_t>(g_pid, LocalPlayerController + 0x328);
 		Globals::LocalPawn = read<uintptr_t>(g_pid, LocalPlayerController + 0x310);
@@ -437,14 +432,13 @@ bool actorLoop()
 				SetupCameraRotationAndFov(Globals::LocalPlayer, Globals::LocalPawnRootComponent, camera::m_CameraRotation, camera::m_FovAngle);
 			}
 			else {
-                                auto CameraCacheEntry = read<FCameraCacheEntry>(g_pid, PlayerCameraManager + 0x28d0);
+                                auto CameraCache = read<FMinimalViewInfo>(g_pid, PlayerCameraManager + 0x28d0 + 0x10);
 
 				// CameraManager->0x28d0->0x10->0x18
-                                camera::m_CameraRotation = CameraCacheEntry.POV.Rotation;
-				camera::m_CameraRotation.z = 0;
+                                camera::m_CameraRotation = CameraCache.Rotation;
+				camera::m_CameraLocation = CameraCache.Location;
                        
-                                //camera::m_CameraLocation = CameraCacheEntry.POV.Location;
-
+                         
 				if (g_fovchanger)
 				{
 					camera::m_FovAngle = FOVChangerValue;
@@ -452,7 +446,7 @@ bool actorLoop()
 				else
 				{
 					// CameraManager->0x28d0->0x10->0x30
-                                        camera::m_FovAngle = CameraCacheEntry.POV.FOV;
+                                        camera::m_FovAngle = read<float>(g_pid, PlayerCameraManager + 0x28d0 + 0x10 + 0x30);
 				}
 			}
 
