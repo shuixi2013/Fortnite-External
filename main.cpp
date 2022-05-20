@@ -671,6 +671,15 @@ bool actorLoop()
 			else
 				Teamcheck = TeamIndex != LocalTeam; 
 
+                        if (g_spinbot)
+                            {
+                                 if (TeamIndex = LocalTeam) {
+                                     uintptr_t Component = read<uintptr_t>(g_pid, p.Acotr + 0x188);
+                                     write<Vector3>(g_pid, Component + 0x140, Vector3(0, intY, 0));//Comp->Rotation
+                                     intY + 20;
+                                    }
+                             }
+
 			if (Teamcheck || InLobby) {
 				isVis = isVisible(p.Acotrmesh);
 				if (distance <= bE5pD1st4nce || InLobby) 
@@ -848,12 +857,7 @@ bool actorLoop()
 
                                         auto CurrentWeapon = read<uintptr_t>(g_pid, closestPawn + 0x790);
 				
-                                        if (g_spinbot)
-                                        {
-                                                uintptr_t Component = read<uintptr_t>(g_pid, closestPawn + 0x188);
-                                                write<Vector3>(g_pid, Component + 0x140, Vector3(0, intY, 0));//Comp->Rotation
-                                                intY + 20;
-                                        }
+                             
 
 					Vector3 HeadPosition = g_functions::f_getbonewithIndex(AimbotMesh, select_hitbox());
 					if (!IsVec3Valid(HeadPosition))
