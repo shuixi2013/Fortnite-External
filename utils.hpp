@@ -33,8 +33,13 @@ int g_width;
 int g_height;
 HWND fortnite_wnd;
 int g_pid;
-uint64_t g_base_address;
-uint64_t pattern_uworld;
+
+uint64_t 
+g_base_address,
+pattern_uworld,
+pattern_gnames
+;
+
 
 Sandy64 Drive;
 
