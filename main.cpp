@@ -219,22 +219,20 @@ void CacheNew()
 
 		GWorld = read<uintptr_t>(g_pid, pattern_uworld);
 		uintptr_t GameInstance = read<uintptr_t>(g_pid, GWorld + 0x1A8);
-		uintptr_t LocalPlayers = read<uintptr_t>(g_pid, GameInstance + 0x38);
-		//Globals::LocalPlayer = read<uintptr_t>(g_pid, LocalPlayers);
-		
+		uintptr_t LocalPlayers = read<uintptr_t>(g_pid, GameInstance + 
 		LocalPlayerController = read<uintptr_t>(g_pid, LocalPlayers + 0xb8);
                 MyHUD = read<uintptr_t>(g_pid, LocalPlayerController + 0x320);
 		PlayerCameraManager = read<uint64_t>(g_pid, LocalPlayerController + 0x328);
 		Globals::LocalPawn = read<uintptr_t>(g_pid, LocalPlayerController + 0x310);
 		Globals::LocalPawnRootComponent = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x188);
-		uint64_t localplayerstate = read<uint64_t>(g_pid, Globals::LocalPawn + 0x290);
+		uint64_t LocalPlayerState = read<uint64_t>(g_pid, Globals::LocalPawn + 0x290);
 		LocalTeam = read<int>(g_pid, localplayerstate + 0x1010);
 
 		InLobby = false;
 		if (!Globals::LocalPawn) InLobby = true;
 
                 uintptr_t PersistentLevel = read<uintptr_t>(g_pid, GWorld + 0x30);
-		auto ActorArray = read<uintptr_t>(g_pid, PersistentLevel + 0xa0);
+		auto ActorArray = read<DWORD>(g_pid, PersistentLevel + 0xa0);
 		auto Actors = read<uintptr_t>(g_pid, PersistentLevel + 0x98);
 		
 		for (int i = 0; i < ActorArray; ++i) {
@@ -470,9 +468,9 @@ bool actorLoop()
 			};
 			SetupCameraLocation(Globals::LocalPlayer, camera::m_CameraLocation);
 
-			uint64_t playerstate = read<uint64_t>(g_pid, p.Acotr + 0x290); 
+			uint64_t PlayerState = read<uint64_t>(g_pid, p.Acotr + 0x290); 
 
-			int TeamIndex = read<int>(g_pid, playerstate + 0x1010);
+			int TeamIndex = read<int>(g_pid, PlayerState + 0x1010);
 
 			if (g_fovchanger)
 			{
@@ -1022,7 +1020,6 @@ void runRenderTick() {
 
 			decoration();
 
-
 			static int Menu_Tab = 0; 1; 2; 3; 4;
 
 			ImGui::SetCursorPos({ 17,29 });
@@ -1241,33 +1238,11 @@ void runRenderTick() {
 	glfwSwapBuffers(g_window);
 }
 
-enum InjectedInputMouseOptions
-{
-    Absolute = 32768,
-    HWheel = 4096,
-    LeftDown = 2,
-    LeftUp = 4,
-    MiddleDown = 32,
-    MiddleUp = 64,
-    Move = 1,
-    MoveNoCoalesce = 8192,
-    None = 0,
-    RightDown = 8,
-    RightUp = 16,
-    VirtualDesk = 16384,
-    Wheel = 2048,
-    XDown = 128,
-    XUp = 256
-};
-
 typedef struct _InjectedInputMouseInfo
 {
 	int DeltaX;
 	int DeltaY;
 	unsigned int MouseData;
-	InjectedInputMouseOptions MouseOptions;
-	unsigned int TimeOffsetInMilliseconds;
-	void* ExtraInfo;
 } InjectedInputMouseInfo;
 
 typedef bool (WINAPI* InjectMouseInput_t)(InjectedInputMouseInfo* inputs, int count);
