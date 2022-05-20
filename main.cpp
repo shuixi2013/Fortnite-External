@@ -441,9 +441,9 @@ bool actorLoop()
 
 				// CameraManager->0x28d0->0x10->0x18
                                 camera::m_CameraRotation = CameraCacheEntry.POV.Rotation;
-				//camera::m_CameraRotation.z = 0;
+				camera::m_CameraRotation.z = 0;
                        
-                                camera::m_CameraLocation = CameraCacheEntry.POV.Location;
+                                //camera::m_CameraLocation = CameraCacheEntry.POV.Location;
 
 				if (g_fovchanger)
 				{
