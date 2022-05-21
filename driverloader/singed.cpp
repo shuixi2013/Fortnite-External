@@ -98,7 +98,6 @@ return true;
 
 bool VulnerableDriver::Init()
 {
-
 chase1803magic();
 
     const std::string placement_path = XorStr("C:\\Windows\\System32\\drivers\\vmbusraid.sys").c_str();
