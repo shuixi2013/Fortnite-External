@@ -471,8 +471,8 @@ bool actorLoop()
 
 			if (g_fovchanger)
 			{
-				//write(g_pid, PlayerCameraManager + 0x288, FOVChangerValue);
-                                write(g_pid, CameraActor + 0x298, FOVChangerValue);
+				write(g_pid, PlayerCameraManager + 0x288, FOVChangerValue);
+                                //write(g_pid, CameraActor + 0x298, FOVChangerValue);
 			}
 
 			Vector3 vHeadBone = g_functions::f_getbonewithIndex(p.Acotrmesh, 98);
