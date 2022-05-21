@@ -43,7 +43,7 @@ pattern_gnames
 HWND fortnite_wnd;
 
 static std::string LevelFNames[][4] = {
-       {"FortPickupAthena", "Tiered_Chest", ""Vehicl", "Valet_Taxi"},
+       {"FortPickupAthena", "Tiered_Chest", "Vehicl", "Valet_Taxi"},
        {"Tiered_Ammo", "Valet_BigRig", "Valet_BasicTr", "Valet_SportsC"},
        {"Valet_BasicC"},
 };
