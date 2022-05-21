@@ -467,9 +467,12 @@ bool actorLoop()
 
 			int TeamIndex = read<int>(g_pid, PlayerState + 0x1010);
 
+                        auto CameraActor = read<uintptr_t>(g_pid, PlayerCameraManager + 0x3168);
+
 			if (g_fovchanger)
 			{
-				write(g_pid, PlayerCameraManager + 0x288, FOVChangerValue);
+				//write(g_pid, PlayerCameraManager + 0x288, FOVChangerValue);
+                                write(g_pid, CameraActor + 0x298, FOVChangerValue);
 			}
 
 			Vector3 vHeadBone = g_functions::f_getbonewithIndex(p.Acotrmesh, 98);
