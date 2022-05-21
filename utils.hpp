@@ -1159,12 +1159,10 @@ std::uintptr_t find_signature(const char* sig, const char* mask)
 
 typedef struct Playertest
 {
-	float ItemDist;
-	uint64_t ACurrentActor;
-	uint64_t USkeletalMeshComponent;
+	uint64_t ACurrentActor,
+        USkeletalMeshComponent;
 	DWORD_PTR USceneComponent;
 	std::string GNames;
-	Vector3 ItemPosition;
 }Playertest;
 std::vector<Playertest> PLIST;
 
@@ -1180,8 +1178,10 @@ DWORD_PTR closestPawn = NULL;
 int LocalTeam;
 static bool targetlocked = false;
 
-uintptr_t GWorld;
-uintptr_t LocalPlayerController, MyHUD;
+uintptr_t GWorld,
+LocalPlayerController,
+MyHUD
+;
 uint64_t PlayerCameraManager;
 bool InLobby = false;
 
