@@ -25,6 +25,7 @@
 
 #define WIN32_LEAN_AND_MEAN  
 #include "driver.h"
+
 HANDLE hDrive;
 
 BOOL Sandy64::Init()
@@ -32,6 +33,7 @@ BOOL Sandy64::Init()
 	hDrive = ::CreateFileA(XorStr("\\\\.\\Sandy64").c_str(), GENERIC_ALL, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_HIDDEN, NULL);
 	return hDrive != 0;
 }
+
 ULONG64 Sandy64::GetModuleBase(ULONG ProcessPid, LPCSTR ModuleName)
 {
 	READWRITE ReadWrite = { ProcessPid,0,0,(ULONG64)ModuleName };
@@ -46,6 +48,7 @@ ULONG64 Sandy64::GetModuleBase(ULONG ProcessPid, LPCSTR ModuleName)
 	delete[] Temp;
 	return temp;
 }
+
 BOOL Sandy64::ReadPtr(ULONG ProcessPid,ULONG64 Address, PVOID pBuffer, DWORD Size)
 {
 	READWRITE ReadWrite = { ProcessPid,Address,Size,0 };
@@ -59,30 +62,10 @@ BOOL Sandy64::ReadPtr(ULONG ProcessPid,ULONG64 Address, PVOID pBuffer, DWORD Siz
 	delete[] Temp;
 	return bRet;
 }
+
 BOOL Sandy64::WritePtr(ULONG ProcessPid,ULONG64 Address, PVOID pBuffer, DWORD Size)
 {
 	READWRITE ReadWrite = { ProcessPid,Address,Size,(ULONG64)pBuffer };
 	BOOL bRet = ::DeviceIoControl(hDrive, 0x222004, &ReadWrite, sizeof(READWRITE), NULL, NULL, NULL, NULL);
-	return bRet;
-}
-ULONG64 Sandy64::ApplyMemory(ULONG ProcessPid, DWORD Size)
-{
-	READWRITE ReadWrite = { ProcessPid,0,Size,0 };
-	BYTE* Temp = new BYTE[8];
-	BOOL bRet = ::DeviceIoControl(hDrive, 0x222008, &ReadWrite, sizeof(READWRITE), Temp, 8, NULL, NULL);
-	ULONG64 temp = 0;
-	if (bRet == TRUE)
-	{
-		memcpy(&temp, Temp, 8);
-	}
-	delete[] Temp;
-	return temp;
-}
-
-BOOL Sandy64::QueryMemory(ULONG ProcessPid, ULONG64 BaseAddress, MEMORY_BASIC_INFORMATIONA &pinfo)
-{
-	READWRITE ReadWrite = { ProcessPid,BaseAddress,0,(ULONG64)&pinfo.BaseAddress };
-
-	BOOL bRet = ::DeviceIoControl(hDrive, 0x222010, &ReadWrite, sizeof(READWRITE), NULL, NULL, NULL, NULL);
 	return bRet;
 }
