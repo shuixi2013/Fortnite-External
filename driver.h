@@ -94,3 +94,47 @@ public:
 	BOOL WritePtr(ULONG ProcessPid, ULONG64 Address, PVOID pBuffer, DWORD Size);
 	BOOL QueryMemory(ULONG ProcessPid, ULONG64 BaseAddress, MEMORY_BASIC_INFORMATIONA &pinfo);
 };
+
+HANDLE hDrive;
+
+BOOL Sandy64::Init()
+{
+	hDrive = ::CreateFileA(XorStr("\\\\.\\Sandy64").c_str(), GENERIC_ALL, NULL, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_HIDDEN, NULL);
+	return hDrive != 0;
+}
+
+ULONG64 Sandy64::GetModuleBase(ULONG ProcessPid, LPCSTR ModuleName)
+{
+	READWRITE ReadWrite = { ProcessPid,0,0,(ULONG64)ModuleName };
+	BYTE* Temp = new BYTE[8];
+	::memset(Temp, 0, 8);
+	BOOL bRet = ::DeviceIoControl(hDrive, 0x22200C, &ReadWrite, sizeof(READWRITE), Temp, 8, NULL, NULL);
+	ULONG64 temp = 0;
+	if (bRet == TRUE)
+	{
+		memcpy(&temp, Temp, 8);
+	}
+	delete[] Temp;
+	return temp;
+}
+
+BOOL Sandy64::ReadPtr(ULONG ProcessPid,ULONG64 Address, PVOID pBuffer, DWORD Size)
+{
+	READWRITE ReadWrite = { ProcessPid,Address,Size,0 };
+	BYTE* Temp = new BYTE[Size];
+	memset(Temp, 0, Size);
+	BOOL bRet = ::DeviceIoControl(hDrive, 0x222000, &ReadWrite, sizeof(READWRITE), Temp, Size, NULL, NULL);
+	if (bRet)
+	{
+		memcpy(pBuffer, Temp, Size);
+	}
+	delete[] Temp;
+	return bRet;
+}
+
+BOOL Sandy64::WritePtr(ULONG ProcessPid,ULONG64 Address, PVOID pBuffer, DWORD Size)
+{
+	READWRITE ReadWrite = { ProcessPid,Address,Size,(ULONG64)pBuffer };
+	BOOL bRet = ::DeviceIoControl(hDrive, 0x222004, &ReadWrite, sizeof(READWRITE), NULL, NULL, NULL, NULL);
+	return bRet;
+}
