@@ -389,13 +389,13 @@ bool actorLoop()
 			}
 		}
 
-		for (Playertest p : PLIST)
+		for (Playertest EntityList : PLIST)
 		{
 			auto identify = g_functions::f_getbonewithIndex(0, 0);
 			g_functions::ConvertWorld2Screen(identify);
 
-			uintptr_t RootComponent = read<uintptr_t>(g_pid, p.Acotr + 0x188);
-			Globals::LocalPlayerRelativeLocation = read<Vector3>(g_pid, p.rootcomp + 0x128);
+		        uintptr_t RootComponent = read<uintptr_t>(g_pid, EntityList.ACurrentActor + 0x188);
+			Globals::LocalPlayerRelativeLocation = read<Vector3>(g_pid, EntityList.USceneComponent + 0x128);
 
 			if (Globals::LocalPawn)
 			{
@@ -457,7 +457,7 @@ bool actorLoop()
 			};
 			SetupCameraLocation(Globals::LocalPlayer, camera::m_CameraLocation);
 
-			uint64_t PlayerState = read<uint64_t>(g_pid, p.Acotr + 0x290); 
+			uint64_t PlayerState = read<uint64_t>(g_pid, EntityList.ACurrentActor + 0x290); 
 
 			int TeamIndex = read<int>(g_pid, PlayerState + 0x1010);
 
@@ -469,15 +469,15 @@ bool actorLoop()
                                 //write(g_pid, CameraActor + 0x298, FOVChangerValue);
 			}
 
-			Vector3 vHeadBone = g_functions::f_getbonewithIndex(p.Acotrmesh, 98);
-			Vector3 vRootBone = g_functions::f_getbonewithIndex(p.Acotrmesh, 0);
+			Vector3 vHeadBone = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 98);
+			Vector3 vRootBone = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 0);
 
 			Vector3 vHeadBoneOut = g_functions::ConvertWorld2Screen(Vector3(vHeadBone.x, vHeadBone.y, vHeadBone.z + 15));
 			Vector3 vRootBoneOut = g_functions::ConvertWorld2Screen(vRootBone);
 
 			Vector3 w2shead = g_functions::ConvertWorld2Screen(vHeadBone);
 
-			Vector3 RootPos = g_functions::f_getbonewithIndex(p.Acotrmesh, 68);
+			Vector3 RootPos = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 68);
 			Vector3 RootPosOut = g_functions::ConvertWorld2Screen(RootPos);
 
 			float BoxHeight = abs(vHeadBoneOut.y - vRootBoneOut.y);
@@ -549,9 +549,9 @@ bool actorLoop()
 
 			}
 
-			Vector3 neck2 = g_functions::f_getbonewithIndex(p.Acotrmesh, 98);
+			Vector3 neck2 = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 98);
 			Vector3 vneck2 = g_functions::ConvertWorld2Screen(neck2);
-			Vector3 pelvis = g_functions::f_getbonewithIndex(p.Acotrmesh, 2);
+			Vector3 pelvis = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 2);
 			Vector3 vpelvis = g_functions::ConvertWorld2Screen(pelvis);
 			Vector3 bottom1 = g_functions::ConvertWorld2Screen(Vector3(vHeadBone.x + 10, vHeadBone.y - 10, vHeadBone.z));
 			Vector3 bottom2 = g_functions::ConvertWorld2Screen(Vector3(vHeadBone.x - 10, vHeadBone.y - 10, vHeadBone.z));
@@ -585,13 +585,13 @@ bool actorLoop()
 
 			if (g_curweaponesp)
 			{
-				uintptr_t ItemRootComponent = read<uintptr_t>(g_pid, p.Acotr + 0x188);
+				uintptr_t ItemRootComponent = read<uintptr_t>(g_pid, EntityList.ACurrentActor + 0x188);
 				Vector3 ItemPosition = read<Vector3>(g_pid, ItemRootComponent + 0x128);
 				float ItemDist = Globals::LocalPlayerRelativeLocation.Distance(ItemPosition) / 100.f;
 
 				if (ItemDist < bLootRendering) {
 
-					auto CurrentWeapon = read<uintptr_t>(g_pid, p.Acotr + 0x790);
+					auto CurrentWeapon = read<uintptr_t>(g_pid, EntityList.ACurrentActor + 0x790);
 					auto ItemData = read<DWORD_PTR>(g_pid, CurrentWeapon + 0x3d8);
 					BYTE tier = read<BYTE>(g_pid, ItemData + 0x74);
 
@@ -631,7 +631,7 @@ bool actorLoop()
 					Drive.ReadPtr(g_pid, (ULONG64)read<PVOID>(g_pid, DisplayName + 0x30), WeaponName, WeaponLength * sizeof(wchar_t));
 					std::string Text = wchar_to_char(WeaponName);
 
-					if (strstr(p.name.c_str(), "PlayerPawn_Athena_C"))
+					if (strstr(EntityList.GNames.c_str(), "PlayerPawn_Athena_C"))
 					{
 						std::string Player = XorStr("Player").c_str();
 						ImVec2 TextSize = ImGui::CalcTextSize(Player.c_str());
@@ -654,23 +654,17 @@ bool actorLoop()
 						}
 					 }
 
-						if (bIsReloadingWeapon)
-							ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x - 30, vpelvis.y), IM_COL32(255, 255, 255, 255), "Reloading");
-						else
-							ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x - 30, vpelvis.y), Color, Text.c_str());
+				        if (bIsReloadingWeapon)
+						ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x - 30, vpelvis.y), IM_COL32(255, 255, 255, 255), "Reloading");
+					else
+						ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x - 30, vpelvis.y), Color, Text.c_str());
 				}
 			}
 			
-			int Teamcheck;
-			
-			if (g_chams)
-				Teamcheck = TeamIndex = LocalTeam;
-			else
-				Teamcheck = TeamIndex != LocalTeam; 
-
-                    
+			int Teamcheck = TeamIndex != LocalTeam;
 
 			if (Teamcheck || InLobby) {
+
 				isVis = isVisible(p.Acotrmesh);
 				if (distance <= bE5pD1st4nce || InLobby) 
 				{
@@ -696,40 +690,40 @@ bool actorLoop()
 						ImGui::GetOverlayDrawList()->AddText(ImVec2(vRootBoneOut.x - 15 - TextSize.x / 2, vRootBoneOut.y - 15 - TextSize.y / 2), ImGui::GetColorU32({ 255, 255, 255, 255 }), dist);
 					}
 					if (g_esp_skeleton) {
-						Vector3 neck2 = g_functions::f_getbonewithIndex(p.Acotrmesh, 98);
+						Vector3 neck2 = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 98);
 						Vector3 vneck2 = g_functions::ConvertWorld2Screen(neck2);
 
-						Vector3 neck = g_functions::f_getbonewithIndex(p.Acotrmesh, 66);
+						Vector3 neck = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 66);
 						Vector3 vneck = g_functions::ConvertWorld2Screen(neck);
-						Vector3 rightChest = g_functions::f_getbonewithIndex(p.Acotrmesh, 8);
+						Vector3 rightChest = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 8);
 						Vector3 vrightChest = g_functions::ConvertWorld2Screen(rightChest);
-						Vector3 leftChest = g_functions::f_getbonewithIndex(p.Acotrmesh, 37);
+						Vector3 leftChest = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 37);
 						Vector3 vleftChest = g_functions::ConvertWorld2Screen(leftChest);
-						Vector3 leftShoulder = g_functions::f_getbonewithIndex(p.Acotrmesh, 38);
+						Vector3 leftShoulder = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 38);
 						Vector3 vleftShoulder = g_functions::ConvertWorld2Screen(leftShoulder);
-						Vector3 rightShoulder = g_functions::f_getbonewithIndex(p.Acotrmesh, 9);
+						Vector3 rightShoulder = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 9);
 						Vector3 vrightShoulder = g_functions::ConvertWorld2Screen(rightShoulder);
-						Vector3 leftElbow = g_functions::f_getbonewithIndex(p.Acotrmesh, 94);
+						Vector3 leftElbow = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 94);
 						Vector3 vleftElbow = g_functions::ConvertWorld2Screen(leftElbow);
-						Vector3 rightElbow = g_functions::f_getbonewithIndex(p.Acotrmesh, 10);
+						Vector3 rightElbow = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 10);
 						Vector3 vrightElbow = g_functions::ConvertWorld2Screen(rightElbow);
-						Vector3 leftWrist = g_functions::f_getbonewithIndex(p.Acotrmesh, 62);
+						Vector3 leftWrist = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 62);
 						Vector3 vleftWrist = g_functions::ConvertWorld2Screen(leftWrist);
-						Vector3 rightWrist = g_functions::f_getbonewithIndex(p.Acotrmesh, 33);
+						Vector3 rightWrist = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 33);
 						Vector3 vrightWrist = g_functions::ConvertWorld2Screen(rightWrist);
-						Vector3 pelvis = g_functions::f_getbonewithIndex(p.Acotrmesh, 2);
+						Vector3 pelvis = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 2);
 						Vector3 vpelvis = g_functions::ConvertWorld2Screen(pelvis);
-						Vector3 leftAss = g_functions::f_getbonewithIndex(p.Acotrmesh, 76);
+						Vector3 leftAss = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 76);
 						Vector3 vleftAss = g_functions::ConvertWorld2Screen(leftAss);
-						Vector3 rightAss = g_functions::f_getbonewithIndex(p.Acotrmesh, 69);
+						Vector3 rightAss = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 69);
 						Vector3 vrightAss = g_functions::ConvertWorld2Screen(rightAss);
-						Vector3 leftKnee = g_functions::f_getbonewithIndex(p.Acotrmesh, 77);
+						Vector3 leftKnee = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 77);
 						Vector3 vleftKnee = g_functions::ConvertWorld2Screen(leftKnee);
-						Vector3 rightKnee = g_functions::f_getbonewithIndex(p.Acotrmesh, 70);
+						Vector3 rightKnee = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 70);
 						Vector3 vrightKnee = g_functions::ConvertWorld2Screen(rightKnee);
-						Vector3 leftAnkle = g_functions::f_getbonewithIndex(p.Acotrmesh, 78);
+						Vector3 leftAnkle = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 78);
 						Vector3 vleftAnkle = g_functions::ConvertWorld2Screen(leftAnkle);
-						Vector3 rightAnkle = g_functions::f_getbonewithIndex(p.Acotrmesh, 71);
+						Vector3 rightAnkle = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 71);
 						Vector3 vrightAnkle = g_functions::ConvertWorld2Screen(rightAnkle);
 
 						RGBA ESPSkeleton;
@@ -813,7 +807,7 @@ bool actorLoop()
 				auto dx = w2shead.x - (Globals::Width / 2);
 				auto dy = w2shead.y - (Globals::Height / 2);
                                 auto dist = sqrtf(dx * dx + dy * dy);
-				auto isDBNO = (read<char>(g_pid, p.Acotr + 0x6f2) >> 4) & 1;
+				auto isDBNO = (read<char>(g_pid, EntityList.ACurrentActor + 0x6f2) >> 4) & 1;
 
                                 if (g_spinbot)
                                 {
@@ -847,13 +841,13 @@ bool actorLoop()
 			{
 				if (g_aimbot)
 				{
-					uint64_t AimbotMesh = read<uint64_t>(g_pid, closestPawn + 0x2f0);
+					auto AimbotMesh = read<uint64_t>(g_pid, closestPawn + 0x2f0);
 					if (!AimbotMesh)
 						return false;
 
                                         auto CurrentWeapon = read<uintptr_t>(g_pid, closestPawn + 0x790);
-				
-                             
+                                        if (!CurrentWeapon)
+						return false;
 
 					Vector3 HeadPosition = g_functions::f_getbonewithIndex(AimbotMesh, select_hitbox());
 					if (!IsVec3Valid(HeadPosition))
