@@ -184,19 +184,18 @@ void CacheLevels()
 					int currentitemid = read<int>(g_pid, CurrentItemPawn + 0x18);
 					auto CurrentItemPawnName = GetNameFromFName(currentitemid);
 
-					if ((g_loot && strstr(CurrentItemPawnName.c_str(), (XorStr("FortPickupAthena")).c_str())) || strstr(CurrentItemPawnName.c_str(), (XorStr("Tiered_Chest").c_str())) || 
-                                        (g_vehicles && strstr(CurrentItemPawnName.c_str(), XorStr("Vehicl").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_Taxi").c_str()) || 
-                                        strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BigRig").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicTr").c_str()) || 
-                                        strstr(CurrentItemPawnName.c_str(), XorStr("Valet_SportsC").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicC").c_str())  ||
-                                        strstr(CurrentItemPawnName.c_str(), XorStr("Tiered_Ammo").c_str()))) 
-                                            {
-                                                 LootEntity fnlEntity{ };
-                                                 fnlEntity.ACurrentItem = CurrentItemPawn;
-                                                 fnlEntity.GNames = CurrentItemPawnName;
-                                                 tmpList.push_back(fnlEntity);
-                                             }
+					if ((g_loot && strstr(CurrentItemPawnName.c_str(), (XorStr("FortPickupAthena")).c_str())) || strstr(CurrentItemPawnName.c_str(), (XorStr("Tiered_Chest").c_str())) ||
+						(g_vehicles && strstr(CurrentItemPawnName.c_str(), XorStr("Vehicl").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_Taxi").c_str()) ||
+							strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BigRig").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicTr").c_str()) ||
+							strstr(CurrentItemPawnName.c_str(), XorStr("Valet_SportsC").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicC").c_str()) ||
+							strstr(CurrentItemPawnName.c_str(), XorStr("Tiered_Ammo").c_str())))
+					{
+						LootEntity fnlEntity{ };
+						fnlEntity.ACurrentItem = CurrentItemPawn;
+						fnlEntity.GNames = CurrentItemPawnName;
+						tmpList.push_back(fnlEntity);
+					}
 				}
-
 			}
 		}
 		LootentityList.clear();
@@ -214,9 +213,9 @@ void CacheGame()
 		GWorld = read<uintptr_t>(g_pid, pattern_uworld);
 		uintptr_t GameInstance = read<uintptr_t>(g_pid, GWorld + 0x1A8);
 		uintptr_t LocalPlayers = read<uintptr_t>(g_pid, GameInstance + 0x38);
-                Globals::LocalPlayer = read<uintptr_t>(g_pid, LocalPlayers);
+        Globals::LocalPlayer = read<uintptr_t>(g_pid, LocalPlayers);
 		LocalPlayerController = read<uintptr_t>(g_pid, Globals::LocalPlayer + 0x30);
-                MyHUD = read<uintptr_t>(g_pid, LocalPlayerController + 0x320);
+        MyHUD = read<uintptr_t>(g_pid, LocalPlayerController + 0x320);
 		PlayerCameraManager = read<uint64_t>(g_pid, LocalPlayerController + 0x328);
 		Globals::LocalPawn = read<uintptr_t>(g_pid, LocalPlayerController + 0x310);
 		Globals::LocalPawnRootComponent = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x188);
@@ -432,23 +431,23 @@ bool CheatLoop()
 				SetupCameraRotationAndFov(Globals::LocalPlayer, Globals::LocalPawnRootComponent, camera::m_CameraRotation, camera::m_FovAngle);
 			}
 			else {
-                
-                                auto CameraCache = read<FMinimalViewInfo>(g_pid, PlayerCameraManager + 0x28d0 + 0x10);
-                
-                                camera::m_CameraRotation = CameraCache.Rotation;
-                                camera::m_CameraLocation = CameraCache.Location;
-                       
-                         
-                                if (g_fovchanger)
-                                {
-                                        camera::m_FovAngle = FOVChangerValue;
-                                }
-                                else
-                                {
-                                        camera::m_FovAngle = CameraCache.FOV;
-                                }
 
-                                
+				auto CameraCache = read<FMinimalViewInfo>(g_pid, PlayerCameraManager + 0x28d0 + 0x10);
+
+				camera::m_CameraRotation = CameraCache.Rotation;
+				camera::m_CameraLocation = CameraCache.Location;
+
+
+				if (g_fovchanger)
+				{
+					camera::m_FovAngle = FOVChangerValue;
+				}
+				else
+				{
+					camera::m_FovAngle = CameraCache.FOV;
+				}
+
+
 			}
 
 			// get camera location
@@ -650,17 +649,17 @@ bool CheatLoop()
 						ImGui::GetOverlayDrawList()->AddText(ImVec2(vHeadBoneOut.x - 30 - TextSize.x / 2, vHeadBoneOut.y - 15 - TextSize.y / 2), ImGui::GetColorU32({ 255, 255, 255, 255 }), Bot.c_str());
 					}
 
-				        if (AmmoCount)
+					if (AmmoCount)
 					{
 						char buffer[128];
 						sprintf_s(buffer, "Ammo: %i", AmmoCount);
-						if (buffer != "?") 
+						if (buffer != "?")
 						{
-						        ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x, vpelvis.y + 15), IM_COL32(255, 255, 255, 255), buffer);
+							ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x, vpelvis.y + 15), IM_COL32(255, 255, 255, 255), buffer);
 						}
-					 }
+					}
 
-				        if (bIsReloadingWeapon)
+					if (bIsReloadingWeapon)
 						ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x - 30, vpelvis.y), IM_COL32(255, 255, 255, 255), "Reloading");
 					else
 						ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x - 30, vpelvis.y), Color, Text.c_str());
@@ -812,15 +811,15 @@ bool CheatLoop()
 
 				auto dx = w2shead.x - (Globals::Width / 2);
 				auto dy = w2shead.y - (Globals::Height / 2);
-                                auto dist = sqrtf(dx * dx + dy * dy);
+                auto dist = sqrtf(dx * dx + dy * dy);
 				auto isDBNO = (read<char>(g_pid, EntityList.ACurrentActor + 0x6f2) >> 4) & 1;
 
-                                if (g_spinbot)
-                                {
-                                      if (GetAsyncKeyState(VK_RBUTTON)) {
-                                            write<Vector3>(g_pid, EntityList.USceneComponent + 0x140, Vector3(0, rand(), 0));
-                                        }
-                                 }
+				if (g_spinbot)
+				{
+					if (GetAsyncKeyState(VK_RBUTTON)) {
+						write<Vector3>(g_pid, EntityList.USceneComponent + 0x140, Vector3(0, rand(), 0));
+					}
+				}
 
 				if (dist < bA1mb0tF0VV4lue && dist < closestDistance && TeamIndex != LocalTeam && !InLobby)
 				{
@@ -851,8 +850,8 @@ bool CheatLoop()
 					if (!AimbotMesh)
 						return false;
 
-                                        auto CurrentWeapon = read<uintptr_t>(g_pid, closestPawn + 0x790);
-                                        if (!CurrentWeapon)
+					auto CurrentWeapon = read<uintptr_t>(g_pid, closestPawn + 0x790);
+					if (!CurrentWeapon)
 						return false;
 
 					Vector3 HeadPosition = g_functions::f_getbonewithIndex(AimbotMesh, select_hitbox());
@@ -885,9 +884,9 @@ bool CheatLoop()
 
 							if (g_gun_tracers)
 							{
-								if (GetAsyncKeyState(VK_LBUTTON)) 
+								if (GetAsyncKeyState(VK_LBUTTON))
 								{
-                                                                        write<float>(g_pid, CurrentWeapon + 0x64, 99);
+									write<float>(g_pid, CurrentWeapon + 0x64, 99);
 								}
 								else
 								{
@@ -1199,7 +1198,7 @@ void runRenderTick() {
 				ImGui::SetCursorPos(ImVec2(140, 35));
 				ImGui::Checkbox(XorStr("No Bloom").c_str(), &g_gun_tracers);
 
-                                ImGui::SetCursorPos(ImVec2(140, 55));
+                ImGui::SetCursorPos(ImVec2(140, 55));
 				ImGui::Checkbox(XorStr("Spinbot").c_str(), &g_spinbot);
 
 				ImGui::PushItemWidth(180.f);
