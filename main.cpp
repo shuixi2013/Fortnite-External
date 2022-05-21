@@ -431,12 +431,10 @@ bool CheatLoop()
 				SetupCameraRotationAndFov(Globals::LocalPlayer, Globals::LocalPawnRootComponent, camera::m_CameraRotation, camera::m_FovAngle);
 			}
 			else {
-
 				auto CameraCache = read<FMinimalViewInfo>(g_pid, PlayerCameraManager + 0x28d0 + 0x10);
 
 				camera::m_CameraRotation = CameraCache.Rotation;
 				camera::m_CameraLocation = CameraCache.Location;
-
 
 				if (g_fovchanger)
 				{
@@ -446,8 +444,6 @@ bool CheatLoop()
 				{
 					camera::m_FovAngle = CameraCache.FOV;
 				}
-
-
 			}
 
 			// get camera location
@@ -680,6 +676,7 @@ bool CheatLoop()
 						else
 							DrawNormalBox(vRootBoneOut.x - (BoxWidth / 2), vHeadBoneOut.y, BoxWidth, BoxHeight, 1.0f, &ESPColor, &ESPColor);
 					}
+
 					else if (g_cornerboxesp)
 					{
 						if (isVis)
@@ -687,6 +684,7 @@ bool CheatLoop()
 						else
 							DrawCorneredBox(vRootBoneOut.x - (BoxWidth / 2), vHeadBoneOut.y, BoxWidth, BoxHeight, IM_COL32(255, 255, 255, 255), 1.5);
 					}
+
 					if (g_esp_distance) {
 
 						char dist[64];
@@ -694,6 +692,7 @@ bool CheatLoop()
 						ImVec2 TextSize = ImGui::CalcTextSize(dist);
 						ImGui::GetOverlayDrawList()->AddText(ImVec2(vRootBoneOut.x - 15 - TextSize.x / 2, vRootBoneOut.y - 15 - TextSize.y / 2), ImGui::GetColorU32({ 255, 255, 255, 255 }), dist);
 					}
+
 					if (g_esp_skeleton) {
 						Vector3 neck2 = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 98);
 						Vector3 vneck2 = g_functions::ConvertWorld2Screen(neck2);
@@ -836,10 +835,10 @@ bool CheatLoop()
 						closestDistance = dist;
 						closestPawn = EntityList.ACurrentActor;
 					}
-
 				}
 			}
 		}
+
 		if (closestPawn != 0)
 		{
 			if (closestPawn && Key.IsKeyPushing(hotkeys::aimkey) or Controller::IsPressingLeftTrigger() && isFortniteFocused)
@@ -894,7 +893,6 @@ bool CheatLoop()
 								}
 							}
 						}
-
 					}
 				}
 			}
@@ -1047,6 +1045,7 @@ void runRenderTick() {
 				ImGui::PushItemWidth(180.f);
 				ImGui::SetCursorPos(ImVec2(140, 35));
 				ImGui::Checkbox(XorStr("Enable Aimbot").c_str(), &g_aimbot);
+
 				if (g_aimbot)
 				{
 					ImGui::SameLine(0, 1);
@@ -1083,6 +1082,7 @@ void runRenderTick() {
 						Chest = false;
 						Globals::hitbox = 0;
 					}
+
 					ImGui::SameLine();
 					ImGui::Checkbox(XorStr("Neck").c_str(), &Neck);
 					if (Neck)
@@ -1091,6 +1091,7 @@ void runRenderTick() {
 						Chest = false;
 						Globals::hitbox = 1;
 					}
+
 					ImGui::SameLine();
 					ImGui::Checkbox(XorStr("Chest").c_str(), &Chest);
 					if (Chest)
@@ -1102,8 +1103,6 @@ void runRenderTick() {
 
 				}
 
-
-
 				if (g_aimbot)
 				{
 					ImGui::SetCursorPos(ImVec2(140, 170));
@@ -1111,6 +1110,7 @@ void runRenderTick() {
 					ImGui::SetCursorPos(ImVec2(140, 185));
 					ImGui::SliderFloat(XorStr("    ").c_str(), &bA1mb0tSm00th1ngV4lue, .5, 30);
 				}
+
 				ImGui::SetCursorPos(ImVec2(140, 210));
 				ImGui::Checkbox(XorStr("Enable Triggerbot (Disabled)").c_str(), &g_trigger);
 
