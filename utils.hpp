@@ -1160,22 +1160,17 @@ std::uintptr_t find_signature(const char* sig, const char* mask)
 typedef struct Playertest
 {
 	float ItemDist;
-	uint64_t Acotr;
-	uint64_t Acotrmesh;
-	DWORD_PTR rootcomp;
-	bool isbot;
-	bool storebot;
-	std::string name;
-	wchar_t* LootNames;
+	uint64_t ACurrentActor;
+	uint64_t USkeletalMeshComponent;
+	DWORD_PTR USceneComponent;
+	std::string GNames;
 	Vector3 ItemPosition;
 }Playertest;
 std::vector<Playertest> PLIST;
 
 typedef struct _LootEntity {
-	ImDrawList* Renderer;
-	std::string name;
+	std::string GNames;
 	uintptr_t CurrentActor;
-	Vector3 LocalRelativeLocation;
 }LootEntity;
 static std::vector<LootEntity> LootentityList;
 
