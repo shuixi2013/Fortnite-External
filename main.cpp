@@ -668,7 +668,7 @@ bool actorLoop()
 
 			if (Teamcheck || InLobby) {
 
-				isVis = isVisible(p.Acotrmesh);
+				isVis = isVisible(EntityList.USkeletalMeshComponent);
 				if (distance <= bE5pD1st4nce || InLobby) 
 				{
 					if (g_boxesp)
@@ -815,7 +815,7 @@ bool actorLoop()
                                 if (g_spinbot)
                                 {
                                       if (GetAsyncKeyState(VK_RBUTTON)) {
-                                            write<Vector3>(g_pid, Globals::LocalPawnRootComponent + 0x140, Vector3(0, rand(), 0));
+                                            write<Vector3>(g_pid, EntityList.USceneComponent + 0x140, Vector3(0, rand(), 0));
                                         }
                                  }
 
@@ -826,13 +826,13 @@ bool actorLoop()
 						if (!isDBNO)
 						{
 							closestDistance = dist;
-							closestPawn = p.Acotr;
+							closestPawn = EntityList.ACurrentActor;
 						}
 					}
 					else
 					{
 						closestDistance = dist;
-						closestPawn = p.Acotr;
+						closestPawn = EntityList.ACurrentActor;
 					}
 
 				}
