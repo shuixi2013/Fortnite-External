@@ -187,8 +187,8 @@ void CacheLevels()
 					if ((g_loot && strstr(CurrentItemPawnName.c_str(), LevelFNames.c_str()))) 
 					{
 						LootEntity fnlEntity{ };
-						fnlEntity.CurrentActor = CurrentItemPawn;
-						fnlEntity.name = CurrentItemPawnName;
+						fnlEntity.ACurrentItem = CurrentItemPawn;
+						fnlEntity.GNames = CurrentItemPawnName;
 						tmpList.push_back(fnlEntity);
 
 					}
@@ -286,19 +286,19 @@ bool actorLoop()
 
 	try
 	{
-		for (LootEntity entity : LootentityList) {
+		for (LootEntity LEntityList : LootentityList) {
 
 			if (Globals::LocalPawn)
 			{
-				uintptr_t ItemRootComponent = read<uintptr_t>(g_pid, entity.CurrentActor + 0x188);
+				uintptr_t ItemRootComponent = read<uintptr_t>(g_pid, LEntityList.ACurrentItem + 0x188);
 				Vector3 ItemPosition = read<Vector3>(g_pid, ItemRootComponent + 0x128);
 				float ItemDist = Globals::LocalPlayerRelativeLocation.Distance(ItemPosition) / 100.f;
 				std::string null = ("");
 
-				auto IsSearched = read<BYTE>(g_pid, (uintptr_t)entity.CurrentActor + 0xf41);
+				auto IsSearched = read<BYTE>(g_pid, (uintptr_t)LEntityList.ACurrentItem + 0xf41);
 				if (IsSearched >> 7 & 1) continue;
 
-				if (strstr(entity.name.c_str(), ("Tiered_Chest")) && g_chests)
+				if (strstr(LEntityList.GNames.c_str(), ("Tiered_Chest")) && g_chests)
 				{
 					if (ItemDist < bLootRendering) {
 						Vector3 ChestPosition;
@@ -307,7 +307,8 @@ bool actorLoop()
 						DrawString(14, ChestPosition.x, ChestPosition.y, &Col.yellow, true, true, Text.c_str());
 					}
 				}
-				else if ((g_vehicles && (strstr(entity.name.c_str(), XorStr("Vehicl").c_str()) || strstr(entity.name.c_str(), XorStr("Valet_Taxi").c_str()) || strstr(entity.name.c_str(), XorStr("Valet_BigRig").c_str()) || strstr(entity.name.c_str(), XorStr("Valet_BasicTr").c_str()) || strstr(entity.name.c_str(), XorStr("Valet_SportsC").c_str()) || strstr(entity.name.c_str(), XorStr("Valet_BasicC").c_str()))))
+
+				else if ((g_vehicles && (strstr(LEntityList.GNames.c_str(), XorStr("Vehicl").c_str()) || strstr(LEntityList.GNames.c_str(), XorStr("Valet_Taxi").c_str()) || strstr(LEntityList.GNames.c_str(), XorStr("Valet_BigRig").c_str()) || strstr(LEntityList.GNames.c_str(), XorStr("Valet_BasicTr").c_str()) || strstr(LEntityList.GNames.c_str(), XorStr("Valet_SportsC").c_str()) || strstr(LEntityList.GNames.c_str(), XorStr("Valet_BasicC").c_str()))))
 				{
 					if (ItemDist < bLootRendering) {
 						Vector3 VehiclePosition = g_functions::ConvertWorld2Screen(ItemPosition);
@@ -315,7 +316,8 @@ bool actorLoop()
 						DrawString(14, VehiclePosition.x, VehiclePosition.y, &Col.red, true, true, Text.c_str());
 					}
 				}
-				else if (strstr(entity.name.c_str(), ("AthenaSupplyDrop_C")) && g_loot)
+
+				else if (strstr(LEntityList.GNames.c_str(), ("AthenaSupplyDrop_C")) && g_loot)
 				{
 					if (ItemDist < bLootRendering) {
 						Vector3 ChestPosition;
@@ -326,7 +328,8 @@ bool actorLoop()
 
 					}
 				}
-				else if (strstr(entity.name.c_str(), ("Tiered_Ammo")) && g_ammo)
+
+				else if (strstr(LEntityList.GNames.c_str(), ("Tiered_Ammo")) && g_ammo)
 				{
 					if (ItemDist < bLootRendering) {
 						Vector3 ChestPosition;
@@ -337,11 +340,11 @@ bool actorLoop()
 					}
 				}
 
-				else if (g_loot && strstr(entity.name.c_str(), ("FortPickupAthena")))
+				else if (g_loot && strstr(LEntityList.GNames.c_str(), ("FortPickupAthena")))
 				{
 					if (ItemDist < bLootRendering) {
 
-						auto definition = read<uint64_t>(g_pid, entity.CurrentActor + 0x2f8 + 0x18);
+						auto definition = read<uint64_t>(g_pid, LEntityList.ACurrentItem + 0x2f8 + 0x18);
 						BYTE tier = read<BYTE>(g_pid, definition + 0x74);
 
 						RGBA Color, RGBAColor;
