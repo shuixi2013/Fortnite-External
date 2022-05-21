@@ -161,7 +161,7 @@ void handleKeyPresses()
 	}
 }
 
-void drawlootloop()
+void CacheLevels()
 {
 	if (Globals::LocalPawn)
 	{
@@ -205,7 +205,7 @@ void drawlootloop()
 	}
 }
 
-void CacheNew()
+void CacheGame()
 {
 	while (true)
 	{
@@ -249,7 +249,7 @@ void CacheNew()
 			}
 		}
 
-		drawlootloop();
+		CacheLevels();
 		PLIST.clear();
 		PLIST = tmpList;
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -1341,7 +1341,7 @@ int main() {
 	GetWindowThreadProcessId(ass, &assid);
 	//wndhide::hide_window(assid, ass, true); // hide overlay using SetWindowDisplayAffinity
 
-	HANDLE handle = CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(CacheNew), nullptr, NULL, nullptr);
+	HANDLE handle = CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(CacheGame), nullptr, NULL, nullptr);
 	CloseHandle(handle);
 
 	while (!glfwWindowShouldClose(g_window))
