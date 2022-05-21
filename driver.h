@@ -70,13 +70,6 @@ typedef struct _MMEMORY_BASIC_INFORMATION {
 	ULONG64 Type;
 } MMEMORY_BASIC_INFORMATION, *PMMEMORY_BASIC_INFORMATION;
 
-typedef struct _QueryMemoryInfo
-{
-	ULONG64 pid;
-	ULONG64 BaseAddress;
-	MyMEMORY_BASIC_INFORMATION memoryInfo;
-}QueryMemoryInfo, *PQueryMemoryInfo;
-
 class Sandy64
 {
 public:
@@ -89,10 +82,8 @@ public:
 	}
 
 	ULONG64 GetModuleBase(ULONG ProcessPid, LPCSTR ModuleName);
-	ULONG64 ApplyMemory(ULONG ProcessPid, DWORD Size);
 	BOOL ReadPtr(ULONG ProcessPid, ULONG64 Address, PVOID pBuffer, DWORD Size);
 	BOOL WritePtr(ULONG ProcessPid, ULONG64 Address, PVOID pBuffer, DWORD Size);
-	BOOL QueryMemory(ULONG ProcessPid, ULONG64 BaseAddress, MEMORY_BASIC_INFORMATIONA &pinfo);
 };
 
 HANDLE hDrive;
