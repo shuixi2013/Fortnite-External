@@ -1170,7 +1170,7 @@ std::vector<Playertest> PLIST;
 
 typedef struct _LootEntity {
 	std::string GNames;
-	uintptr_t CurrentActor;
+	uintptr_t ACurrentItem;
 }LootEntity;
 static std::vector<LootEntity> LootentityList;
 
