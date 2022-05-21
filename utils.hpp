@@ -29,7 +29,8 @@
 #include <cstdint>
 #include <string>
 
-int g_width,
+int 
+g_width,
 g_height,
 g_pid
 ;
@@ -1178,7 +1179,8 @@ DWORD_PTR closestPawn = NULL;
 int LocalTeam;
 static bool targetlocked = false;
 
-uintptr_t GWorld,
+uintptr_t 
+GWorld,
 LocalPlayerController,
 MyHUD
 ;
