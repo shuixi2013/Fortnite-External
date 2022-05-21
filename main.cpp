@@ -184,14 +184,17 @@ void CacheLevels()
 					int currentitemid = read<int>(g_pid, CurrentItemPawn + 0x18);
 					auto CurrentItemPawnName = GetNameFromFName(currentitemid);
 
-					if ((g_loot && strstr(CurrentItemPawnName.c_str(), LevelFNames.c_str()))) 
-					{
-						LootEntity fnlEntity{ };
-						fnlEntity.ACurrentItem = CurrentItemPawn;
-						fnlEntity.GNames = CurrentItemPawnName;
-						tmpList.push_back(fnlEntity);
-
-					}
+					if ((g_loot && strstr(CurrentItemPawnName.c_str(), (XorStr("FortPickupAthena")).c_str())) || strstr(CurrentItemPawnName.c_str(), (XorStr("Tiered_Chest").c_str())) || 
+                                        (g_vehicles && strstr(CurrentItemPawnName.c_str(), XorStr("Vehicl").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_Taxi").c_str()) || 
+                                        strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BigRig").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicTr").c_str()) || 
+                                        strstr(CurrentItemPawnName.c_str(), XorStr("Valet_SportsC").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicC").c_str())  ||
+                                        strstr(CurrentItemPawnName.c_str(), XorStr("Tiered_Ammo").c_str()))) 
+                                            {
+                                                 LootEntity fnlEntity{ };
+                                                 fnlEntity.CurrentActor = CurrentItemPawn;
+                                                 fnlEntity.name = CurrentItemPawnName;
+                                                 tmpList.push_back(fnlEntity);
+                                             }
 				}
 
 			}
