@@ -277,7 +277,7 @@ void WriteAngles(Vector3 Location)
 	//Depreciated
 }
 
-bool actorLoop() 
+bool CheatLoop() 
 {
 	bool bValidEnemyInArea = false;
 	float ClosestActorDistance = FLT_MAX;
@@ -940,7 +940,7 @@ void runRenderTick() {
 		Globals::ScreenCenterX = (Globals::Width / 2.0f);
 		Globals::ScreenCenterY = (Globals::Height / 2.0f);
 
-		actorLoop();
+		CheatLoop();
 	}
 
 	float radiusx = bA1mb0tF0VV4lue * (Globals::ScreenCenterX / 100);
