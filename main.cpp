@@ -213,9 +213,9 @@ void CacheGame()
 		GWorld = read<uintptr_t>(g_pid, pattern_uworld);
 		uintptr_t GameInstance = read<uintptr_t>(g_pid, GWorld + 0x1A8);
 		uintptr_t LocalPlayers = read<uintptr_t>(g_pid, GameInstance + 0x38);
-        Globals::LocalPlayer = read<uintptr_t>(g_pid, LocalPlayers);
+		Globals::LocalPlayer = read<uintptr_t>(g_pid, LocalPlayers);
 		LocalPlayerController = read<uintptr_t>(g_pid, Globals::LocalPlayer + 0x30);
-        MyHUD = read<uintptr_t>(g_pid, LocalPlayerController + 0x320);
+		MyHUD = read<uintptr_t>(g_pid, LocalPlayerController + 0x320);
 		PlayerCameraManager = read<uint64_t>(g_pid, LocalPlayerController + 0x328);
 		Globals::LocalPawn = read<uintptr_t>(g_pid, LocalPlayerController + 0x310);
 		Globals::LocalPawnRootComponent = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x188);
@@ -225,13 +225,13 @@ void CacheGame()
 		InLobby = false;
 		if (!Globals::LocalPawn) InLobby = true;
 
-                uintptr_t PersistentLevel = read<uintptr_t>(g_pid, GWorld + 0x30);
+		uintptr_t PersistentLevel = read<uintptr_t>(g_pid, GWorld + 0x30);
 		auto ActorArray = read<DWORD>(g_pid, PersistentLevel + 0xa0);
 		auto Actors = read<uintptr_t>(g_pid, PersistentLevel + 0x98);
-		
+
 		for (int i = 0; i < ActorArray; ++i) {
 			uintptr_t CurrentItemPawn = read<uintptr_t>(g_pid, Actors + (i * sizeof(uintptr_t)));
-			
+
 			int CurrentItemId = read<int>(g_pid, CurrentItemPawn + 0x18);
 			auto CurrentItemPawnName = GetNameFromFName(CurrentItemId);
 
@@ -399,7 +399,7 @@ bool CheatLoop()
 			auto identify = g_functions::f_getbonewithIndex(0, 0);
 			g_functions::ConvertWorld2Screen(identify);
 
-		        uintptr_t RootComponent = read<uintptr_t>(g_pid, EntityList.ACurrentActor + 0x188);
+			uintptr_t RootComponent = read<uintptr_t>(g_pid, EntityList.ACurrentActor + 0x188);
 			Globals::LocalPlayerRelativeLocation = read<Vector3>(g_pid, EntityList.USceneComponent + 0x128);
 
 			if (Globals::LocalPawn)
@@ -462,16 +462,16 @@ bool CheatLoop()
 			};
 			SetupCameraLocation(Globals::LocalPlayer, camera::m_CameraLocation);
 
-			uint64_t PlayerState = read<uint64_t>(g_pid, EntityList.ACurrentActor + 0x290); 
+			uint64_t PlayerState = read<uint64_t>(g_pid, EntityList.ACurrentActor + 0x290);
 
 			int TeamIndex = read<int>(g_pid, PlayerState + 0x1010);
 
-                        auto CameraActor = read<uintptr_t>(g_pid, PlayerCameraManager + 0x3168);
+			auto CameraActor = read<uintptr_t>(g_pid, PlayerCameraManager + 0x3168);
 
 			if (g_fovchanger)
 			{
 				write(g_pid, PlayerCameraManager + 0x288, FOVChangerValue);
-                                //write(g_pid, CameraActor + 0x298, FOVChangerValue);
+				//write(g_pid, CameraActor + 0x298, FOVChangerValue);
 			}
 
 			Vector3 vHeadBone = g_functions::f_getbonewithIndex(EntityList.USkeletalMeshComponent, 98);
@@ -524,9 +524,9 @@ bool CheatLoop()
 				uint32_t StringLength = read<uint32_t>(g_pid, nameptr + 0x8);
 				wchar_t* OutString = new wchar_t[StringLength + 1];
 				Drive.ReadPtr(g_pid, StringData, OutString, StringLength * sizeof(wchar_t));
-				
+
 				std::string Text = wchar_to_char(OutString);
-				
+
 				if (strstr(Text.c_str(), ("WIN")))
 				{
 					DrawString(13, vHeadBoneOut.x, vHeadBoneOut.y - 20, &Col.white, true, true, "PC");
@@ -665,13 +665,13 @@ bool CheatLoop()
 						ImGui::GetOverlayDrawList()->AddText(ImVec2(vpelvis.x - 30, vpelvis.y), Color, Text.c_str());
 				}
 			}
-			
+
 			int Teamcheck = TeamIndex != LocalTeam;
 
 			if (Teamcheck || InLobby) {
 
 				isVis = isVisible(EntityList.USkeletalMeshComponent);
-				if (distance <= bE5pD1st4nce || InLobby) 
+				if (distance <= bE5pD1st4nce || InLobby)
 				{
 					if (g_boxesp)
 					{
@@ -763,7 +763,7 @@ bool CheatLoop()
 								ESPSkeleton = ImGui::GetColorU32({ 255, 215, 0, 255 });
 							else
 								ESPSkeleton = ImGui::GetColorU32({ 255, 255, 255, 255 });
-							
+
 							Vector3 bottom1 = g_functions::ConvertWorld2Screen(Vector3(vRootBone.x + 40, vRootBone.y - 40, vRootBone.z));
 							Vector3 bottom2 = g_functions::ConvertWorld2Screen(Vector3(vRootBone.x - 40, vRootBone.y - 40, vRootBone.z));
 							Vector3 bottom3 = g_functions::ConvertWorld2Screen(Vector3(vRootBone.x - 40, vRootBone.y + 40, vRootBone.z));
@@ -807,11 +807,11 @@ bool CheatLoop()
 						);
 					}
 				}
-				
+
 
 				auto dx = w2shead.x - (Globals::Width / 2);
 				auto dy = w2shead.y - (Globals::Height / 2);
-                auto dist = sqrtf(dx * dx + dy * dy);
+				auto dist = sqrtf(dx * dx + dy * dy);
 				auto isDBNO = (read<char>(g_pid, EntityList.ACurrentActor + 0x6f2) >> 4) & 1;
 
 				if (g_spinbot)
