@@ -1,7 +1,7 @@
 /*
 	Gloomy.cc
- 	https://github.com/Chase1803
-	
+	https://github.com/Chase1803
+
 	Copyright (c) 2022 Chase1803
 	Permission is hereby granted, free of charge, to any person
 	obtaining a copy of this software and associated documentation
@@ -55,18 +55,18 @@ extern void aimbot(float x, float y);
 GLFWwindow* g_window;
 
 struct FMinimalViewInfo
- {
- 	Vector3 Location;
- 	Vector3 Rotation;
- 	float FOV;
- };
+{
+	Vector3 Location;
+	Vector3 Rotation;
+	float FOV;
+};
 
 static void glfwErrorCallback(int error, const char* description)
 {
 	fprintf(stderr, XorStr("OverEW: %d: %s\n").c_str(), error, description);
 }
 
-void setupWindow() 
+void setupWindow()
 {
 	glfwSetErrorCallback(glfwErrorCallback);
 	if (!glfwInit()) {
@@ -101,7 +101,7 @@ void setupWindow()
 	glfwSetWindowMonitor(g_window, NULL, 0, 0, g_width, g_height + 1, 0);
 
 	glfwMakeContextCurrent(g_window);
-	glfwSwapInterval(1); 
+	glfwSwapInterval(1);
 
 	if (glewInit() != GLEW_OK)
 	{
@@ -146,7 +146,7 @@ void activateFortniteWindow() {
 	SetForegroundWindow(fortnite_wnd);
 }
 
-void handleKeyPresses() 
+void handleKeyPresses()
 {
 	if (GetAsyncKeyState(VK_F1) & 1) {
 		g_overlay_visible = !g_overlay_visible;
@@ -186,9 +186,9 @@ void CacheLevels()
 
 					if ((g_loot && strstr(CurrentItemPawnName.c_str(), (XorStr("FortPickupAthena")).c_str())) || strstr(CurrentItemPawnName.c_str(), (XorStr("Tiered_Chest").c_str())) ||
 						(g_vehicles && strstr(CurrentItemPawnName.c_str(), XorStr("Vehicl").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_Taxi").c_str()) ||
-						strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BigRig").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicTr").c_str()) ||
-						strstr(CurrentItemPawnName.c_str(), XorStr("Valet_SportsC").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicC").c_str()) ||
-						strstr(CurrentItemPawnName.c_str(), XorStr("Tiered_Ammo").c_str())))
+							strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BigRig").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicTr").c_str()) ||
+							strstr(CurrentItemPawnName.c_str(), XorStr("Valet_SportsC").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicC").c_str()) ||
+							strstr(CurrentItemPawnName.c_str(), XorStr("Tiered_Ammo").c_str())))
 					{
 						LootEntity fnlEntity{ };
 						fnlEntity.ACurrentItem = CurrentItemPawn;
@@ -279,7 +279,7 @@ void WriteAngles(Vector3 Location)
 	//Depreciated
 }
 
-bool CheatLoop() 
+bool CheatLoop()
 {
 	bool bValidEnemyInArea = false;
 	float ClosestActorDistance = FLT_MAX;
@@ -991,7 +991,7 @@ void runRenderTick() {
 	if (g_overlay_visible) {
 		{
 
-			ImGui::Begin(XorStr(" ").c_str(), nullptr,  ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar); //  | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground
+			ImGui::Begin(XorStr(" ").c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar); //  | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground
 			ImGui::SetWindowSize(XorStr(" ").c_str(), ImVec2(400, 300));
 
 			ImGuiStyle& s = ImGui::GetStyle();
@@ -1159,7 +1159,7 @@ void runRenderTick() {
 				if (g_fov || g_circlefov)
 				{
 					ImGui::SetCursorPos(ImVec2(140, 75));
-					ImGui::Text("FOV"); 
+					ImGui::Text("FOV");
 					ImGui::SetCursorPos(ImVec2(140, 90));
 					ImGui::SliderFloat(XorStr("    ").c_str(), &bA1mb0tF0VV4lue, 10, 1000);
 				}
@@ -1180,7 +1180,7 @@ void runRenderTick() {
 				ImGui::PushItemWidth(180.f);
 				ImGui::Spacing();
 				ImGui::SetCursorPos(ImVec2(140, 135));
-				ImGui::Text("Max Rendering"); 
+				ImGui::Text("Max Rendering");
 				ImGui::SetCursorPos(ImVec2(140, 150));
 				ImGui::SliderInt(XorStr(" ").c_str(), &bLootRendering, 5, 50);
 				ImGui::Spacing();
@@ -1198,7 +1198,7 @@ void runRenderTick() {
 				ImGui::SetCursorPos(ImVec2(140, 35));
 				ImGui::Checkbox(XorStr("No Bloom").c_str(), &g_gun_tracers);
 
-                ImGui::SetCursorPos(ImVec2(140, 55));
+				ImGui::SetCursorPos(ImVec2(140, 55));
 				ImGui::Checkbox(XorStr("Spinbot").c_str(), &g_spinbot);
 
 				ImGui::PushItemWidth(180.f);
@@ -1233,35 +1233,35 @@ void runRenderTick() {
 }
 
 enum InjectedInputMouseOptions
- {
-     Absolute = 32768,
-     HWheel = 4096,
-     LeftDown = 2,
-     LeftUp = 4,
-     MiddleDown = 32,
-     MiddleUp = 64,
-     Move = 1,
-     MoveNoCoalesce = 8192,
-     None = 0,
-     RightDown = 8,
-     RightUp = 16,
-     VirtualDesk = 16384,
-     Wheel = 2048,
-     XDown = 128,
-     XUp = 256
- };
+{
+	Absolute = 32768,
+	HWheel = 4096,
+	LeftDown = 2,
+	LeftUp = 4,
+	MiddleDown = 32,
+	MiddleUp = 64,
+	Move = 1,
+	MoveNoCoalesce = 8192,
+	None = 0,
+	RightDown = 8,
+	RightUp = 16,
+	VirtualDesk = 16384,
+	Wheel = 2048,
+	XDown = 128,
+	XUp = 256
+};
 
- typedef struct _InjectedInputMouseInfo
- {
- 	int DeltaX;
- 	int DeltaY;
- 	unsigned int MouseData;
- 	InjectedInputMouseOptions MouseOptions;
- 	unsigned int TimeOffsetInMilliseconds;
- 	void* ExtraInfo;
- } InjectedInputMouseInfo;
+typedef struct _InjectedInputMouseInfo
+{
+	int DeltaX;
+	int DeltaY;
+	unsigned int MouseData;
+	InjectedInputMouseOptions MouseOptions;
+	unsigned int TimeOffsetInMilliseconds;
+	void* ExtraInfo;
+} InjectedInputMouseInfo;
 
- typedef bool (WINAPI* InjectMouseInput_t)(InjectedInputMouseInfo* inputs, int count);
+typedef bool (WINAPI* InjectMouseInput_t)(InjectedInputMouseInfo* inputs, int count);
 
 InjectMouseInput_t InjectMouseInput;
 
@@ -1316,8 +1316,8 @@ int main() {
 	if (!pattern_uworld)
 		pattern_uworld = find_signature(XorStr("\x48\x89\x05\x00\x00\x00\x00\x48\x8B\x4B\x78").c_str(), XorStr("xxx????xxxx").c_str());
 
-        //if (!pattern_gnames)
-	//	pattern_gnames = find_signature(XorStr("\x48\x83\xEC\x28\x80\x3D\x9D\x12\x82\x0B\x00\x74\x0C\x48\x8D\x05\x98").c_str(), XorStr("xxxxxxxxxx?xxxxxx").c_str());
+	//if (!pattern_gnames)
+//	pattern_gnames = find_signature(XorStr("\x48\x83\xEC\x28\x80\x3D\x9D\x12\x82\x0B\x00\x74\x0C\x48\x8D\x05\x98").c_str(), XorStr("xxxxxxxxxx?xxxxxx").c_str());
 
 	if (!g_base_address) {
 		std::cout << XorStr("Could not get base address.\n").c_str();
