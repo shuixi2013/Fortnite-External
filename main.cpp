@@ -191,7 +191,7 @@ void CacheLevels()
                                         strstr(CurrentItemPawnName.c_str(), XorStr("Tiered_Ammo").c_str()))) 
                                             {
                                                  LootEntity fnlEntity{ };
-                                                 fnlEntity.ACurrentActor = CurrentItemPawn;
+                                                 fnlEntity.ACurrentItem = CurrentItemPawn;
                                                  fnlEntity.GNames = CurrentItemPawnName;
                                                  tmpList.push_back(fnlEntity);
                                              }
