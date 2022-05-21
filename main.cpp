@@ -280,8 +280,6 @@ void WriteAngles(Vector3 Location)
 	//Depreciated
 }
 
-int intY = 0;
-
 bool actorLoop() 
 {
 	bool bValidEnemyInArea = false;
@@ -396,7 +394,6 @@ bool actorLoop()
 
 		for (Playertest p : PLIST)
 		{
-                        intY = 0;
 			auto identify = g_functions::f_getbonewithIndex(0, 0);
 			g_functions::ConvertWorld2Screen(identify);
 
@@ -818,18 +815,16 @@ bool actorLoop()
 
 				auto dx = w2shead.x - (Globals::Width / 2);
 				auto dy = w2shead.y - (Globals::Height / 2);
-				//auto dist = sqrtf(dx * dx + dy * dy) / 100.0f;
                                 auto dist = sqrtf(dx * dx + dy * dy);
 				auto isDBNO = (read<char>(g_pid, p.Acotr + 0x6f2) >> 4) & 1;
 
-                                 if (g_spinbot)
-                                    {
-                                      if (TeamIndex = LocalTeam && GetAsyncKeyState(VK_RBUTTON)) {
-                                            uintptr_t Component = read<uintptr_t>(g_pid, p.Acotr + 0x188);
-                                            write<Vector3>(g_pid, Component + 0x140, Vector3(0, intY, 0));//Comp->Rotation
-                                            intY + 20;
+                                if (g_spinbot)
+                                {
+                                      if (GetAsyncKeyState(VK_RBUTTON)) {
+                                            write<Vector3>(g_pid, Globals::LocalPawnRootComponent + 0x140, Vector3(0, rand(), 0));
                                         }
-                                    }
+                                 }
+
 				if (dist < bA1mb0tF0VV4lue && dist < closestDistance && TeamIndex != LocalTeam && !InLobby)
 				{
 					if (g_skipknocked)
