@@ -237,10 +237,10 @@ void CacheGame()
 			{
 				Playertest Actor{ };
 
-				Actor.Acotr = CurrentItemPawn;
-				Actor.Acotrmesh = read<uint64_t>(g_pid, CurrentItemPawn + 0x2f0);
-				Actor.name = CurrentItemPawnName;
-				Actor.rootcomp = Globals::LocalPawnRootComponent;
+				Actor.ACurrentActor = CurrentItemPawn;
+				Actor.USkeletalMeshComponent = read<uint64_t>(g_pid, CurrentItemPawn + 0x2f0);
+				Actor.GNames = CurrentItemPawnName;
+				Actor.USceneComponent = Globals::LocalPawnRootComponent;
 
 				tmpList.push_back(Actor);
 			}
