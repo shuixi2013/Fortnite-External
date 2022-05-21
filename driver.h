@@ -25,6 +25,7 @@
 
 #define WIN32_LEAN_AND_MEAN  
 #pragma once
+
 #include <windows.h>
 #include "tlhelp32.h"
 #include "string.hpp"
@@ -36,6 +37,7 @@ struct READWRITE
 	DWORD Size;
 	ULONG64 Buffer;
 };
+
 typedef struct _MEMORY_BASIC_INFORMATIONA
 {
 	ULONG64  BaseAddress;
@@ -47,6 +49,7 @@ typedef struct _MEMORY_BASIC_INFORMATIONA
 	ULONG  Type;
 
 } MEMORY_BASIC_INFORMATIONA, *PMEMORY_BASIC_INFORMATIONA;
+
 typedef struct _MyMEMORY_BASIC_INFORMATION {
 	ULONG64 BaseAddress;
 	ULONG64 AllocationBase;
@@ -56,6 +59,7 @@ typedef struct _MyMEMORY_BASIC_INFORMATION {
 	ULONG64 Protect;
 	ULONG64 Type;
 } MyMEMORY_BASIC_INFORMATION, *PMyMEMORY_BASIC_INFORMATION;
+
 typedef struct _MMEMORY_BASIC_INFORMATION {
 	ULONG64 BaseAddress;
 	ULONG64 AllocationBase;
@@ -65,12 +69,14 @@ typedef struct _MMEMORY_BASIC_INFORMATION {
 	ULONG64 Protect;
 	ULONG64 Type;
 } MMEMORY_BASIC_INFORMATION, *PMMEMORY_BASIC_INFORMATION;
+
 typedef struct _QueryMemoryInfo
 {
 	ULONG64 pid;
 	ULONG64 BaseAddress;
 	MyMEMORY_BASIC_INFORMATION memoryInfo;
 }QueryMemoryInfo, *PQueryMemoryInfo;
+
 class Sandy64
 {
 public:
