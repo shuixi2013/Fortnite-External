@@ -8,4 +8,3 @@ Last Update: 20/05/22 - Updated offsets and fnamepool to latest patch.
 
 
 Discord: https://discord.gg/RwJUHwdQwG
-
