@@ -1,4 +1,5 @@
 #pragma once
+
 /*
 	*Gloomy.cc
  	*https://github.com/Chase1803
@@ -23,47 +24,6 @@
 	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 	OTHER DEALINGS IN THE SOFTWARE.
  */
-
-/*
-__int64 __fastcall sub_7FF6119D0ED0(unsigned __int16 *a1, _WORD *a2) //a1 index
-{
-  _WORD *v2; // rdi
-  unsigned __int16 *v3; // rbx
-  int v4; // ebx
-  unsigned int v5; // eax
-  unsigned int v6; // er9
-  unsigned int v7; // er8
-  __int64 result; // rax
-  unsigned int v9; // er9
-  int v10; // ecx
-
-  v2 = a2;
-  v3 = a1;
-  ((void (__fastcall *)(_WORD *, unsigned __int16 *, unsigned __int64))unk_7FF60EA8CC72)(
-	a2,
-	a1 + 2,
-	2 * ((unsigned __int64)*a1 >> 6));
-  v4 = *v3 >> 6;
-  v5 = sub_7FF60EAA60C0();
-  v6 = v5;
-  v7 = v5 ^ 0x9C677CC5;
-  result = 1041204193 * v5;
-  v9 = v6 % 0x21;
-  v10 = 0;
-  if ( v4 )
-  {
-	do
-	{
-	  result = v10++ + v9;
-	  v7 += result;
-	  *v2 ^= v7;
-	  ++v2;
-	}
-	while ( v10 < v4 );
-  }
-  return result;
-}
-*/
 
 static std::string ReadFNamePool(int key) 
 {
