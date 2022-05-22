@@ -1157,6 +1157,57 @@ std::uintptr_t find_signature(const char* sig, const char* mask)
 	return 0;
 }
 
+template<class T>
+T PatternScan(const char* signature, int offset) {
+    int instructionLength = offset + sizeof(T);
+    IMAGE_DOS_HEADER dos_header = read<IMAGE_DOS_HEADER>(g_pid, g_base_address);
+    IMAGE_NT_HEADERS64 nt_headers = read<IMAGE_NT_HEADERS64>(g_pid, g_base_address + dos_header.e_lfanew);
+
+    const size_t target_len = nt_headers.OptionalHeader.SizeOfImage;
+
+    static auto patternToByte = [](const char* pattern)
+    {
+        auto bytes = std::vector<int>{};
+        const auto start = const_cast<char*>(pattern);
+        const auto end = const_cast<char*>(pattern) + strlen(pattern);
+
+        for(auto current = start; current < end; ++current)
+        {
+            if(*current == '?')
+            {
+                ++current;
+                bytes.push_back(-1);
+            }
+            else { bytes.push_back(strtoul(current, &current, 16)); }
+        }
+        return bytes;
+    };
+
+    auto patternBytes = patternToByte(signature);
+    const auto s = patternBytes.size();
+    const auto d = patternBytes.data();
+
+    auto target = std::unique_ptr<uint8_t[]>(new uint8_t[target_len]);
+    if(read_array(g_pid, g_base_address, target.get(), target_len)) {
+        for(auto i = 0ul; i < nt_headers.OptionalHeader.SizeOfImage - s; ++i)
+        {
+            bool found = true;
+            for(auto j = 0ul; j < s; ++j)
+            {
+                if(target[static_cast<size_t>(i) + j] != d[j] && d[j] != -1)
+                {
+                    found = false;
+                    break;
+                }
+            }
+            if(found) {
+                return read<T>(g_pid, g_base_address + i + offset) + i + instructionLength;
+            }
+        }
+    }
+
+    return NULL;
+}
 
 typedef struct Playertest
 {
