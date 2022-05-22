@@ -5,7 +5,5 @@ External Fortnite Cheat written mostly in C++.
 
 Status: Updated to latest patch, BattleEye only!
 
-Menu Key - F1
-
 Last Update: 20/05/22 - Updated offsets and fnamepool to latest patch.
 
