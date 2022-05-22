@@ -65,15 +65,16 @@ __int64 __fastcall sub_7FF6119D0ED0(unsigned __int16 *a1, _WORD *a2) //a1 index
 }
 */
 
-static std::string ReadGetNameFromFName(int key) {
+static std::string ReadFNamePool(int key) 
+{
 	uint32_t ChunkOffset = (uint32_t)((int)(key) >> 16);
 	uint16_t NameOffset = (uint16_t)key;
- 
 	uint64_t NamePoolChunk = read<uint64_t>(g_pid, pattern_gnames + (8 * ChunkOffset) + 16) + (unsigned int)(4 * NameOffset); // ERROR_NAME_SIZE_EXCEEDED
 	uint16_t nameEntry = read<uint16_t>(g_pid, NamePoolChunk);
  
 	int nameLength = nameEntry >> 6; 
-	char buff[1024]; 
+	char buff[1024];
+
 	if ((uint32_t)nameLength)
 	{
 		for (int x = 0; x < nameLength; ++x)
@@ -81,13 +82,8 @@ static std::string ReadGetNameFromFName(int key) {
 			buff[x] = read<char>(g_pid, NamePoolChunk + 4 + x);
 		}
 
-		char* v2 = buff;
-		int v4 = nameLength;
-		int v5 = 0;
-		int v7;
-		char v8;
-                __int64 v6 = 30i64;
-		
+		char* v2 = buff; int v4 = nameLength, v5 = 0, v7; __int64 v6 = 30i64; char v8;
+              
 		if (v4)
 		{
 			do
@@ -99,29 +95,25 @@ static std::string ReadGetNameFromFName(int key) {
 				v6 = (unsigned int)(2 * v7);
 				*(BYTE*)(v2 - 1) ^= v8;
 			} while (v5 < v4);
-		}
-		buff[nameLength] = '\0';
-		return std::string(buff);
+		} buff[nameLength] = '\0'; return std::string(buff);
 	}
-	else
-	{
-		return "";
-	}
+	else return "";
 }
  
 static std::string GetNameFromFName(int key)
 {
 	uint32_t ChunkOffset = (uint32_t)((int)(key) >> 16);
 	uint16_t NameOffset = (uint16_t)key;
- 
-	uint64_t NamePoolChunk = read<uint64_t>(g_pid, pattern_gnames + (8 * ChunkOffset) + 16) + (unsigned int)(4 * NameOffset); // ERROR_NAME_SIZE_EXCEEDED
+	uint64_t NamePoolChunk = read<uint64_t>(g_pid, pattern_gnames + (8 * ChunkOffset) + 16) + (unsigned int)(4 * NameOffset);
+
 	if (read<uint16_t>(g_pid, NamePoolChunk) < 64)
 	{
 		auto a1 = read<DWORD>(g_pid, NamePoolChunk + 4);
-		return ReadGetNameFromFName(a1);
+		return ReadFNamePool(a1);
 	}
+
 	else
 	{
-		return ReadGetNameFromFName(key);
+		return ReadFNamePool(key);
 	}
 }
