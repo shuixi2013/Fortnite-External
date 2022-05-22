@@ -27,12 +27,8 @@
 
 static std::string ReadFNamePool(int key) 
 {
-	uint32_t ChunkOffset = (uint32_t)((int)(key) >> 16);
-	uint16_t NameOffset = (uint16_t)key;
-	uint64_t NamePoolChunk = read<uint64_t>(g_pid, pattern_gnames + (8 * ChunkOffset) + 16) + (unsigned int)(4 * NameOffset);
-	uint16_t nameEntry = read<uint16_t>(g_pid, NamePoolChunk);
- 
-	int nameLength = nameEntry >> 6; 
+	uint64_t NamePoolChunk = read<uint64_t>(g_pid, pattern_gnames + (8 * (uint32_t)((int)(key) >> 16)) + 16) + (unsigned int)(4 * (uint16_t)key);
+	int nameLength = read<uint16_t>(g_pid, NamePoolChunk) >> 6; 
 	char buff[1024];
 
 	if ((uint32_t)nameLength)
@@ -62,9 +58,7 @@ static std::string ReadFNamePool(int key)
  
 static std::string GetNameFromFName(int key)
 {
-	uint32_t ChunkOffset = (uint32_t)((int)(key) >> 16);
-	uint16_t NameOffset = (uint16_t)key;
-	uint64_t NamePoolChunk = read<uint64_t>(g_pid, pattern_gnames + (8 * ChunkOffset) + 16) + (unsigned int)(4 * NameOffset);
+	uint64_t NamePoolChunk = read<uint64_t>(g_pid, pattern_gnames + (8 * (uint32_t)((int)(key) >> 16)) + 16) + (unsigned int)(4 * (uint16_t)key);
 
 	if (read<uint16_t>(g_pid, NamePoolChunk) < 64)
 	{
