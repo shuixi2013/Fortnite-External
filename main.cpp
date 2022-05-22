@@ -821,7 +821,7 @@ bool CheatLoop()
 					if (GetAsyncKeyState(VK_RBUTTON)) {
 						write<Vector3>(g_pid, Mesh + 0x140, Vector3(1, rand() % 361, 1));
 					}
-					else write<Vector3>(g_pid, Mesh + 0x140, Cached);
+					else if (!GetAsyncKeyState(VK_RBUTTON)) write<Vector3>(g_pid, Mesh + 0x140, Cached);
 				}
 
 				if (dist < bA1mb0tF0VV4lue && dist < closestDistance && TeamIndex != LocalTeam && !InLobby)
