@@ -43,7 +43,7 @@ pattern_gnames
 
 HWND fortnite_wnd;
 
-static const char* LEntityNames[] =
+const char* LEntityNames[] =
 {
 "FortPickupAthena",
 "Tiered_Chest",
