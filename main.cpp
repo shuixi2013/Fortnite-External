@@ -816,7 +816,9 @@ bool CheatLoop()
 				if (g_spinbot)
 				{
 					if (GetAsyncKeyState(VK_RBUTTON)) {
-						write<Vector3>(g_pid, EntityList.USceneComponent + 0x140, Vector3(0, rand(), 0));
+
+						auto Mesh = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2f0);
+						write<Vector3>(g_pid, Mesh + 0x140, Vector3(1, rand() % 361, 1));
 					}
 				}
 
