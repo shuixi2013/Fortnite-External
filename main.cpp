@@ -190,10 +190,10 @@ void CacheLevels()
 							strstr(CurrentItemPawnName.c_str(), XorStr("Valet_SportsC").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_BasicC").c_str()) ||
 							strstr(CurrentItemPawnName.c_str(), XorStr("Tiered_Ammo").c_str())))
 					{
-						LootEntity fnlEntity{ };
-						fnlEntity.ACurrentItem = CurrentItemPawn;
-						fnlEntity.GNames = CurrentItemPawnName;
-						tmpList.push_back(fnlEntity);
+						LootEntity LevelObjects{ };
+						LevelObjects.ACurrentItem = CurrentItemPawn;
+						LevelObjects.GNames = CurrentItemPawnName;
+						tmpList.push_back(LevelObjects);
 					}
 				}
 			}
