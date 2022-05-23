@@ -181,8 +181,8 @@ void CacheLevels()
 
 				if (ItemDist < bLootRendering) {
 
-					int currentitemid = read<int>(g_pid, CurrentItemPawn + 0x18);
-					auto CurrentItemPawnName = GetNameFromFName(currentitemid);
+					int ItemIndex = read<int>(g_pid, CurrentItemPawn + 0x18);
+					auto CurrentItemPawnName = GetNameFromFName(ItemIndex);
 
 					if ((g_loot && strstr(CurrentItemPawnName.c_str(), (XorStr("FortPickupAthena")).c_str())) || strstr(CurrentItemPawnName.c_str(), (XorStr("Tiered_Chest").c_str())) ||
 						(g_vehicles && strstr(CurrentItemPawnName.c_str(), XorStr("Vehicl").c_str()) || strstr(CurrentItemPawnName.c_str(), XorStr("Valet_Taxi").c_str()) ||
@@ -232,8 +232,8 @@ void CacheGame()
 		for (int i = 0; i < ActorArray; ++i) {
 			uintptr_t CurrentItemPawn = read<uintptr_t>(g_pid, Actors + (i * sizeof(uintptr_t)));
 
-			int CurrentItemId = read<int>(g_pid, CurrentItemPawn + 0x18);
-			auto CurrentItemPawnName = GetNameFromFName(CurrentItemId);
+			int Index = read<int>(g_pid, CurrentItemPawn + 0x18);
+			auto CurrentItemPawnName = GetNameFromFName(Index);
 
 			if (strstr(CurrentItemPawnName.c_str(), "PlayerPawn_Athena_C") || strstr(CurrentItemPawnName.c_str(), "PlayerPawn"))
 			{
