@@ -175,12 +175,23 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Controller.h" />
+    <ClInclude Include="controller.h" />
     <ClInclude Include="driverloader\file_utils.hpp" />
     <ClInclude Include="driverloader\singed.hpp" />
     <ClInclude Include="driverloader\raw_driver.hpp" />
     <ClInclude Include="driverloader\service_utils.hpp" />
     <ClInclude Include="font.h" />
+    <ClInclude Include="globals.h" />
+    <ClInclude Include="doAimbot.h" />
+    <ClInclude Include="menu.h" />
+    <ClInclude Include="window.h" />
+    <ClInclude Include="LevelEntities.h" />
+    <ClInclude Include="PlayersLoop.h" />
+    <ClInclude Include="LevelsLoop.h" />
+    <ClInclude Include="maths.h" />
+    <ClInclude Include="structs.h" />
+    <ClInclude Include="sdk.h" />
+    <ClInclude Include="overlay.h" />
     <ClInclude Include="string.hpp" />
     <ClInclude Include="driver.h" />
     <ClInclude Include="utils.hpp" />

@@ -128,4 +128,57 @@ BOOL Sandy64::WritePtr(ULONG ProcessPid,ULONG64 Address, PVOID pBuffer, DWORD Si
 	READWRITE ReadWrite = { ProcessPid,Address,Size,(ULONG64)pBuffer };
 	BOOL bRet = ::DeviceIoControl(hDrive, 0x222004, &ReadWrite, sizeof(READWRITE), NULL, NULL, NULL, NULL);
 	return bRet;
+}Sandy64 Drive;
+
+uintptr_t getBaseAddress(uintptr_t pid) {
+	return Drive.GetModuleBase(pid, XorStr("FortniteClient-Win64-Shipping.exe").c_str());
+}
+
+template<typename T>
+inline bool read_array(uintptr_t pid, uintptr_t address, T* array, size_t len) {
+	return Drive.ReadPtr(pid, address, array, sizeof(T) * len);
+}
+
+template <typename T> T read(uintptr_t pid, uintptr_t address) {
+	T t{};
+	Drive.ReadPtr(pid, address, &t, sizeof(T));
+	return t;
+}
+
+template<typename T>
+inline bool write(int pid, uint64_t address, const T& value) {
+	return Drive.WritePtr(pid, address, (PVOID)&value, sizeof(T));
+}
+
+std::string read_ascii(uintptr_t pid, const std::uintptr_t address, std::size_t size)
+{
+	std::unique_ptr<char[]> buffer(new char[size]);
+	Drive.ReadPtr(pid, address, buffer.get(), size);
+	return std::string(buffer.get());
+}
+
+std::wstring read_unicode(uintptr_t pid, const std::uintptr_t address, std::size_t size)
+{
+	const auto buffer = std::make_unique<wchar_t[]>(size);
+	Drive.ReadPtr(pid, address, buffer.get(), size * 2);
+	return std::wstring(buffer.get());
+}
+
+std::wstring read_wstr(uintptr_t pid, uintptr_t address)
+{
+	wchar_t buffer[1024 * sizeof(wchar_t)];
+	Drive.ReadPtr(pid, address, &buffer, 64 * sizeof(wchar_t));
+	return std::wstring(buffer);
+}
+
+wchar_t* readString(uintptr_t pid, DWORD64 Address, wchar_t* string)
+{
+	if (read<uint16_t>(pid, Address + 0x10) > 0)
+	{
+		for (int i = 0; i < read<uint16_t>(pid, Address + 0x10) * 2; i++)
+		{
+			string[i] = read<wchar_t>(pid, Address + 0x14 + (i * 2));
+		}
+	}
+	return string;
 }
