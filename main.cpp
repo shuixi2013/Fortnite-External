@@ -985,11 +985,8 @@ void runRenderTick() {
 	ImGui::GetOverlayDrawList()->AddText(ImVec2(15, 40), ImColor(cRainbow), dist);
 
 	if (g_overlay_visible)
-	{
-		//cursor();
 		background();
 
-	}
 	ImGuiIO& io = ImGui::GetIO();
 
 	if (g_overlay_visible) {
