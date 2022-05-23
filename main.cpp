@@ -491,57 +491,29 @@ void runRenderTick()
 			static int Menu_Tab = 0; 1; 2; 3; 4;
 
 			ImGui::SetCursorPos({ 17,29 });
-			if (ImGui::Button("Aimbot "))
-			{
-				Menu_Tab = 0;
-			}
+			if (ImGui::Button("Aimbot ")) Menu_Tab = 0;
 			ImGui::SetCursorPos({ 17,49 });
-			if (ImGui::Button("Visuals")) {
-				Menu_Tab = 1;
-			}
+			if (ImGui::Button("Visuals")) Menu_Tab = 1;
+
 			ImGui::SetCursorPos({ 17,69 });
-			if (ImGui::Button("Misc   "))
-			{
-				Menu_Tab = 2;
-			}
+			if (ImGui::Button("Misc   ")) Menu_Tab = 2;
+
 			ImGui::SetCursorPos({ 17,89 });
-			if (ImGui::Button("World  "))
-			{
-				Menu_Tab = 3;
-			}
+			if (ImGui::Button("World  ")) Menu_Tab = 3;
+
 			ImGui::SetCursorPos({ 17,109 });
-			if (ImGui::Button("Exploit"))
-			{
-				Menu_Tab = 4;
-			}
+			if (ImGui::Button("Exploit")) Menu_Tab = 4;
+
 			ImGui::SetCursorPos(ImVec2(240, 10));
 
-			if (Menu_Tab == 0)
-			{
-				AimbotTab();
-			}
-			else if (Menu_Tab == 1)
-			{
-				VisualsTab();
-			}
-			else if (Menu_Tab == 2)
-			{
-				MiscTab();
-			}
-			else if (Menu_Tab == 3)
-			{
-				WorldTab();
-			}
-			else if (Menu_Tab == 4)
-			{
-				ExploitsTab();
-			}
+			if (Menu_Tab == 0) AimbotTab();
+			else if (Menu_Tab == 1) VisualsTab();
+			else if (Menu_Tab == 2) MiscTab();
+			else if (Menu_Tab == 3) WorldTab();
+			else if (Menu_Tab == 4) ExploitsTab();
 
 			ImGui::SetCursorPos({ 17,270 });
-			if (ImGui::Button("Unload"))
-			{
-				exit(0);
-			}
+			if (ImGui::Button("Unload")) exit(0);
 			ImGui::End();
 		}
 
