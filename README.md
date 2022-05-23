@@ -8,7 +8,7 @@
 
 Discord: https://discord.gg/RwJUHwdQwG
 
-**Cheat Features:**
+**Features:**
 
 **Aimbot**
 - Mouse Aimbot
