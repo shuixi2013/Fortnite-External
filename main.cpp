@@ -122,7 +122,8 @@ void setupWindow()
 	ImGui_ImplOpenGL3_Init(XorStr("#version 130").c_str());
 }
 
-void cleanupWindow() {
+void cleanupWindow()
+{
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
@@ -131,7 +132,8 @@ void cleanupWindow() {
 	glfwTerminate();
 }
 
-BOOL CALLBACK retreiveFortniteWindow(HWND hwnd, LPARAM lparam) {
+BOOL CALLBACK retreiveFortniteWindow(HWND hwnd, LPARAM lparam)
+{
 	DWORD process_id;
 	GetWindowThreadProcessId(hwnd, &process_id);
 	if (process_id == g_pid) {
@@ -142,7 +144,8 @@ BOOL CALLBACK retreiveFortniteWindow(HWND hwnd, LPARAM lparam) {
 
 bool isFortniteFocused = false;
 
-void activateFortniteWindow() {
+void activateFortniteWindow()
+{
 	SetForegroundWindow(fortnite_wnd);
 }
 
@@ -912,9 +915,9 @@ bool CheatLoop()
 
 bool Head = true, Neck, Chest;
 
-void runRenderTick() {
+void runRenderTick() 
+{
 	glfwPollEvents();
-
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
@@ -1266,7 +1269,8 @@ typedef bool (WINAPI* InjectMouseInput_t)(InjectedInputMouseInfo* inputs, int co
 
 InjectMouseInput_t InjectMouseInput;
 
-int main() {
+int main() 
+{
 	InjectMouseInput = reinterpret_cast<InjectMouseInput_t>(GetProcAddress(LoadLibraryA("user32.dll"), "InjectMouseInput"));
 
 	if (GlobalFindAtomA("innit??") == 0)
