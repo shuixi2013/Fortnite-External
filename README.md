@@ -1,5 +1,4 @@
-https://streamable.com/hb08pv
-[![Watch the video](https://user-images.githubusercontent.com/70964202/169858758-a604bc4f-340b-46d2-bc62-cf3fb29b9b8b.png)]
+[![Watch the video](https://user-images.githubusercontent.com/70964202/169858758-a604bc4f-340b-46d2-bc62-cf3fb29b9b8b.png)]https://streamable.com/hb08pv
 
 # Gloomy.cc
 
