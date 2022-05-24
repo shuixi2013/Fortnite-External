@@ -941,7 +941,8 @@ float bA1mb0tF0VV4lue = 150.0f, bA1mb0tSm00th1ngV4lue = 2.0f;
 
 int bD1st4nce, bH1tb0x = 0, bE5pD1st4nce = 280, bA1mD1st4nce = 280, bB0xS1ze = 2.0f, bAut0L0ckD1st = 1, bLootRendering = 40;
 static  float FOVChangerValue = 100.0f;
-
+float boatmulti = 1.0f;
+float boatspeed = 1.0f;
 
 
 Vector3 AimbotCorrection(float bulletVelocity, float bulletGravity, float targetDistance, Vector3 targetPosition, Vector3 targetVelocity) {
@@ -1396,3 +1397,4 @@ bool g_spinbot{ false };
 bool g_chams{ false };
 bool g_platform_esp{ false };
 bool g_name_esp{ false };
+bool g_boatspeed{ false };
