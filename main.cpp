@@ -54,6 +54,13 @@
 extern void aimbot(float x, float y);
 GLFWwindow* g_window;
 
+bool common{ false };
+bool uncommon{ false };
+bool rare{ false };
+bool epic{ false };
+bool legendary{ false };
+bool mythic{ false };
+
 struct FMinimalViewInfo
 {
 	Vector3 Location;
@@ -365,27 +372,27 @@ bool CheatLoop()
 
 							std::string Text = wchar_to_char(WeaponName);
 							std::string wtf2 = Text + " [" + std::to_string((int)ItemDist) + ("m]");
-							if (tier == 2)
+							if (tier == 2 && (uncommon))
 							{
 								Color = Col.green;
 							}
-							else if ((tier == 3))
+							else if ((tier == 3) && (rare))
 							{
 								Color = Col.blue;
 							}
-							else if ((tier == 4))
+							else if ((tier == 4) && (epic))
 							{
 								Color = Col.purple;
 							}
-							else if ((tier == 5))
+							else if ((tier == 5) && (legendary))
 							{
 								Color = Col.yellow;
 							}
-							else if ((tier == 6))
+							else if ((tier == 6) && (mythic))
 							{
 								Color = Col.yellow;
 							}
-							else if ((tier == 0) || (tier == 1))
+							else if ((tier == 0) || (tier == 1) && (common))
 							{
 								Color = Col.white;
 							}
@@ -1173,19 +1180,51 @@ void runRenderTick()
 				ImGui::Spacing();
 				ImGui::SetCursorPos(ImVec2(140, 35));
 				ImGui::Checkbox(XorStr("Loot ESP").c_str(), &g_loot);
+				ImGui::SameLine();
+				ImGui::Text("                      "); //dont hate me for this lmao
+				ImGui::SameLine();
+				ImGui::Text("Loot:");
 				ImGui::SetCursorPos(ImVec2(140, 55));
 				ImGui::Checkbox(XorStr("Utils ESP").c_str(), &g_utils);
+				ImGui::SameLine();
+				ImGui::Text("                   ");
+				ImGui::SameLine();
+				ImGui::Checkbox(XorStr("Common").c_str(), &common);
 				ImGui::SetCursorPos(ImVec2(140, 75));
 				ImGui::Checkbox(XorStr("Vehicle Esp").c_str(), &g_vehicles);
+				ImGui::SameLine();
+				ImGui::Text("              ");
+				ImGui::SameLine();
+				ImGui::Checkbox(XorStr("Uncommon").c_str(), &uncommon);
 				ImGui::SetCursorPos(ImVec2(140, 95));
 				ImGui::Checkbox(XorStr("Chest ESP").c_str(), &g_chests);
+				ImGui::SameLine();
+				ImGui::Text("                 ");
+				ImGui::SameLine();
+				ImGui::Checkbox(XorStr("Rare").c_str(), &rare);
 				ImGui::SetCursorPos(ImVec2(140, 115));
 				ImGui::Checkbox(XorStr("Ammo Box ESP").c_str(), &g_ammo);
-				ImGui::PushItemWidth(180.f);
-				ImGui::Spacing();
+				ImGui::SameLine();
+				ImGui::Text("        ");
+				ImGui::SameLine();
+				ImGui::Checkbox(XorStr("Epic").c_str(), &epic);
 				ImGui::SetCursorPos(ImVec2(140, 135));
+				
+				ImGui::Text("                      ");
+				ImGui::SameLine();
+				ImGui::Text("                       ");
+				ImGui::SameLine();
+				ImGui::Checkbox(XorStr("Legendary").c_str(), &legendary);
+				ImGui::SetCursorPos(ImVec2(140, 155));
+				ImGui::Text("                      ");
+				ImGui::SameLine();
+				ImGui::Text("                       ");
+				ImGui::SameLine();
+				ImGui::Checkbox(XorStr("Mythic").c_str(), &mythic);
+				ImGui::Spacing();
+				ImGui::SetCursorPos(ImVec2(140, 175));
 				ImGui::Text("Max Rendering");
-				ImGui::SetCursorPos(ImVec2(140, 150));
+				ImGui::SetCursorPos(ImVec2(140, 200));
 				ImGui::SliderInt(XorStr(" ").c_str(), &bLootRendering, 5, 50);
 				ImGui::Spacing();
 			}
