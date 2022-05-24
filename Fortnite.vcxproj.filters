@@ -51,70 +51,18 @@
     <ClInclude Include="driverloader\raw_driver.hpp">
       <Filter>Driver\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="maths.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="structs.h">
-      <Filter>Game</Filter>
-    </ClInclude>
-    <ClInclude Include="controller.h">
-      <Filter>Cheat</Filter>
-    </ClInclude>
-    <ClInclude Include="font.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="globals.h">
-      <Filter>Cheat</Filter>
-    </ClInclude>
-    <ClInclude Include="LevelsLoop.h">
-      <Filter>Cheat\Loop</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayersLoop.h">
-      <Filter>Cheat\Loop</Filter>
-    </ClInclude>
-    <ClInclude Include="LevelEntities.h">
-      <Filter>Cheat\Esp</Filter>
-    </ClInclude>
-    <ClInclude Include="doAimbot.h">
-      <Filter>Cheat\Aimbot</Filter>
-    </ClInclude>
-    <ClInclude Include="sdk.h">
-      <Filter>Cheat</Filter>
-    </ClInclude>
-    <ClInclude Include="overlay.h">
-      <Filter>Cheat</Filter>
-    </ClInclude>
-    <ClInclude Include="window.h">
-      <Filter>Cheat</Filter>
-    </ClInclude>
-    <ClInclude Include="menu.h">
-      <Filter>Cheat</Filter>
-    </ClInclude>
+    <ClInclude Include="font.h" />
+    <ClInclude Include="Controller.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Imgui">
       <UniqueIdentifier>{4d9021b4-dd91-4ec8-87c7-bda5042981d9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Driver">
-      <UniqueIdentifier>{32cfab22-395c-448f-950f-47310441bf56}</UniqueIdentifier>
-    </Filter>
+       <UniqueIdentifier>{32cfab22-395c-448f-950f-47310441bf56}</UniqueIdentifier>
+     </Filter>
     <Filter Include="Driver\Loader">
       <UniqueIdentifier>{83b1fab2-b644-4a84-974c-23b1893d6d93}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Game">
-      <UniqueIdentifier>{4652be7c-9ecd-412d-adb3-c72b3c9c708a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Cheat">
-      <UniqueIdentifier>{2698269c-ee51-455d-b321-f3c885d82c12}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Cheat\Loop">
-      <UniqueIdentifier>{f0175dfe-c46b-44a5-9a95-ff6dcd105410}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Cheat\Aimbot">
-      <UniqueIdentifier>{39c62136-9d17-45a1-8dce-a5a2416cf7db}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Cheat\Esp">
-      <UniqueIdentifier>{c57cdea0-848a-462b-98e4-1daef6576135}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

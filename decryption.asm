@@ -27,15 +27,15 @@
 
 static std::string ReadFNamePool(int key) 
 {
-	uint64_t NamePoolChunk = read<uint64_t>(Globals::g_pid, Globals::g_base_address + 0xC6F3C00 + (8 * (uint32_t)((int)(key) >> 16)) + 16) + (unsigned int)(4 * (uint16_t)key);
-	int nameLength = read<uint16_t>(Globals::g_pid, NamePoolChunk) >> 6; 
+	uint64_t NamePoolChunk = read<uint64_t>(g_pid, g_base_address + 0xC6F3C00 + (8 * (uint32_t)((int)(key) >> 16)) + 16) + (unsigned int)(4 * (uint16_t)key);
+	int nameLength = read<uint16_t>(g_pid, NamePoolChunk) >> 6; 
 	char buff[1024];
 
 	if ((uint32_t)nameLength)
 	{
 		for (int x = 0; x < nameLength; ++x)
 		{
-			buff[x] = read<char>(Globals::g_pid, NamePoolChunk + 4 + x);
+			buff[x] = read<char>(g_pid, NamePoolChunk + 4 + x);
 		}
 
 		char* v2 = buff; int v4 = nameLength, v5 = 0, v7; __int64 v6 = 30i64; char v8;
@@ -58,11 +58,11 @@ static std::string ReadFNamePool(int key)
  
 static std::string GetNameFromFName(int key)
 {
-	uint64_t NamePoolChunk = read<uint64_t>(Globals::g_pid, Globals::g_base_address + 0xC6F3C00 + (8 * (uint32_t)((int)(key) >> 16)) + 16) + (unsigned int)(4 * (uint16_t)key);
+	uint64_t NamePoolChunk = read<uint64_t>(g_pid, g_base_address + 0xC6F3C00 + (8 * (uint32_t)((int)(key) >> 16)) + 16) + (unsigned int)(4 * (uint16_t)key);
 
-	if (read<uint16_t>(Globals::g_pid, NamePoolChunk) < 64)
+	if (read<uint16_t>(g_pid, NamePoolChunk) < 64)
 	{
-		auto a1 = read<DWORD>(Globals::g_pid, NamePoolChunk + 4);
+		auto a1 = read<DWORD>(g_pid, NamePoolChunk + 4);
 		return ReadFNamePool(a1);
 	}
 
