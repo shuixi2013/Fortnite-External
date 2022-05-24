@@ -850,6 +850,7 @@ bool CheatLoop()
 					static auto Cached = read<char>(Vehicle + 0x66a);
 					if (GetAsyncKeyState(VK_SPACE)) write<char>(Vehicle + 0x66a, 0);
 					else write<char>(Cached, 0);
+					
 				}
 				if (dist < bA1mb0tF0VV4lue && dist < closestDistance && TeamIndex != LocalTeam && !InLobby)
 				{
@@ -1262,29 +1263,33 @@ void runRenderTick()
 				ImGui::Checkbox(XorStr("Spinbot").c_str(), &g_spinbot);
 
 				ImGui::SetCursorPos(ImVec2(140, 75));
-				ImGui::Checkbox(XorStr("Boat speed test").c_str(), &g_boatspeed);
+				ImGui::Checkbox(XorStr("Boat Speed Test").c_str(), &g_boatspeed);
 
-				ImGui::PushItemWidth(180.f);
 				ImGui::SetCursorPos(ImVec2(140, 95));
+				ImGui::Checkbox(XorStr("Boat Fly Test").c_str(), &g_boatfly_test);
+
+				
+				ImGui::PushItemWidth(180.f);
+				ImGui::SetCursorPos(ImVec2(140, 115));
 				ImGui::Checkbox("Fov Changer", &g_fovchanger);
 				if (g_fovchanger)
 				{
-					ImGui::SetCursorPos(ImVec2(140, 115));
-					ImGui::Text("FOV CHANGER");
 					ImGui::SetCursorPos(ImVec2(140, 135));
+					ImGui::Text("FOV CHANGER");
+					ImGui::SetCursorPos(ImVec2(140, 155));
 					ImGui::SliderFloat(("                 "), &FOVChangerValue, 90.0f, 170.0f, ("%.2f"));
 				}
 
 				if (g_boatspeed)
 				{
-					ImGui::SetCursorPos(ImVec2(140, 155));
-					ImGui::Text("Speed Multiplier");
 					ImGui::SetCursorPos(ImVec2(140, 175));
+					ImGui::Text("Speed Multiplier");
+					ImGui::SetCursorPos(ImVec2(140, 195));
 					ImGui::SliderFloat(("                 "), &boatmulti, 1.0f, 100.0f, ("%.1f"));
 
-					ImGui::SetCursorPos(ImVec2(140, 195));
-					ImGui::Text("just speed");
 					ImGui::SetCursorPos(ImVec2(140, 215));
+					ImGui::Text("Spped");
+					ImGui::SetCursorPos(ImVec2(140, 235));
 					ImGui::SliderFloat(("                 "), &boatspeed, 1.0f, 100.0f, ("%.1f"));
 				}
 			}
