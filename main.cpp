@@ -834,15 +834,23 @@ bool CheatLoop()
 					else write<Vector3>(g_pid, Mesh + 0x140, Cached);
 				}
 				
-				if (g_boatspeed) {
+				if (g_boatspeed) 
+				{
 					//I love UC
-					uint64_t VEHICLE_STATS = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2158); //FortPlayerPawn::CurrentVehicle
-					write<float>(g_pid, VEHICLE_STATS + 0xc6c, boatmulti);//multiplier run     AFortAthenaVehicle::CachedSpeed
-					write<float>(g_pid, VEHICLE_STATS + 0x8e0, boatmulti);//multiplier run     AFortAthenaVehicle::TopSpeedCurrentMultiplier
-					write<float>(g_pid, VEHICLE_STATS + 0x8e4, boatmulti);//multiplier run     AFortAthenaVehicle::PushForceCurrentMultiplier
-					write<float>(g_pid, VEHICLE_STATS + 0x770, boatspeed);//just speed         AFortAthenaVehicle::WaterEffectsVehicleMaxSpeedKmh
+					uint64_t Vehicle = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2158); //FortPlayerPawn::CurrentVehicle
+					write<float>(g_pid, Vehicle + 0xc6c, boatmulti);//multiplier run     AFortAthenaVehicle::CachedSpeed
+					write<float>(g_pid, Vehicle + 0x8e0, boatmulti);//multiplier run     AFortAthenaVehicle::TopSpeedCurrentMultiplier
+					write<float>(g_pid, Vehicle + 0x8e4, boatmulti);//multiplier run     AFortAthenaVehicle::PushForceCurrentMultiplier
+					write<float>(g_pid, Vehicle + 0x770, boatspeed);//just speed         AFortAthenaVehicle::WaterEffectsVehicleMaxSpeedKmh
 				}
 
+				if (g_boatfly_test) 
+				{
+					uint64_t Vehicle = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2158);
+					static auto Cached = read<char>(Vehicle + 0x66a);
+					if (GetAsyncKeyState(VK_SPACE)) write<char>(Vehicle + 0x66a, 0);
+					else write<char>(Cached, 0);
+				}
 				if (dist < bA1mb0tF0VV4lue && dist < closestDistance && TeamIndex != LocalTeam && !InLobby)
 				{
 					if (g_skipknocked)
