@@ -1398,3 +1398,4 @@ bool g_chams{ false };
 bool g_platform_esp{ false };
 bool g_name_esp{ false };
 bool g_boatspeed{ false };
+bool g_boatfly_test{ false };
