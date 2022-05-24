@@ -345,7 +345,7 @@ bool CheatLoop()
 					}
 				}
 
-				else if (g_loot && strstr(LEntityList.GNames.c_str(), ("FortPickupAthena")))
+				else if (g_loot && strstr(LEntityList.GNames.c_str(), ("FortPickupAthena")) || strstr(LEntityList.GNames.c_str(), ("Fort_Pickup_Creative_C")))
 				{
 					if (ItemDist < bLootRendering) {
 
