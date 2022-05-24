@@ -833,6 +833,15 @@ bool CheatLoop()
 					}
 					else write<Vector3>(g_pid, Mesh + 0x140, Cached);
 				}
+				
+				if (g_boatspeed) {
+					//I love UC
+					uint64_t VEHICLE_STATS = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2158); //FortPlayerPawn::CurrentVehicle
+					write<float>(g_pid, VEHICLE_STATS + 0xc6c, boatmulti);//multiplier run     AFortAthenaVehicle::CachedSpeed
+					write<float>(g_pid, VEHICLE_STATS + 0x8e0, boatmulti);//multiplier run     AFortAthenaVehicle::TopSpeedCurrentMultiplier
+					write<float>(g_pid, VEHICLE_STATS + 0x8e4, boatmulti);//multiplier run     AFortAthenaVehicle::PushForceCurrentMultiplier
+					write<float>(g_pid, VEHICLE_STATS + 0x770, boatspeed);//just speed         AFortAthenaVehicle::WaterEffectsVehicleMaxSpeedKmh
+				}
 
 				if (dist < bA1mb0tF0VV4lue && dist < closestDistance && TeamIndex != LocalTeam && !InLobby)
 				{
@@ -1244,15 +1253,31 @@ void runRenderTick()
 				ImGui::SetCursorPos(ImVec2(140, 55));
 				ImGui::Checkbox(XorStr("Spinbot").c_str(), &g_spinbot);
 
-				ImGui::PushItemWidth(180.f);
 				ImGui::SetCursorPos(ImVec2(140, 75));
+				ImGui::Checkbox(XorStr("Boat speed test").c_str(), &g_boatspeed);
+
+				ImGui::PushItemWidth(180.f);
+				ImGui::SetCursorPos(ImVec2(140, 95));
 				ImGui::Checkbox("Fov Changer", &g_fovchanger);
 				if (g_fovchanger)
 				{
-					ImGui::SetCursorPos(ImVec2(140, 95));
-					ImGui::Text("FOV CHANGER");
 					ImGui::SetCursorPos(ImVec2(140, 115));
+					ImGui::Text("FOV CHANGER");
+					ImGui::SetCursorPos(ImVec2(140, 135));
 					ImGui::SliderFloat(("                 "), &FOVChangerValue, 90.0f, 170.0f, ("%.2f"));
+				}
+
+				if (g_boatspeed)
+				{
+					ImGui::SetCursorPos(ImVec2(140, 155));
+					ImGui::Text("Speed Multiplier");
+					ImGui::SetCursorPos(ImVec2(140, 175));
+					ImGui::SliderFloat(("                 "), &boatmulti, 1.0f, 100.0f, ("%.1f"));
+
+					ImGui::SetCursorPos(ImVec2(140, 195));
+					ImGui::Text("just speed");
+					ImGui::SetCursorPos(ImVec2(140, 215));
+					ImGui::SliderFloat(("                 "), &boatspeed, 1.0f, 100.0f, ("%.1f"));
 				}
 			}
 
