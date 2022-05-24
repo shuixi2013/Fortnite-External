@@ -45,4 +45,7 @@ Discord: https://discord.gg/RwJUHwdQwG
 **Exploits**
 - No Bloom
 - Spinbot
+- Boat Fly
+- Boat Speed Multiplier
+- Boat Speed
 - FOV Changer
