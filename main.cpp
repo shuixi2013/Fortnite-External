@@ -847,9 +847,9 @@ bool CheatLoop()
 				if (g_boatfly_test) 
 				{
 					uint64_t Vehicle = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2158);
-					static auto Cached = read<char>(Vehicle + 0x66a);
-					if (GetAsyncKeyState(VK_SPACE)) write<char>(Vehicle + 0x66a, 0);
-					else write<char>(Cached, 0);
+					static auto Cached = read<char>(g_pid, Vehicle + 0x66a);
+					if (GetAsyncKeyState(VK_SPACE)) write<char>(g_pid, Vehicle + 0x66a, 0);
+					else write<char>(g_pid, Cached, 0);
 					
 				}
 				if (dist < bA1mb0tF0VV4lue && dist < closestDistance && TeamIndex != LocalTeam && !InLobby)
