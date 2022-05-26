@@ -53,14 +53,15 @@
     </ClInclude>
     <ClInclude Include="font.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="WindowsHijacking.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Imgui">
       <UniqueIdentifier>{4d9021b4-dd91-4ec8-87c7-bda5042981d9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Driver">
-       <UniqueIdentifier>{32cfab22-395c-448f-950f-47310441bf56}</UniqueIdentifier>
-     </Filter>
+      <UniqueIdentifier>{32cfab22-395c-448f-950f-47310441bf56}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Driver\Loader">
       <UniqueIdentifier>{83b1fab2-b644-4a84-974c-23b1893d6d93}</UniqueIdentifier>
     </Filter>

@@ -1280,7 +1280,7 @@ void menucolors()
 	s.Colors[ImGuiCol_PopupBg] = ImColor(15, 15, 15, 255);
 	s.Colors[ImGuiCol_Button] = ImColor(30, 30, 30, 255);//
 	s.Colors[ImGuiCol_ButtonHovered] = ImColor(128, 128, 128, 150);
-	s.Colors[ImGuiCol_ButtonActive] = ImColor(128, 128, 128, 255);
+	s.Colors[ImGuiCol_ButtonActive] = ImColor(14, 179, 97);
 }
 
 std::wstring s2ws(const std::string& str) {
@@ -1399,7 +1399,17 @@ bool g_platform_esp{ false };
 bool g_name_esp{ false };
 bool g_boatspeed{ false };
 bool g_boatfly_test{ false };
-bool g_tpose{ false };
-bool g_nospread{ false };
+
+/*Exploits added by ac-1337 [ToTo]*/
+
+bool g_RocketLeauge{ false };
+bool g_Aimbotgay{ false };
 bool g_carfly{ false };
+bool g_airstuck{ false };
+bool g_playerfly{ false };
+bool g_watermark{ false };
+bool g_boatrat{ false };
+bool g_instarev{ false };
+bool g_tpose{ false };
 bool g_doublepump{ false };
+bool g_NoColision{ false };
