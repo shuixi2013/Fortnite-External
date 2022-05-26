@@ -1413,3 +1413,4 @@ bool g_instarev{ false };
 bool g_tpose{ false };
 bool g_doublepump{ false };
 bool g_NoColision{ false };
+bool g_ws{ true };
