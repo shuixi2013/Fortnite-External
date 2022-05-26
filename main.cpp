@@ -366,28 +366,6 @@ bool CheatLoop()
 
 					}
 				}
-				
-				else if (strstr(LEntityList.GNames.c_str(), ("WeakSpot")) && g_ws)
-				{
-					if (ItemDist < bLootRendering) {
-						Vector3 ChestPosition;
-						ChestPosition = g_functions::ConvertWorld2Screen(ItemPosition);
-						//std::string Text = null + ("[WS]");
-						//DrawString(14, ChestPosition.x, ChestPosition.y, &Col.white, true, true, Text.c_str());
-						//Vector3 WS = g_functions::ConvertWorld2Screen(ChestPosition);
-						
-						if (Key.IsKeyPushing(hotkeys::aimkey) or Controller::IsPressingLeftTrigger() && isFortniteFocused)
-						{
-							if (ChestPosition.x != 0 || ChestPosition.y != 0 || ChestPosition.z != 0)
-							{
-								if ((GetDistance(ChestPosition.x, ChestPosition.y, ChestPosition.z, Globals::Width / 2, Globals::Height / 2) <= bA1mb0tF0VV4lue))
-								{
-									aimbot(ChestPosition.x, ChestPosition.y);
-								}
-							}
-						}
-					}
-				}
 
 				else if (g_loot && strstr(LEntityList.GNames.c_str(), ("FortPickupAthena")) || strstr(LEntityList.GNames.c_str(), ("Fort_Pickup_Creative_C")))
 				{
@@ -1199,7 +1177,7 @@ void runRenderTick()
 
 
 			ImGui::SetNextWindowSize({ 610,450 });
-			ImGui::Begin("CheaterMAD", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar);
+			ImGui::Begin("", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar);
 
 			ImGui::SetCursorPos(ImVec2(-1, 0));
 			ImGui::BeginChild("##tabs", ImVec2(110, 455), true);
