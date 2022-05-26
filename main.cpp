@@ -1015,6 +1015,18 @@ void runRenderTick()
 	//bool BackTrack = false;
 	//bool tpose = false;
 	bool doublepump{ false };
+=======
+	bool nospread = false;
+
+	if (nospread)
+	{
+		if (GetAsyncKeyState(VK_RBUTTON)) { //Alt Keybind
+			write<float>(g_pid, CurrentWeapon + 0x64, 99); //CustomTimeDilation Offset
+		}
+		else {
+			write<float>(g_pid, CurrentWeapon + 0x64, 1); //CustomTimeDilation Offset
+		}
+	}
 
 	if (doublepump) {
 		uintptr_t CurrentWeapon = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x790);
@@ -1045,6 +1057,7 @@ void runRenderTick()
 		else {
 			write<float>(g_pid, Globals::LocalPawn + 0x64, 1); //CustomTimeDilation Offset
 		}
+=======
 	}
 
 	if (carfly)
