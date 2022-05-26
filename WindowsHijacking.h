@@ -1,6 +1,11 @@
 /*Still Working at it please dont touch....*/
 
 #pragma once
+#include <vector>
+#include <rpcasync.h>
+#include <wtypes.h>
+#include <string>
+#include <iostream>
 #pragma once
 
 
@@ -215,8 +220,8 @@ namespace SetUp {
 
     struct WindowsFinderParams {
         DWORD pidOwner = NULL;
-        string wndClassName = "";
-        string wndName = "";
+        std::string wndClassName = "";
+        std::string wndName = "";
         RECT pos = { 0, 0, 0, 0 };
         POINT res = { 0, 0 };
         float percentAllScreens = 0.0f;
@@ -224,19 +229,19 @@ namespace SetUp {
         DWORD style = NULL;
         DWORD styleEx = NULL;
         bool satisfyAllCriteria = false;
-        vector<HWND> hwnds;
+        std::vector<HWND> hwnds;
     };
 
     // Prototypes
     inline std::vector<HWND> WindowsFinder(WindowsFinderParams params);
     inline BOOL CALLBACK EnumWindowsCallback(HWND hwnd, LPARAM lParam);
     inline HWND HiJackNotepadWindow();
-    inline std::vector<DWORD> GetPIDs(wstring targetProcessName);
+    inline std::vector<DWORD> GetPIDs(std::wstring targetProcessName);
 
     inline int amain() {
         HWND hwnd = HiJackNotepadWindow();
         if (!hwnd) {
-            cout << EX("Window HiJacking failed (use debugger to investigate why)") << endl;
+            std::cout << ("Window HiJacking failed (use debugger to investigate why)");
             return EXIT_FAILURE;
         }
 
@@ -288,7 +293,7 @@ namespace SetUp {
         HWND hwnd = NULL;
 
         // Remove previous windows
-        vector<DWORD> existingNotepads = GetPIDs(EX(L"notepad.exe").decrypt());
+        std::vector<DWORD> existingNotepads = GetPIDs(EX(L"notepad.exe").decrypt());
         if (!existingNotepads.empty()) {
             for (int i(0); i < existingNotepads.size(); ++i) {
                 // Terminating processes
@@ -301,14 +306,14 @@ namespace SetUp {
         system(EX("start notepad")); // Start notepad, and not as child process, so easy :)
 
         // Finding notepad's window (we could just use FindWindow but then it would be OS language dependent)
-        vector<DWORD> notepads = GetPIDs(EX(L"notepad.exe").decrypt());
+        std::vector<DWORD> notepads = GetPIDs(EX(L"notepad.exe").decrypt());
         if (notepads.empty() || notepads.size() > 1) // Should check if more than one to be more strict
             return hwnd;
         WindowsFinderParams params;
         params.pidOwner = notepads[0];
         params.style = WS_VISIBLE;
         params.satisfyAllCriteria = true;
-        vector<HWND> hwnds;
+        std::vector<HWND> hwnds;
         int attempt = 0; // The process takes a bit of time to initialise and spawn the window, will try during 5 sec before time out
         while (hwnd == NULL || attempt > 50) {
             Sleep(100);
@@ -380,7 +385,7 @@ namespace SetUp {
         // If looking for windows with a specific name
         char windowName[MAX_WNDNAME] = "";
         GetWindowText(hwnd, (LPSTR)windowName, MAX_CLASSNAME);
-        string windowNameWstr = windowName;
+        std::string windowNameWstr = windowName;
         if (params.wndName != "")
             if (params.wndName == windowNameWstr)
                 ++satisfiedCriteria; // Not the class targeted
