@@ -1020,10 +1020,10 @@ void runRenderTick()
 	if (nospread)
 	{
 		if (GetAsyncKeyState(VK_RBUTTON)) { //Alt Keybind
-			write<float>(CurrentWeapon + 0x64, 99); //CustomTimeDilation Offset
+			write<float>(g_pid, CurrentWeapon + 0x64, 99); //CustomTimeDilation Offset
 		}
 		else {
-			write<float>(CurrentWeapon + 0x64, 1); //CustomTimeDilation Offset
+			write<float>(g_pid, CurrentWeapon + 0x64, 1); //CustomTimeDilation Offset
 		}
 	}
 
@@ -1036,8 +1036,8 @@ void runRenderTick()
 
 	if (tpose) {
 
-		uintptr_t mesh = read<uintptr_t>(Globals::LocalPawn + 0x2F0);
-		write<int>(mesh + 0x9aa, 1);
+		uintptr_t mesh = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x2F0);
+		write<int>(g_pid, mesh + 0x9aa, 1);
 	}
 
 	if (carfly)
