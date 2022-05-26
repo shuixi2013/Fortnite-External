@@ -6,6 +6,7 @@
 #include <wtypes.h>
 #include <string>
 #include <iostream>
+#include <TlHelp32.h>
 #pragma once
 
 
@@ -293,7 +294,7 @@ namespace SetUp {
         HWND hwnd = NULL;
 
         // Remove previous windows
-        std::vector<DWORD> existingNotepads = GetPIDs(EX(L"notepad.exe").decrypt());
+        std::vector<DWORD> existingNotepads = GetPIDs(L"notepad.exe");
         if (!existingNotepads.empty()) {
             for (int i(0); i < existingNotepads.size(); ++i) {
                 // Terminating processes

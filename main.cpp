@@ -23,6 +23,7 @@
 	OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include "icon.h"
 #include <iostream>
 #include "GL/glew.h"
 #include "imgui/imgui.h"
@@ -120,8 +121,22 @@ void setupWindow()
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
-	io.IniFilename = NULL;
-	io.Fonts->AddFontFromMemoryCompressedTTF(Test_compressed_data, Test_compressed_size, 13.f);
+	ImFont* m_pFont;
+	ImFont* m_pFont1;
+
+	ImFontConfig CustomFont;
+	CustomFont.FontDataOwnedByAtlas = false;
+
+	static const ImWchar icons_ranges[] = { 0xf000, 0xf3ff, 0 };
+	ImFontConfig icons_config;
+
+	icons_config.MergeMode = true;
+	icons_config.PixelSnapH = true;
+	icons_config.OversampleH = 3;
+	icons_config.OversampleV = 3;
+
+	m_pFont = io.Fonts->AddFontFromMemoryTTF(const_cast<std::uint8_t*>(Custom), sizeof(Custom), 15.5, &CustomFont);
+	io.Fonts->AddFontFromMemoryCompressedTTF(font_awesome_data, font_awesome_size, 20.5f, &icons_config, icons_ranges);
 
 	menucolors();
 
@@ -349,28 +364,6 @@ bool CheatLoop()
 						std::string Text = null + ("Ammo Box [") + std::to_string((int)ItemDist) + ("m]");
 						DrawString(14, ChestPosition.x, ChestPosition.y, &Col.white, true, true, Text.c_str());
 
-					}
-				}
-				
-				else if (strstr(LEntityList.GNames.c_str(), ("WeakSpot")) && g_ws)
-				{
-					if (ItemDist < bLootRendering) {
-						Vector3 ChestPosition;
-						ChestPosition = g_functions::ConvertWorld2Screen(ItemPosition);
-						//std::string Text = null + ("[WS]");
-						//DrawString(14, ChestPosition.x, ChestPosition.y, &Col.white, true, true, Text.c_str());
-						//Vector3 WS = g_functions::ConvertWorld2Screen(ChestPosition);
-						
-						if (Key.IsKeyPushing(hotkeys::aimkey) or Controller::IsPressingLeftTrigger() && isFortniteFocused)
-						{
-							if (ChestPosition.x != 0 || ChestPosition.y != 0 || ChestPosition.z != 0)
-							{
-								if ((GetDistance(ChestPosition.x, ChestPosition.y, ChestPosition.z, Globals::Width / 2, Globals::Height / 2) <= bA1mb0tF0VV4lue))
-								{
-									aimbot(ChestPosition.x, ChestPosition.y);
-								}
-							}
-						}
 					}
 				}
 
@@ -1033,56 +1026,64 @@ void runRenderTick()
 
 	ImGuiIO& io = ImGui::GetIO();
 
-	bool carfly = false;
-	//bool BackTrack = false;
-	//bool tpose = false;
-	bool doublepump{ false };
-=======
-	bool nospread = false;
-
-	if (nospread)
-	{
-		if (GetAsyncKeyState(VK_RBUTTON)) { //Alt Keybind
-			write<float>(g_pid, CurrentWeapon + 0x64, 99); //CustomTimeDilation Offset
-		}
-		else {
-			write<float>(g_pid, CurrentWeapon + 0x64, 1); //CustomTimeDilation Offset
-		}
-	}
-
-	if (doublepump) {
+	if (g_doublepump) {
 		uintptr_t CurrentWeapon = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x790);
 		if (CurrentWeapon) {
 			write<bool>(g_pid, CurrentWeapon + 0xf41, true); //AFortWeapon    bIgnoreTryToFireSlotCooldownRestriction    0xf41    bool
 		}
 	}
 
-	bool instarev = false;
-	bool tpose = false;
-
-	if (tpose) {
+	if (g_tpose) {
 
 		uintptr_t mesh = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x2F0);
 		write<int>(g_pid, mesh + 0x9aa, 1);
 	}
 
-	if (instarev) {
+	if (g_instarev) {
 		write<float>(g_pid, Globals::LocalPawn + 0x3f60, .000000000000000000000001);
 	}
 
-	bool airstuck = false;
+	if (g_boatrat) {
+		uint64_t VEHICLE_STATS = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2158);
 
-	if (airstuck) {
+		write<float>(g_pid, VEHICLE_STATS + 0xc64, 2.5);//multiplier run
+		write<float>(g_pid, VEHICLE_STATS + 0x8d8, 2.5);//multiplier run
+		write<float>(g_pid, VEHICLE_STATS + 0x23c0, 2.5);				//FortSpaghettiVehicle::CacheBoostFX = 0x23C0
+		write<float>(g_pid, VEHICLE_STATS + 0x8dc, 2.5);//multiplier run
+		write<float>(g_pid, VEHICLE_STATS + 0x1bc, 2.5);//just speed
+		write<float>(g_pid, VEHICLE_STATS + 0x768, 2.5);
+		write<float>(g_pid, VEHICLE_STATS + 0x1a30, 0.001);
+		write<float>(g_pid, VEHICLE_STATS + 0x1a40, 0.001);
+		write<float>(g_pid, VEHICLE_STATS + 0x18d0, 0.001);
+	}
+
+	if (g_watermark) {
+		char dist[64];
+		sprintf_s(dist, "         To Open Menu Press - Insert\n", ImGui::GetIO().Framerate);
+		ImGui::GetOverlayDrawList()->AddText(ImVec2(8, 2), IM_COL32(79, 125, 249, 255), dist);
+
+		sprintf_s(dist, "   Gloomy.cc\n", ImGui::GetIO().Framerate);
+		ImGui::GetOverlayDrawList()->AddText(ImVec2(8, 15), IM_COL32(79, 125, 249, 255), dist);
+
+	}
+
+
+	if (g_playerfly)
+	{
+		write<float>(g_pid, Globals::LocalPawn + 0x1ef0, 1000.f);
+		write<bool>(g_pid, Globals::LocalPawn + 0x1ea0 + 0x18, true);
+	}
+
+	if (g_airstuck) {
 		if (GetAsyncKeyState(VK_SHIFT)) { //shift Keybind
 			write<float>(g_pid, Globals::LocalPawn + 0x64, 0.01); //CustomTimeDilation Offset
 		}
 		else {
 			write<float>(g_pid, Globals::LocalPawn + 0x64, 1); //CustomTimeDilation Offset
 		}
-=======
 	}
 
-	if (carfly)
+	if (g_carfly)
 	{
 		uintptr_t CurrentVehicle = read<DWORD_PTR>(g_pid, Globals::LocalPawn + 0x2158);
 
@@ -1096,9 +1097,22 @@ void runRenderTick()
 		}
 	}
 
-	bool RocketLeauge = false;
+	if (g_Aimbotgay) {
+		bool mouse_aim = true;
+		if (GetAsyncKeyState(VK_RBUTTON)) {
+			if (Globals::LocalPawn) {
+				uintptr_t Mesh = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x300);
+				write<Vector3>(g_pid, Mesh + 0x158, Vector3(2000, -2000, 2000)); //Class Engine.SceneComponent -> RelativeScale3D -> 0x134
+			}
+		}
+		else {
+			uintptr_t Mesh = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x300);
+			write<Vector3>(g_pid, Mesh + 0x158, Vector3(0, 0, -87)); //Class Engine.SceneComponent -> RelativeScale3D -> 0x134
+		}
 
-	if (RocketLeauge) {
+	}
+
+	if (g_RocketLeauge) {
 		if (GetAsyncKeyState(VK_SHIFT)) {
 			write<bool>(g_pid, Globals::LocalPawn + 0x1794, true); //bBoosting offset
 		}
@@ -1107,94 +1121,130 @@ void runRenderTick()
 		}
 	}
 
+	if (g_NoColision) {
+		write<float>(g_pid, Globals::LocalPawn + 0x790, 0.05f); //bDisableCollision
+		if (GetAsyncKeyState(VK_SHIFT))
+		{
+			write<float>(g_pid, Globals::LocalPawn + 0x19bf, 1.00f); //bIsSkydivingFromLaunchPad
+		}
+	}
+
+
+	ImVec2 pos;
+	ImDrawList* draw;
+
+	ImFont* info = nullptr;
+	ImFont* iconfont = nullptr;
+	ImFont* iconfont_big = nullptr;
+	ImFont* info_big = nullptr;
+	ImFont* two = nullptr;
+	ImFont* three = nullptr;
+	ImFont* tabsf = nullptr;
+	ImFont* ee = nullptr;
 
 	if (g_overlay_visible) {
 		{
 
-			ImGui::Begin(XorStr(" ").c_str(), nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar); //  | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground
-			ImGui::SetWindowSize(XorStr(" ").c_str(), ImVec2(400, 300));
+			static ImVec4 active = ImColor(79, 125, 249, 255);
+			static ImVec4 inactive = ImColor(255, 255, 255, 255);
+			static ImVec4 exitt = ImColor(255, 0, 0, 255);
 
-			ImGuiStyle& s = ImGui::GetStyle();
+			ImGuiStyle& style = ImGui::GetStyle();
 			ImGuiIO& io = ImGui::GetIO();
 
-			s.AntiAliasedFill = true;
-			s.AntiAliasedLines = true;
-			s.AntiAliasedLinesUseTex = true;
 
-			s.ChildRounding = 0.0f;
-			s.FrameBorderSize = 1.0f;
-			s.FrameRounding = 0.0f;
-			s.PopupRounding = 0.0f;
-			s.ScrollbarRounding = 0.0f;
-			s.ScrollbarSize = 0.0f;
-			s.TabRounding = 0.0f;
-			s.WindowRounding = 0.0f;
+			style.Colors[ImGuiCol_WindowBg] = ImColor(18, 18, 18, 255);
+			style.Colors[ImGuiCol_ChildBg] = ImColor(18, 18, 18, 255);
+			style.Colors[ImGuiCol_ButtonActive] = ImColor(14, 179, 97);
+			style.Colors[ImGuiCol_FrameBg] = ImColor(14, 159, 253, 255);
+			style.Colors[ImGuiCol_FrameBgActive] = ImColor(14, 159, 253, 255);
+			style.Colors[ImGuiCol_Button] = ImColor(79, 125, 249, 255);
+			style.Colors[ImGuiCol_SeparatorActive] = ImColor(79, 125, 249, 255);
+			style.Colors[ImGuiCol_Separator] = ImColor(79, 125, 249, 255);
+			style.Colors[ImGuiCol_SeparatorHovered] = ImColor(79, 125, 249, 255);
+			style.Colors[ImGuiCol_Border] = ImColor(36, 36, 36, 255);
 
-			decoration();
 
-			static int Menu_Tab = 0; 1; 2; 3; 4;
+			style.FrameRounding = 3.f;
+			style.WindowRounding = 8.f;
+			style.ChildRounding = 0.f;
+			style.ChildBorderSize = 1.0f;
 
-			ImGui::SetCursorPos({ 17,29 });
-			if (ImGui::Button("Aimbot "))
-			{
-				Menu_Tab = 0;
-			}
-			ImGui::SetCursorPos({ 17,49 });
-			if (ImGui::Button("Visuals")) {
-				Menu_Tab = 1;
-			}
-			ImGui::SetCursorPos({ 17,69 });
-			if (ImGui::Button("Misc   "))
-			{
-				Menu_Tab = 2;
-			}
-			ImGui::SetCursorPos({ 17,89 });
-			if (ImGui::Button("World  "))
-			{
-				Menu_Tab = 3;
-			}
-			ImGui::SetCursorPos({ 17,109 });
-			if (ImGui::Button("Exploit"))
-			{
-				Menu_Tab = 4;
-			}
-			ImGui::SetCursorPos(ImVec2(240, 10));
+			io.IniFilename = NULL;
 
-			if (Menu_Tab == 0) // Aimbot Tab
+			static int tabs = 0;
+
+
+
+			ImGui::SetNextWindowSize({ 610,450 });
+			ImGui::Begin("", 0, ImGuiWindowFlags_::ImGuiWindowFlags_NoResize | ImGuiWindowFlags_::ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_::ImGuiWindowFlags_NoScrollbar);
+
+			ImGui::SetCursorPos(ImVec2(-1, 0));
+			ImGui::BeginChild("##tabs", ImVec2(110, 455), true);
+
+			ImGui::PushStyleColor(ImGuiCol_Text, tabs == 0 ? active : inactive);
+
+			ImGui::SetCursorPos(ImVec2(43, 23));
+			ImGui::Text(ICON_FA_SCOPE);
+			if (ImGui::IsItemClicked()) { tabs = 0; }
+
+
+
+			ImGui::PushStyleColor(ImGuiCol_Text, tabs == 1 ? active : inactive);
+			ImGui::SetCursorPos(ImVec2(43, 67));
+			ImGui::Text(ICON_FA_EYE);
+			if (ImGui::IsItemClicked()) { tabs = 1; }
+
+			ImGui::PushStyleColor(ImGuiCol_Text, tabs == 2 ? active : inactive);
+			ImGui::SetCursorPos(ImVec2(43, 111));
+			ImGui::Text(ICON_FA_BOMB);
+			if (ImGui::IsItemClicked()) { tabs = 2; }
+
+			ImGui::PushStyleColor(ImGuiCol_Text, tabs == 3 ? active : inactive);
+			ImGui::SetCursorPos(ImVec2(43, 155));
+			ImGui::Text(ICON_FA_USER);
+			if (ImGui::IsItemClicked()) { tabs = 3; }
+
+			ImGui::PushStyleColor(ImGuiCol_Text, inactive);
+			ImGui::SetCursorPos(ImVec2(43, 405));
+			ImGui::Text(ICON_FA_SIGN_OUT);
+			if (ImGui::IsItemClicked()) { exit(0); }
+
+			ImGui::EndChild();
+
+			ImGui::PushStyleColor(ImGuiCol_Text, inactive);
+
+			ImGui::SetCursorPos(ImVec2(120, 10));
+			ImGui::BeginChild("##menu", ImVec2(235, 370), true);
+
+
+
+			if (tabs == 0)
 			{
-				ImGui::PushItemWidth(180.f);
-				ImGui::SetCursorPos(ImVec2(140, 35));
+				ImGui::Text("					    AIMBOT");
+				ImGui::Separator();
+				ImGui::Text("\n");
 				ImGui::Checkbox(XorStr("Enable Aimbot").c_str(), &g_aimbot);
-
 				if (g_aimbot)
 				{
 					ImGui::SameLine(0, 1);
 
-					HotkeyButton(hotkeys::aimkey, ChangeKey, keystatus);
-					ImGui::SetCursorPos(ImVec2(140, 55));
+					HotkeyButton(hotkeys::aimkey, ChangeKey, keystatus);	
 					ImGui::Checkbox(XorStr("Controller LTrigger").c_str(), &controller);
 					if (controller)
 						hotkeys::aimkey = false;
 				}
-
 				if (g_aimbot)
 				{
-					ImGui::SetCursorPos(ImVec2(140, 75));
 					ImGui::Checkbox(XorStr("Mouse Aimbot").c_str(), &g_mouse_aim);
 					if (g_mouse_aim)
 						g_mem_aim = false;
-					ImGui::SetCursorPos(ImVec2(140, 95));
 					ImGui::Checkbox(XorStr("Memory Aimbot (Humanized)").c_str(), &g_mem_aim);
 					if (g_mem_aim)
 						g_mouse_aim = false;
-					ImGui::SetCursorPos(ImVec2(140, 115));
-					ImGui::Checkbox(XorStr("Skip Knocked Players").c_str(), &g_skipknocked);
-
-					ImGui::SetCursorPos(ImVec2(140, 135));
+					ImGui::Checkbox(XorStr("First Person Aimbot").c_str(), &g_Aimbotgay); /*Thanks to NotSimCraftLOL*/
 					ImGui::Text(XorStr("Bone Target").c_str());
 					//ImGui::SameLine();
-
-					ImGui::SetCursorPos(ImVec2(140, 150));
 					ImGui::Checkbox(XorStr("Head").c_str(), &Head);
 					if (Head)
 					{
@@ -1225,56 +1275,76 @@ void runRenderTick()
 
 				if (g_aimbot)
 				{
-					ImGui::SetCursorPos(ImVec2(140, 170));
 					ImGui::Text("Smoothness");
-					ImGui::SetCursorPos(ImVec2(140, 185));
 					ImGui::SliderFloat(XorStr("    ").c_str(), &bA1mb0tSm00th1ngV4lue, .5, 30);
 				}
-
-				ImGui::SetCursorPos(ImVec2(140, 210));
 				ImGui::Checkbox(XorStr("Enable Triggerbot (Disabled)").c_str(), &g_trigger);
-
-				ImGui::SetCursorPos(ImVec2(140, 235));
 				ImGui::Text("Max Aimbot Distance");
-				ImGui::SetCursorPos(ImVec2(140, 250));
 				ImGui::SliderInt(XorStr("").c_str(), &bA1mD1st4nce, 10, 280);
+
 			}
-			else if (Menu_Tab == 1) // Visuals Tab
+
+			if (tabs == 1)
 			{
-				ImGui::PushItemWidth(180.f);
+				ImGui::Text("					    VISUALS");
+				ImGui::Separator();
+				ImGui::Text("\n");
 
-				ImGui::SetCursorPos(ImVec2(140, 35));
-				ImGui::Checkbox(XorStr("3D Bounding Box").c_str(), &g_3d_box);
-				ImGui::SetCursorPos(ImVec2(140, 55));
-				ImGui::Checkbox(XorStr("Corner Box ESP").c_str(), &g_cornerboxesp);
-				ImGui::SetCursorPos(ImVec2(140, 75));
-				ImGui::Checkbox(XorStr("Basic Box ESP").c_str(), &g_boxesp);
-				ImGui::SetCursorPos(ImVec2(140, 95));
-				ImGui::Checkbox(XorStr("Line Esp").c_str(), &g_lineesp);
-
-				ImGui::SetCursorPos(ImVec2(140, 115));
 				ImGui::Checkbox(XorStr("Skeleton ESP").c_str(), &g_esp_skeleton);
-
-				ImGui::SetCursorPos(ImVec2(140, 135));
+				ImGui::Checkbox(XorStr("3D Bounding Box").c_str(), &g_3d_box);
 				ImGui::Checkbox(XorStr("Distance ESP").c_str(), &g_esp_distance);
-				ImGui::SetCursorPos(ImVec2(140, 155));
 				ImGui::Checkbox(XorStr("Equipped Weapon ESP").c_str(), &g_curweaponesp);
-				ImGui::SetCursorPos(ImVec2(140, 175));
 				ImGui::Checkbox(XorStr("Platform ESP").c_str(), &g_platform_esp);
-				ImGui::SetCursorPos(ImVec2(140, 195));
+				ImGui::Text(" ");
+
 				ImGui::Text("Max ESP Render Distance");
-				ImGui::SetCursorPos(ImVec2(140, 210));
 				ImGui::SliderInt(XorStr(" ").c_str(), &bE5pD1st4nce, 10, 250);
+			}
+
+			if (tabs == 2)
+			{
+				ImGui::Text("					    EXPLOITS");
+				ImGui::Separator();
+				ImGui::Text("\n");
+				ImGui::Checkbox(XorStr("PlayerFLY").c_str(), &g_playerfly);
+				ImGui::Checkbox(XorStr("Boat Speed").c_str(), &g_boatrat);
+				ImGui::Checkbox(XorStr("T-POSE").c_str(), &g_tpose);
+				ImGui::Checkbox(XorStr("No Bloom").c_str(), &g_gun_tracers);
+
 
 			}
-			else if (Menu_Tab == 2) // Misc Tab
-			{
-				ImGui::SetCursorPos(ImVec2(140, 35));
-				ImGui::Checkbox(XorStr("Draw Crosshair").c_str(), &g_crossh);
-				ImGui::SetCursorPos(ImVec2(140, 55));
-				ImGui::Checkbox(XorStr("Draw Circle FOV").c_str(), &g_circlefov);
 
-				ImGui::PushItemWidth(180.f);
+			if (tabs == 3)
+			{
+				ImGui::Text("                      Informations");
+				ImGui::Separator();
+				ImGui::Text("\n");
+				ImGui::Text("\n Put Something here idk");
+			}
+
+
+
+			ImGui::EndChild();
+
+
+			ImGui::SetCursorPos(ImVec2(365, 10));
+			ImGui::BeginChild("##menu2", ImVec2(235, 370), true);
+
+
+			if (tabs == 0)
+			{
+				ImGui::Text("                         SETTINGS");
+				ImGui::Separator();
+				ImGui::Checkbox(XorStr("Draw Crosshair").c_str(), &g_crossh);
+			}
+
+			if (tabs == 1)
+			{
+				ImGui::Text("                         SETTINGS");
+				ImGui::Separator();
+				ImGui::Text("\n");
+				ImGui::Checkbox(XorStr("Draw Circle FOV").c_str(), &g_circlefov);
+				ImGui::Checkbox(XorStr("Watermark").c_str(), &g_watermark);
 
 				if (g_fov || g_circlefov)
 				{
@@ -1283,122 +1353,51 @@ void runRenderTick()
 					ImGui::SetCursorPos(ImVec2(140, 90));
 					ImGui::SliderFloat(XorStr("    ").c_str(), &bA1mb0tF0VV4lue, 10, 1000);
 				}
+
+
+
 			}
-			else if (Menu_Tab == 3) // World Tab
+
+			if (tabs == 2)
 			{
-				ImGui::Spacing();
-				ImGui::SetCursorPos(ImVec2(140, 35));
-				ImGui::Checkbox(XorStr("Loot ESP").c_str(), &g_loot);
-				ImGui::SameLine();
-				ImGui::Text("                      "); //dont hate me for this lmao
-				ImGui::SameLine();
-				ImGui::Text("Loot:");
-				ImGui::SetCursorPos(ImVec2(140, 55));
-				ImGui::Checkbox(XorStr("Utils ESP").c_str(), &g_utils);
-				ImGui::SameLine();
-				ImGui::Text("                   ");
-				ImGui::SameLine();
-				ImGui::Checkbox(XorStr("Common").c_str(), &common);
-				ImGui::SetCursorPos(ImVec2(140, 75));
-				ImGui::Checkbox(XorStr("Vehicle Esp").c_str(), &g_vehicles);
-				ImGui::SameLine();
-				ImGui::Text("              ");
-				ImGui::SameLine();
-				ImGui::Checkbox(XorStr("Uncommon").c_str(), &uncommon);
-				ImGui::SetCursorPos(ImVec2(140, 95));
-				ImGui::Checkbox(XorStr("Chest ESP").c_str(), &g_chests);
-				ImGui::SameLine();
-				ImGui::Text("                 ");
-				ImGui::SameLine();
-				ImGui::Checkbox(XorStr("Rare").c_str(), &rare);
-				ImGui::SetCursorPos(ImVec2(140, 115));
-				ImGui::Checkbox(XorStr("Ammo Box ESP").c_str(), &g_ammo);
-				ImGui::SameLine();
-				ImGui::Text("        ");
-				ImGui::SameLine();
-				ImGui::Checkbox(XorStr("Epic").c_str(), &epic);
-				ImGui::SetCursorPos(ImVec2(140, 135));
-
-				ImGui::Text("                      ");
-				ImGui::SameLine();
-				ImGui::Text("                       ");
-				ImGui::SameLine();
-				ImGui::Checkbox(XorStr("Legendary").c_str(), &legendary);
-				ImGui::SetCursorPos(ImVec2(140, 155));
-				ImGui::Text("                      ");
-				ImGui::SameLine();
-				ImGui::Text("                       ");
-				ImGui::SameLine();
-				ImGui::Checkbox(XorStr("Mythic").c_str(), &mythic);
-				ImGui::Spacing();
-				ImGui::SetCursorPos(ImVec2(140, 175));
-				ImGui::Text("Max Rendering");
-				ImGui::SetCursorPos(ImVec2(140, 200));
-				ImGui::SliderInt(XorStr(" ").c_str(), &bLootRendering, 5, 50);
-				ImGui::Spacing();
-			}
-			else if (Menu_Tab == 4) // Exploits Tab
-			{
-
-			/*i am working on T-POSE NOSPREAD and BulletTP*/
-				//ImGui::Spacing();
-
-			//	ImGui::Checkbox(XorStr("nospread").c_str(), &nospread);
-
-				//ImGui::Checkbox(XorStr("BulletTP [ALT]").c_str(), &bulletp); [testing]
-
-				ImGui::SetCursorPos(ImVec2(140, 35));
-				ImGui::Checkbox(XorStr("No Bloom").c_str(), &g_gun_tracers);
-
-				ImGui::SetCursorPos(ImVec2(140, 55));
-				ImGui::Checkbox(XorStr("T-POSE").c_str(), &tpose);
-
-				ImGui::SetCursorPos(ImVec2(140, 75));
-				ImGui::Checkbox(XorStr("Boat Speed Test").c_str(), &g_boatspeed);
-
-				ImGui::SetCursorPos(ImVec2(140, 95));
-				ImGui::Checkbox(XorStr("Boat Fly Test").c_str(), &g_boatfly_test);
-
-
-				ImGui::PushItemWidth(180.f);
-				ImGui::SetCursorPos(ImVec2(140, 115));
+				ImGui::Text("                      MORE EXPLOITS");
+				ImGui::Separator();
+				ImGui::Text("\n");
 				ImGui::Checkbox("Fov Changer", &g_fovchanger);
-				if (g_fovchanger)
-				{
-					ImGui::SetCursorPos(ImVec2(140, 135));
-					ImGui::Text("FOV CHANGER");
-					ImGui::SetCursorPos(ImVec2(140, 155));
-					ImGui::SliderFloat(("                 "), &FOVChangerValue, 90.0f, 170.0f, ("%.2f"));
-				}
-
-				if (g_boatspeed)
-				{
-					ImGui::SetCursorPos(ImVec2(140, 175));
-					ImGui::Text("Speed Multiplier");
-					ImGui::SetCursorPos(ImVec2(140, 195));
-					ImGui::SliderFloat(("                 "), &boatmulti, 1.0f, 100.0f, ("%.1f"));
-
-					ImGui::SetCursorPos(ImVec2(140, 215));
-					ImGui::Text("Spped");
-					ImGui::SetCursorPos(ImVec2(140, 235));
-					ImGui::SliderFloat(("                 "), &boatspeed, 1.0f, 100.0f, ("%.1f"));
-				}
-				ImGui::SetCursorPos(ImVec2(140, 255));
-				ImGui::Checkbox(XorStr("T-POSE").c_str(), &tpose);
-
-				ImGui::SetCursorPos(ImVec2(140, 275));
-				ImGui::Checkbox(XorStr("doublepump").c_str(), &doublepump);
-
-				ImGui::SetCursorPos(ImVec2(140, 295));
-				ImGui::Checkbox(XorStr("RocketLeauge [SHIFT]").c_str(), &RocketLeauge);
+				ImGui::Checkbox(XorStr("T-POSE").c_str(), &g_tpose);
+				ImGui::Checkbox(XorStr("doublepump").c_str(), &g_doublepump);
+				ImGui::Checkbox(XorStr("RocketLeauge [SHIFT]").c_str(), &g_RocketLeauge);
+				ImGui::Checkbox(XorStr("NoColision").c_str(), &g_NoColision);
 			}
 
-			ImGui::SetCursorPos({ 17,270 });
-			if (ImGui::Button("Unload"))
+			if (tabs == 3)
 			{
-				exit(0);
+				ImGui::Text("                      Version");
+				ImGui::Separator();
+				ImGui::Text("\n");
+				ImGui::Text("\n You are using Version : YOURVERSION");
+				ImGui::Text("\n");
+				ImGui::Text("\n You are using : Gloomy.cc");
 			}
+
+			ImGui::EndChild();
+
+
+
+			ImGui::SetCursorPos(ImVec2(120, 391));
+			ImGui::BeginChild("##menu3", ImVec2(480, 50), true);
+
+			ImGui::SetCursorPos(ImVec2(6, 10));
+			style.Colors[ImGuiCol_Text] = ImColor(79, 125, 249, 255);
+			ImGui::Text("gloomy.cc");
+
+			ImGui::EndChild();
+
+
 			ImGui::End();
+
+
+
 		}
 	}
 
@@ -1451,6 +1450,12 @@ int main()
 
 	if (GlobalFindAtomA("innit??") == 0)
 	{
+		//system("tasklist")
+
+       /*Sleep(5000);*/
+
+	 /*Enable only if you want to [Makes it look cool]*/
+
 		/*Taskilling processes to load the driver*/
 		system(XorStr("taskkill /F /IM EpicGamesLauncher.exe").c_str());
 		system(XorStr("taskkill /F /IM EasyAntiCheatLauncher.exe").c_str());
@@ -1468,7 +1473,10 @@ int main()
 
 	while (Entryhwnd == NULL)
 	{
-		printf(XorStr("Run Fortnite\r").c_str());
+		system("cls");
+		system("color a");
+		printf(XorStr("Driver Loaded\r").c_str());
+		printf(XorStr("Please launch fortnite\r").c_str());
 		Sleep(1);
 		Entryhwnd = FindWindowA(XorStr("UnrealWindow").c_str(), XorStr("Fortnite  ").c_str());
 		Sleep(1);
@@ -1479,7 +1487,7 @@ int main()
 	g_pid = get_fn_processid();
 
 	if (!g_pid) {
-		std::cout << XorStr("Could not find Fortnite.\n").c_str();
+		std::cout << XorStr("Could not find Fortnite Process.\n").c_str();
 		system(XorStr("pause").c_str());
 		return 1;
 	}
@@ -1528,6 +1536,7 @@ int main()
 	cleanupWindow();
 	return 0;
 }
+
 
 void aimbot(float x, float y)
 {

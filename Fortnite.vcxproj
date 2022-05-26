@@ -184,6 +184,7 @@
     <ClInclude Include="string.hpp" />
     <ClInclude Include="driver.h" />
     <ClInclude Include="utils.hpp" />
+    <ClInclude Include="WindowsHijacking.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
