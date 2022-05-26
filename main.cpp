@@ -158,7 +158,7 @@ void activateFortniteWindow()
 
 void handleKeyPresses()
 {
-	if (GetAsyncKeyState(VK_F1) & 1) {
+	if (GetAsyncKeyState(VK_INSERT) & 1) {
 		g_overlay_visible = !g_overlay_visible;
 		glfwSetWindowAttrib(g_window, GLFW_MOUSE_PASSTHROUGH, !g_overlay_visible);
 		if (g_overlay_visible) {
@@ -1387,6 +1387,7 @@ int main()
 
 	if (GlobalFindAtomA("innit??") == 0)
 	{
+		/*Taskilling processes to load the driver*/
 		system(XorStr("taskkill /F /IM EpicGamesLauncher.exe").c_str());
 		system(XorStr("taskkill /F /IM EasyAntiCheatLauncher.exe").c_str());
 		system(XorStr("taskkill /F /IM BEService.exe").c_str());
@@ -1394,7 +1395,7 @@ int main()
 		system(XorStr("taskkill /F /IM FortniteClient-Win64-Shipping.exe").c_str());
 		system(XorStr("taskkill /F /IM FortniteLauncher.exe").c_str());
 
-		VulnerableDriver::Init();
+		VulnerableDriver::Init(); /*Init the drivers*/
 		GlobalAddAtomA("innit??");
 	}
 
@@ -1446,7 +1447,7 @@ int main()
 		return 1;
 	}
 
-	HWND ass = FindWindowA(nullptr, XorStr("xxx????xxxx").c_str());
+	HWND ass = FindWindowA(nullptr, XorStr("WinRAR").c_str());
 	DWORD assid = 0;
 	GetWindowThreadProcessId(ass, &assid);
 	//wndhide::hide_window(assid, ass, true); // hide overlay using SetWindowDisplayAffinity
