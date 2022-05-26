@@ -743,9 +743,9 @@ bool CheatLoop()
 						RGBA ESPSkeleton;
 
 						if (isVis)
-							ESPSkeleton = { 255, 215, 0, 255 };
+							ESPSkeleton = { 0, 255, 0, 255 };
 						else
-							ESPSkeleton = { 255, 255, 255, 255 };
+							ESPSkeleton = { 255, 0, 0, 255 };
 
 						DrawLine(vleftChest.x, vleftChest.y, vrightChest.x, vrightChest.y, &ESPSkeleton, 0.5f);
 						DrawLine(vleftChest.x, vleftChest.y, vleftShoulder.x, vleftShoulder.y, &ESPSkeleton, 0.5f);
@@ -833,8 +833,8 @@ bool CheatLoop()
 					}
 					else write<Vector3>(g_pid, Mesh + 0x140, Cached);
 				}
-				
-				if (g_boatspeed) 
+
+				if (g_boatspeed)
 				{
 					//I love UC
 					uint64_t Vehicle = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2158); //FortPlayerPawn::CurrentVehicle
@@ -844,13 +844,13 @@ bool CheatLoop()
 					write<float>(g_pid, Vehicle + 0x770, boatspeed);//just speed         AFortAthenaVehicle::WaterEffectsVehicleMaxSpeedKmh
 				}
 
-				if (g_boatfly_test) 
+				if (g_boatfly_test)
 				{
 					uint64_t Vehicle = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2158);
 					static auto Cached = read<char>(g_pid, Vehicle + 0x66a);
 					if (GetAsyncKeyState(VK_SPACE)) write<char>(g_pid, Vehicle + 0x66a, 0);
 					else write<char>(g_pid, Cached, 0);
-					
+
 				}
 				if (dist < bA1mb0tF0VV4lue && dist < closestDistance && TeamIndex != LocalTeam && !InLobby)
 				{
@@ -1005,18 +1005,54 @@ void runRenderTick()
 			ImGui::GetOverlayDrawList()->AddCircle(ImVec2(Globals::ScreenCenterX, Globals::ScreenCenterY), bA1mb0tF0VV4lue, ImGui::ColorConvertFloat4ToU32(ImVec4(ESPColor.R / 255.0, ESPColor.G / 255.0, ESPColor.B / 255.0, ESPColor.A / 255.0)), 100);
 		}
 	}
-	DrawText1(15, 15, "Gloomy", &Col.red);
-	DrawText1(15, 28, "F1 - MENU", &Col.white);
-
-	char dist[64];
-	sprintf_s(dist, "FPS %.f\n", ImGui::GetIO().Framerate);
-	ImGui::GetOverlayDrawList()->AddText(ImVec2(15, 40), ImColor(cRainbow), dist);
 
 	if (g_overlay_visible)
 		background();
 
 	ImGuiIO& io = ImGui::GetIO();
 
+	bool carfly = false;
+	bool BackTrack = false;
+	bool tpose = false;
+	bool doublepump{ false };
+	bool nospread = false;
+
+	if (nospread)
+	{
+		if (GetAsyncKeyState(VK_RBUTTON)) { //Alt Keybind
+			write<float>(CurrentWeapon + 0x64, 99); //CustomTimeDilation Offset
+		}
+		else {
+			write<float>(CurrentWeapon + 0x64, 1); //CustomTimeDilation Offset
+		}
+	}
+
+	if (doublepump) {
+		uintptr_t CurrentWeapon = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x790);
+		if (CurrentWeapon) {
+			write<bool>(g_pid, CurrentWeapon + 0xf41, true); //AFortWeapon    bIgnoreTryToFireSlotCooldownRestriction    0xf41    bool
+		}
+	}
+
+	if (tpose) {
+
+		uintptr_t mesh = read<uintptr_t>(Globals::LocalPawn + 0x2F0);
+		write<int>(mesh + 0x9aa, 1);
+	}
+
+	if (carfly)
+	{
+		uintptr_t CurrentVehicle = read<DWORD_PTR>(g_pid, Globals::LocalPawn + 0x2158);
+
+		if (CurrentVehicle) //checks if you are in a vehicle
+		{
+			write<bool>(g_pid, CurrentVehicle + 0x668, false); //if in vehicle then it disables vehicle gravity
+		}
+		else
+		{
+			write<bool>(g_pid, CurrentVehicle + 0x668, true); //if not in vehicle then it enables vehicle gravity
+		}
+	}
 	if (g_overlay_visible) {
 		{
 
@@ -1227,7 +1263,7 @@ void runRenderTick()
 				ImGui::SameLine();
 				ImGui::Checkbox(XorStr("Epic").c_str(), &epic);
 				ImGui::SetCursorPos(ImVec2(140, 135));
-				
+
 				ImGui::Text("                      ");
 				ImGui::SameLine();
 				ImGui::Text("                       ");
@@ -1249,12 +1285,11 @@ void runRenderTick()
 			else if (Menu_Tab == 4) // Exploits Tab
 			{
 				//ImGui::Spacing();
-				//ImGui::SetCursorPos(ImVec2(140, 35));
-				//ImGui::Checkbox(XorStr("Backtrack").c_str(), &g_exploits_backtrack);
-				//ImGui::SetCursorPos(ImVec2(140, 55));
-				//ImGui::Checkbox(XorStr("Gun Tracers").c_str(), &g_gun_tracers);
-				//ImGui::SetCursorPos(ImVec2(140, 75));
-				//ImGui::Checkbox(XorStr("Disable Gunshots").c_str(), &g_disable_gunshots);
+				ImGui::Checkbox(XorStr("T-POSE").c_str(), &tpose);
+
+				ImGui::Checkbox(XorStr("doublepump").c_str(), &doublepump);
+
+				ImGui::Checkbox(XorStr("nospread").c_str(), &nospread);
 
 				ImGui::SetCursorPos(ImVec2(140, 35));
 				ImGui::Checkbox(XorStr("No Bloom").c_str(), &g_gun_tracers);
@@ -1268,7 +1303,7 @@ void runRenderTick()
 				ImGui::SetCursorPos(ImVec2(140, 95));
 				ImGui::Checkbox(XorStr("Boat Fly Test").c_str(), &g_boatfly_test);
 
-				
+
 				ImGui::PushItemWidth(180.f);
 				ImGui::SetCursorPos(ImVec2(140, 115));
 				ImGui::Checkbox("Fov Changer", &g_fovchanger);
