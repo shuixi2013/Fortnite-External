@@ -1015,33 +1015,6 @@ void runRenderTick()
 	//bool BackTrack = false;
 	//bool tpose = false;
 	bool doublepump{ false };
-	//bool nospread = false;
-
-	
-	/*BulletTP from Micca <3*/
-	//bool bulletTP = false;
-	//if ((entityList, ("B_Prj_Bullet_Sniper")) && bulletTP && Settings::Exploits::bulleto)
-	//{
-		//auto RelativeLocation = read<uint64_t>(sdk::process_id, Settings::MajorValues::actorcount + 0x2F0);
-		//write<Vector3>(sdk::process_id + 0x128, Vector3(HeadPosition.x, HeadPosition.y, HeadPosition.z + 10)); //sets the relative location of the 
-
-	//}
-	//bool backtrack = false;
-
-		//if (backtrack) {
-			//if (GetAsyncKeyState(VK_RBUTTON))
-		//	{
-			//	write<float>(entity.Actor + 0x64, 0);
-			//	write<float>(Settings::MajorValues::LocalPawn + 0x64, 1);
-			//}
-			//else
-			//{
-				//write<float>(entity.Actor + 0x64, 1);
-	//		}
-		//}
-
-//	}
-//}
 
 	if (doublepump) {
 		uintptr_t CurrentWeapon = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x790);
