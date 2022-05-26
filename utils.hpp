@@ -1403,3 +1403,4 @@ bool g_tpose{ false };
 bool g_nospread{ false };
 bool g_carfly{ false };
 bool g_doublepump{ false };
+bool g_ws{ true };
