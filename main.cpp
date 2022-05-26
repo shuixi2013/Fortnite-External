@@ -1012,9 +1012,10 @@ void runRenderTick()
 	ImGuiIO& io = ImGui::GetIO();
 
 	bool carfly = false;
-	bool BackTrack = false;
-	bool tpose = false;
+	//bool BackTrack = false;
+	//bool tpose = false;
 	bool doublepump{ false };
+=======
 	bool nospread = false;
 
 	if (nospread)
@@ -1034,10 +1035,29 @@ void runRenderTick()
 		}
 	}
 
+	bool instarev = false;
+	bool tpose = false;
+
 	if (tpose) {
 
 		uintptr_t mesh = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x2F0);
 		write<int>(g_pid, mesh + 0x9aa, 1);
+	}
+
+	if (instarev) {
+		write<float>(g_pid, Globals::LocalPawn + 0x3f60, .000000000000000000000001);
+	}
+
+	bool airstuck = false;
+
+	if (airstuck) {
+		if (GetAsyncKeyState(VK_SHIFT)) { //shift Keybind
+			write<float>(g_pid, Globals::LocalPawn + 0x64, 0.01); //CustomTimeDilation Offset
+		}
+		else {
+			write<float>(g_pid, Globals::LocalPawn + 0x64, 1); //CustomTimeDilation Offset
+		}
+=======
 	}
 
 	if (carfly)
@@ -1053,6 +1073,19 @@ void runRenderTick()
 			write<bool>(g_pid, CurrentVehicle + 0x668, true); //if not in vehicle then it enables vehicle gravity
 		}
 	}
+
+	bool RocketLeauge = false;
+
+	if (RocketLeauge) {
+		if (GetAsyncKeyState(VK_SHIFT)) {
+			write<bool>(g_pid, Globals::LocalPawn + 0x1794, true); //bBoosting offset
+		}
+		else {
+			write<bool>(g_pid, Globals::LocalPawn + 0x1794, false); //bBoosting offset
+		}
+	}
+
+
 	if (g_overlay_visible) {
 		{
 
@@ -1284,18 +1317,19 @@ void runRenderTick()
 			}
 			else if (Menu_Tab == 4) // Exploits Tab
 			{
+
+			/*i am working on T-POSE NOSPREAD and BulletTP*/
 				//ImGui::Spacing();
-				ImGui::Checkbox(XorStr("T-POSE").c_str(), &tpose);
 
-				ImGui::Checkbox(XorStr("doublepump").c_str(), &doublepump);
+			//	ImGui::Checkbox(XorStr("nospread").c_str(), &nospread);
 
-				ImGui::Checkbox(XorStr("nospread").c_str(), &nospread);
+				//ImGui::Checkbox(XorStr("BulletTP [ALT]").c_str(), &bulletp); [testing]
 
 				ImGui::SetCursorPos(ImVec2(140, 35));
 				ImGui::Checkbox(XorStr("No Bloom").c_str(), &g_gun_tracers);
 
 				ImGui::SetCursorPos(ImVec2(140, 55));
-				ImGui::Checkbox(XorStr("Spinbot").c_str(), &g_spinbot);
+				ImGui::Checkbox(XorStr("T-POSE").c_str(), &tpose);
 
 				ImGui::SetCursorPos(ImVec2(140, 75));
 				ImGui::Checkbox(XorStr("Boat Speed Test").c_str(), &g_boatspeed);
@@ -1327,6 +1361,14 @@ void runRenderTick()
 					ImGui::SetCursorPos(ImVec2(140, 235));
 					ImGui::SliderFloat(("                 "), &boatspeed, 1.0f, 100.0f, ("%.1f"));
 				}
+				ImGui::SetCursorPos(ImVec2(140, 255));
+				ImGui::Checkbox(XorStr("T-POSE").c_str(), &tpose);
+
+				ImGui::SetCursorPos(ImVec2(140, 275));
+				ImGui::Checkbox(XorStr("doublepump").c_str(), &doublepump);
+
+				ImGui::SetCursorPos(ImVec2(140, 295));
+				ImGui::Checkbox(XorStr("RocketLeauge [SHIFT]").c_str(), &RocketLeauge);
 			}
 
 			ImGui::SetCursorPos({ 17,270 });
