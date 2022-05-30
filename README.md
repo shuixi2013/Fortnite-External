@@ -7,7 +7,7 @@ https://streamable.com/hb08pv
 
 **Status: Updated to latest patch, BattleEye only!**
 
-Discord: https://discord.gg/gloomy-cc
+Discord: https://discord.gg/gloomy
 
 **Cheat Features:**
 
