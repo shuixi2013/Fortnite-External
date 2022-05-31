@@ -1450,13 +1450,6 @@ int main()
 
 	if (GlobalFindAtomA("innit??") == 0)
 	{
-		//system("tasklist")
-
-       /*Sleep(5000);*/
-
-	 /*Enable only if you want to [Makes it look cool]*/
-
-		/*Taskilling processes to load the driver*/
 		system(XorStr("taskkill /F /IM EpicGamesLauncher.exe").c_str());
 		system(XorStr("taskkill /F /IM EasyAntiCheatLauncher.exe").c_str());
 		system(XorStr("taskkill /F /IM BEService.exe").c_str());
@@ -1464,7 +1457,7 @@ int main()
 		system(XorStr("taskkill /F /IM FortniteClient-Win64-Shipping.exe").c_str());
 		system(XorStr("taskkill /F /IM FortniteLauncher.exe").c_str());
 
-		VulnerableDriver::Init(); /*Init the drivers*/
+		VulnerableDriver::Init();
 		GlobalAddAtomA("innit??");
 	}
 
@@ -1473,10 +1466,7 @@ int main()
 
 	while (Entryhwnd == NULL)
 	{
-		system("cls");
-		system("color a");
-		printf(XorStr("Driver Loaded\r").c_str());
-		printf(XorStr("Please launch fortnite\r").c_str());
+		printf(XorStr("Start Fortnite...\r").c_str());
 		Sleep(1);
 		Entryhwnd = FindWindowA(XorStr("UnrealWindow").c_str(), XorStr("Fortnite  ").c_str());
 		Sleep(1);
