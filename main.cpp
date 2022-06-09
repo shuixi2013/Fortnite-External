@@ -245,7 +245,7 @@ void CacheGame()
 		Globals::LocalPawn = read<uintptr_t>(g_pid, LocalPlayerController + 0x310);
 		Globals::LocalPawnRootComponent = read<uintptr_t>(g_pid, Globals::LocalPawn + 0x188);
 		uint64_t LocalPlayerState = read<uint64_t>(g_pid, Globals::LocalPawn + 0x290);
-		LocalTeam = read<int>(g_pid, LocalPlayerState + 0x1010);
+		LocalTeam = read<int>(g_pid, LocalPlayerState + 0x1068);
 
 		InLobby = false;
 		if (!Globals::LocalPawn) InLobby = true;
@@ -485,7 +485,7 @@ bool CheatLoop()
 
 			uint64_t PlayerState = read<uint64_t>(g_pid, EntityList.ACurrentActor + 0x290);
 
-			int TeamIndex = read<int>(g_pid, PlayerState + 0x1010);
+			int TeamIndex = read<int>(g_pid, PlayerState + 0x1068);
 
 			auto CameraActor = read<uintptr_t>(g_pid, PlayerCameraManager + 0x3168);
 
@@ -523,7 +523,7 @@ bool CheatLoop()
 
 			if (g_name_esp)
 			{
-				uint64_t APlayerState = read<uint64_t>(g_pid, 0x0);//APlayerState->PlayerNamePrivate*FString
+				uint64_t APlayerState = read<uint64_t>(g_pid, 0x360);//APlayerState->PlayerNamePrivate*FString
 				auto nameptr = read<uintptr_t>(g_pid, APlayerState + 0x370);
 
 				uint64_t StringData = read<uint64_t>(g_pid, nameptr);
@@ -538,7 +538,7 @@ bool CheatLoop()
 
 			if (g_platform_esp)
 			{
-				uint64_t AFortPlayerState = read<uint64_t>(g_pid, 0x0);//AFortPlayerState->Platform*FString
+				uint64_t AFortPlayerState = read<uint64_t>(g_pid, 0x358);//AFortPlayerState->Platform*FString
 				auto nameptr = read<uintptr_t>(g_pid, AFortPlayerState + 0x420);
 
 				uint64_t StringData = read<uint64_t>(g_pid, nameptr);
@@ -617,7 +617,7 @@ bool CheatLoop()
 
 				if (ItemDist < bLootRendering) {
 
-					auto CurrentWeapon = read<uintptr_t>(g_pid, EntityList.ACurrentActor + 0x790);
+					auto CurrentWeapon = read<uintptr_t>(g_pid, EntityList.ACurrentActor + 0x7f0);
 					auto ItemData = read<DWORD_PTR>(g_pid, CurrentWeapon + 0x3d8);
 					BYTE tier = read<BYTE>(g_pid, ItemData + 0x74);
 
@@ -836,7 +836,7 @@ bool CheatLoop()
 				auto dx = w2shead.x - (Globals::Width / 2);
 				auto dy = w2shead.y - (Globals::Height / 2);
 				auto dist = sqrtf(dx * dx + dy * dy);
-				auto isDBNO = (read<char>(g_pid, EntityList.ACurrentActor + 0x6f2) >> 4) & 1;
+				auto isDBNO = (read<char>(g_pid, EntityList.ACurrentActor + 0x74a) >> 4) & 1;
 
 				if (g_spinbot)
 				{
@@ -852,16 +852,16 @@ bool CheatLoop()
 				if (g_boatspeed)
 				{
 					//I love UC
-					uint64_t Vehicle = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2158); //FortPlayerPawn::CurrentVehicle
-					write<float>(g_pid, Vehicle + 0xc6c, boatmulti);//multiplier run     AFortAthenaVehicle::CachedSpeed
-					write<float>(g_pid, Vehicle + 0x8e0, boatmulti);//multiplier run     AFortAthenaVehicle::TopSpeedCurrentMultiplier
-					write<float>(g_pid, Vehicle + 0x8e4, boatmulti);//multiplier run     AFortAthenaVehicle::PushForceCurrentMultiplier
-					write<float>(g_pid, Vehicle + 0x770, boatspeed);//just speed         AFortAthenaVehicle::WaterEffectsVehicleMaxSpeedKmh
+					uint64_t Vehicle = read<uint64_t>(g_pid, Globals::LocalPawn + 0x21b8); //FortPlayerPawn::CurrentVehicle
+					write<float>(g_pid, Vehicle + 0xc74, boatmulti);//multiplier run     AFortAthenaVehicle::CachedSpeed
+					write<float>(g_pid, Vehicle + 0x8e8, boatmulti);//multiplier run     AFortAthenaVehicle::TopSpeedCurrentMultiplier
+					write<float>(g_pid, Vehicle + 0x8ec, boatmulti);//multiplier run     AFortAthenaVehicle::PushForceCurrentMultiplier
+					write<float>(g_pid, Vehicle + 0x778, boatspeed);//just speed         AFortAthenaVehicle::WaterEffectsVehicleMaxSpeedKmh
 				}
 
 				if (g_boatfly_test)
 				{
-					uint64_t Vehicle = read<uint64_t>(g_pid, Globals::LocalPawn + 0x2158);
+					uint64_t Vehicle = read<uint64_t>(g_pid, Globals::LocalPawn + 0x21b8);
 					static auto Cached = read<char>(g_pid, Vehicle + 0x66a);
 					if (GetAsyncKeyState(VK_SPACE)) write<char>(g_pid, Vehicle + 0x66a, 0);
 					else write<char>(g_pid, Cached, 0);
@@ -896,7 +896,7 @@ bool CheatLoop()
 					if (!AimbotMesh)
 						return false;
 
-					auto CurrentWeapon = read<uintptr_t>(g_pid, closestPawn + 0x790);
+					auto CurrentWeapon = read<uintptr_t>(g_pid, closestPawn + 0x7f0);
 					if (!CurrentWeapon)
 						return false;
 
