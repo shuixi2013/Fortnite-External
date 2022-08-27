@@ -49,3 +49,10 @@ Discord: https://discord.gg/visualstudio
 - Boat Speed Multiplier
 - Boat Speed
 - FOV Changer
+
+
+
+**Support my projects:**\
+BTC: bc1qg4tn04nznuh9prakkk0ve8nrnjrhpnx2h2qztw\
+LTC: LPbvhWcLosGTn99U2WMzyF8DnuJ4jvWb8\
+ETH: 0x0390dcAe271fB8A39c0c4d49C7ae90113FFB91Ac
