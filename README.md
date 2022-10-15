@@ -5,9 +5,9 @@ https://streamable.com/hb08pv
 
 **External Fortnite Cheat written mostly in C++.**
 
-**Status: Updated to latest patch, BattleEye only!**
+**Status: Outdated**
 
-Discord: https://discord.gg/visualstudio
+Discord: https://discord.gg/cebNKKYQTj
 
 **Cheat Features:**
 
